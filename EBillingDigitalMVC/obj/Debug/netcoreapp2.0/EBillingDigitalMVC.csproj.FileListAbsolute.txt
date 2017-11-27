@@ -1,0 +1,11 @@
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\bin\Debug\netcoreapp2.0\EBillingDigitalMVC.deps.json
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\bin\Debug\netcoreapp2.0\EBillingDigitalMVC.runtimeconfig.json
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\bin\Debug\netcoreapp2.0\EBillingDigitalMVC.runtimeconfig.dev.json
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\bin\Debug\netcoreapp2.0\EBillingDigitalMVC.dll
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\obj\Debug\netcoreapp2.0\EBillingDigitalMVC.csprojResolveAssemblyReference.cache
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\obj\Debug\netcoreapp2.0\EBillingDigitalMVC.csproj.CoreCompileInputs.cache
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\obj\Debug\netcoreapp2.0\EBillingDigitalMVC.AssemblyInfoInputs.cache
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\obj\Debug\netcoreapp2.0\EBillingDigitalMVC.AssemblyInfo.cs
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\bin\Debug\netcoreapp2.0\EBillingDigitalMVC.pdb
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\obj\Debug\netcoreapp2.0\EBillingDigitalMVC.dll
+C:\Users\x4v1\Source\Repos\MyFirstProject\EBillingDigitalMVC\EBillingDigitalMVC\obj\Debug\netcoreapp2.0\EBillingDigitalMVC.pdb
