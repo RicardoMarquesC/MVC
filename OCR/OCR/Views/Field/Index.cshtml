@@ -1,0 +1,76 @@
+﻿@model  IEnumerable<SelectListItem>
+
+@{
+
+}
+ 
+    <div>         
+        <p>
+            Imagem
+        </p>
+        @Html.DropDownList("file",Model)
+        <p>
+            Campo
+        </p>
+        <select id="dropDownFields" name="field" class="form-control">
+            <option value="Data">Data</option>
+            <option value="Nº de Factura">Nº de Factura</option>
+            <option value="Morada">Morada</option>
+            <option value="Email">Email</option>
+        </select>       
+        
+        <p>
+            Coordenadas
+        </p>
+        <input type="text" name="coordinates" id="coords" />
+        <p>
+
+        </p>
+        <input type="button" name="Submit" id="btnSend" />
+    </div>
+@section scripts{
+   
+    <script>
+        
+
+        $(function () {
+            $("#btnSend").click(function () {
+                var dataToSend = {
+                    file: $("#file").val(),
+                    coordinates: $("#coords").val(),
+                    field: $("#dropDownFields").val(),
+                };
+
+                $.ajax({
+                url: '@Url.Action("GetValues", "Field")',
+                data: dataToSend,
+                type: "POST",
+                success: function (data) {
+                 console.log(data);
+                 if(data == "OK"){
+                  console.log("Sucesso!");
+                  window.location = "";
+                 }else{
+                  console.log("Insucesso!");
+                  window.location = window.location;
+                 }
+                },
+                error: function (data) {
+                 console.log(data);
+                 console.log("Erro!");
+                },
+                complete: function (data) {
+                 console.log("Post feito!");
+                }
+               });
+            });
+        });
+
+        $("#file").change(function () {
+            console.log("mexeu!");
+        });
+        
+
+    </script>
+
+}

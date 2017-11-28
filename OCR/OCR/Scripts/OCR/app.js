@@ -276,7 +276,7 @@
                         var h = Math.round(Math.sqrt(Math.pow(f[2] - f[0], 2) + Math.pow(f[3] - f[1], 2)));
                         f = f.slice(0, 2), f.push(h)
                     }				
-					cord += "\n Campo: "+ c[b].area[d].href +" Coordenadas: " +f.join(",");	
+					cord += f.join(",") + ";";	
 					
                 })
                 

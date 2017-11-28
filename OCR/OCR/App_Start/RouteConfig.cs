@@ -24,6 +24,12 @@ namespace OCR
                 url: "{ImageWork}/{Duplex}",
                 defaults: new { controller = "Home", action = "Index" }
             );
+
+            routes.MapRoute(
+                name: "Field",
+                url: "{controller}/{action}",
+                defaults: new { controller = "Field", action = "Index" }
+            );
         }
     }
 }

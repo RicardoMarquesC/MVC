@@ -65,11 +65,9 @@
                     </thead>
                     <tbody>
                         <tr>
-
                             <td style="width: 65px">
                                 <div class="control-label input-sm"><input name="im[0][active]" value="1" checked="checked" type="radio"></div>
                             </td>
-
 
                             <td style="width: 0%" id="hide">
                                 <select id="Forma" name="im[0][shape]" class="form-control input-sm">
@@ -78,7 +76,9 @@
                             </td>
 
                             <td>
-                                <input name="im[0][href]" placeholder="Campo" class="form-control input-sm" type="text">
+                                <select id="Forma" name="im[0][shape]" class="form-control input-sm">
+                                    <option value="rect" selected="selected">Rect</option>
+                                </select>
                             </td>
 
                             <td>
@@ -128,6 +128,8 @@
 
     <script src="~/Scripts/OCR/app.js">
     </script>
+    
+
     <script>
         function GetCoords() {
             document.getElementById('coords').value = document.getElementById('modal-code-result').value;
