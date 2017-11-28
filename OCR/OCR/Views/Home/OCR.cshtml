@@ -36,17 +36,20 @@
 <body>
 
     <div class="container">
+
         <div class="row">
             <div class="col-md-12">
                 </p>
                 <div class="step">
+
                     <button type="button" class="btn btn-success btn-lg" id="image-mapper-upload">Select Image from My PC</button>
-                    <input name="" id="image-mapper-file" type="file">
+                    <input name="files" id="image-mapper-file" type="file">
                 </div>
             </div>
         </div>
     </div>
-
+@using (Html.BeginForm("Duplex", "ImageWork", FormMethod.Post))
+{
     <div class="container toggle-content" style="display: none;">
         <div class="row">
             <div class="col-md-12">
@@ -66,7 +69,6 @@
                     <thead>
                         <tr>
                             <th>Active</th>
-                            <th>    </th>
                             <th>Campo</th>
                             <th>Valor</th>
                         </tr>
@@ -112,6 +114,9 @@
                 </table>
 
                 <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modal-code">Show Me The Coordinates!</button>
+                <button type="submit" class="btn btn-success btn-lg" id="enviar">Enviar</button>
+                <input type="hidden" name="coords" value="" />
+
             </div>
         </div>
     </div>
@@ -125,14 +130,20 @@
                 </div>
                 <div class="modal-body"><textarea class="form-control input-sm" readonly="readonly" id="modal-code-result" rows="10"></textarea></div>
                 <div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
+
             </div>
         </div>
     </div>
-
+    }
 
     <script src="~/Scripts/OCR/app.js">
     </script>
-
+    <script>
+        //$("#enviar").click(function () {
+        //    var a = $("#coords");
+        //    a.tex("modal-code-result").text();
+        //})
+    </script>
     <script>
 			(function ($) { $(document).trigger('init'); })(jQuery);
     </script>
