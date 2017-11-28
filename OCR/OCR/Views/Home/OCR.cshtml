@@ -35,22 +35,12 @@
 </head>
 <body>
 
+@using (Html.BeginForm("Duplex", "ImageWork", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{ 
     <div class="container">
+        <button type="button" class="btn btn-success btn-lg" id="image-mapper-upload">Select Image from My PC</button>
+        <input name="file" id="image-mapper-file" type="file">
 
-        <div class="row">
-            <div class="col-md-12">
-                </p>
-                <div class="step">
-
-                    <button type="button" class="btn btn-success btn-lg" id="image-mapper-upload">Select Image from My PC</button>
-                    <input name="files" id="image-mapper-file" type="file">
-                </div>
-            </div>
-        </div>
-    </div>
-@using (Html.BeginForm("Duplex", "ImageWork", FormMethod.Post))
-{
-    <div class="container toggle-content" style="display: none;">
         <div class="row">
             <div class="col-md-12">
                 <div class="container">
@@ -114,8 +104,8 @@
                 </table>
 
                 <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#modal-code">Show Me The Coordinates!</button>
-                <button type="submit" class="btn btn-success btn-lg" id="enviar">Enviar</button>
-                <input type="hidden" name="coords" value="" />
+                <button type="submit" class="btn btn-success btn-lg" id="enviar" onclick="GetCoords()">Enviar</button>
+                <input type="hidden" name="coords" value="" id="coords" />
 
             </div>
         </div>
@@ -139,10 +129,9 @@
     <script src="~/Scripts/OCR/app.js">
     </script>
     <script>
-        //$("#enviar").click(function () {
-        //    var a = $("#coords");
-        //    a.tex("modal-code-result").text();
-        //})
+        function GetCoords() {
+            document.getElementById('coords').value = document.getElementById('modal-code-result').value;
+        }
     </script>
     <script>
 			(function ($) { $(document).trigger('init'); })(jQuery);
