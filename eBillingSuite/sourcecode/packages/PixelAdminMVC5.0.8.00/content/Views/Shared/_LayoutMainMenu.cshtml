@@ -1,0 +1,83 @@
+﻿@{
+	var pc = ViewBag.PixelAdminPageContext as IPixelAdminPageContext;
+}
+@*
+<!-- 4. $MAIN_MENU =================================================================================
+
+		Main menu
+		
+		Notes:
+		* to make the menu item active, add a class 'active' to the <li>
+		  example: <li class="active">...</li>
+		* multilevel submenu example:
+			<li class="mm-dropdown">
+			  <a href="#"><span class="mm-text">Submenu item text 1</span></a>
+			  <ul>
+				<li>...</li>
+				<li class="mm-dropdown">
+				  <a href="#"><span class="mm-text">Submenu item text 2</span></a>
+				  <ul>
+					<li>...</li>
+					...
+				  </ul>
+				</li>
+				...
+			  </ul>
+			</li>
+-->
+*@
+@helper RenderMenuEntry(BasePixelAdminMenuEntry entry){
+	if(entry is PixelAdminMenuEntry){
+		var e = entry as PixelAdminMenuEntry;
+		var hasSubMenu = e.SubMenu != null && e.SubMenu.Count > 0;
+		var active = e.Active;
+		var descendentActive = e.DescendentsActive;
+				
+		<li class="@(active || descendentActive?"active":null) @(hasSubMenu?"mm-dropdown":null) @(descendentActive?"open":null)">
+			<a href="@(string.IsNullOrWhiteSpace(e.Url)?"#":e.Url)" target="@(e.OpenInNewWindow?"_blank":null)">
+				@if(!string.IsNullOrWhiteSpace(e.Icon)){
+					<i class="menu-icon fa @e.Icon"></i>
+				}
+				<span class="mm-text">@e.Label</span>
+			</a>
+			@if(e.SubMenu != null && e.SubMenu.Count > 0)
+			{
+			<ul>
+				@foreach(var subEntry in e.SubMenu){
+					@RenderMenuEntry(subEntry)
+				}
+			</ul>
+			}
+		</li>		
+	}
+}
+<div id="main-menu" role="navigation">
+	<div id="main-menu-inner">
+		<div class="menu-content top" id="menu-content-demo">
+			@*
+			<!-- Menu custom content demo
+					CSS:        styles/pixel-admin-less/demo.less or styles/pixel-admin-scss/_demo.scss
+					Javascript: html/assets/demo/demo.js
+				-->
+			*@
+			<div>
+				<div class="text-bg"><span class="text-slim">Welcome,</span> <span class="text-semibold">@pc.UserFirstName</span></div>
+
+				<img src="@pc.UserAvatar" alt="" class="">
+				<div class="btn-group">
+					<a href="#" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-envelope"></i></a>
+					<a href="#" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-user"></i></a>
+					<a href="#" class="btn btn-xs btn-primary btn-outline dark"><i class="fa fa-cog"></i></a>
+					<a href="#" class="btn btn-xs btn-danger btn-outline dark"><i class="fa fa-power-off"></i></a>
+				</div>
+				<a href="#" class="close">&times;</a>
+			</div>
+		</div>
+		<ul class="navigation">
+			@foreach (var entry in pc.Menu) { 
+				@RenderMenuEntry(entry)
+			}
+		</ul> <!-- / .navigation -->
+		
+	</div> <!-- / #main-menu-inner -->
+</div> <!-- / #main-menu -->

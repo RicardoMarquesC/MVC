@@ -1,0 +1,20 @@
+﻿using Ninject;
+
+namespace eBillingSuite.Globalization
+{
+	public class DataAnnotationsModelMetadataProvider : Shortcut.Globalization.LanguageDataAnnotationsModelMetadataProvider
+	{
+		private IKernel _kernel;
+
+		public DataAnnotationsModelMetadataProvider(IKernel kernel)
+		{
+			_kernel = kernel;
+		}
+
+		protected override string GetDisplayName(string key)
+		{
+			var value = _kernel.Get<IeBillingSuiteRequestContext>().GetDictionaryValue(key);
+			return string.IsNullOrWhiteSpace(value) ? key : value;
+		}
+	}
+}

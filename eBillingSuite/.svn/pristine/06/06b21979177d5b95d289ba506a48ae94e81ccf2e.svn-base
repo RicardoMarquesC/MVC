@@ -1,0 +1,466 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3A7D6E4D-B211-4B87-BCC3-55548DE9EC0D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>eBillingSuite</RootNamespace>
+    <AssemblyName>eBillingSuite.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CMPWs.Interop">
+      <HintPath>..\ExternalDLLS\CMPWs.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation, Version=6.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.6.0.2.0\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.7.2, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.1.7.2\lib\net45\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=59d6d24383174ac4, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocation.1.0.0\lib\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Shortcut.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shortcut.Core.1.0.35\lib\net45\Shortcut.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleCrypto, Version=26.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleCrypto.0.3.30.26\lib\SimpleCrypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Globalization" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CoreModule.cs" />
+    <Compile Include="Enumerations\AppEnums.cs" />
+    <Compile Include="Enumerations\Constants.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Globalization\DataAnnotationsModelMetadataProvider.cs" />
+    <Compile Include="Globalization\DictionaryEntryKeys.cs" />
+    <Compile Include="Globalization\Generators\BaseDictionaryEntriesGenerator.cs" />
+    <Compile Include="Globalization\Generators\DictionaryEntriesForPT.cs" />
+    <Compile Include="Globalization\Generators\DictionaryEntriesForUK.cs" />
+    <Compile Include="Globalization\Generators\DoNotGenerateDictionaryEntryAttribute.cs" />
+    <Compile Include="Globalization\IDictionaryDataSource.cs" />
+    <Compile Include="Globalization\InMemoryDictionaryDataSource.cs" />
+    <Compile Include="Globalization\ITimeAgoFormatter.cs" />
+    <Compile Include="Globalization\TimeAgoFormatter.cs" />
+    <Compile Include="HelperTools\DadosTemplateXmlDBTable.cs" />
+    <Compile Include="HelperTools\Encryption.cs" />
+    <Compile Include="HelperTools\Interfaces\IEncryption.cs" />
+    <Compile Include="HelperTools\Interfaces\IXmlHelper.cs" />
+    <Compile Include="HelperTools\JsonReturnObject.cs" />
+    <Compile Include="HelperTools\XmlHelper.cs" />
+    <Compile Include="IeBillingSuiteRequestContext.cs" />
+    <Compile Include="IECCListRepositories.cs" />
+    <Compile Include="Integrations\ExternalWSClasses\CMPEntidades.cs" />
+    <Compile Include="Integrations\Interfaces\IAccountingData.cs" />
+    <Compile Include="Integrations\Interfaces\ISupplierSyncronization.cs" />
+    <Compile Include="Integrations\AccountingData.cs" />
+    <Compile Include="Integrations\SupplierSyncronization.cs" />
+    <Compile Include="Model\CIC_DB\CIC_DB.cs" />
+    <Compile Include="Model\CIC_DB\InboundIVA.cs" />
+    <Compile Include="Model\CIC_DB\InboundLineItems.cs" />
+    <Compile Include="Model\CIC_DB\InboundPacket.cs" />
+    <Compile Include="Model\CIC_DB\IntegrationFilters.cs" />
+    <Compile Include="Model\CIC_DB\OutboundIVA.cs" />
+    <Compile Include="Model\CIC_DB\OutboundLineItems.cs" />
+    <Compile Include="Model\CIC_DB\OutboundPacket.cs" />
+    <Compile Include="Model\CIC_DB\OutboundProcesses.cs" />
+    <Compile Include="Model\CIC_DB\TipoNomenclaturaSender.cs" />
+    <Compile Include="Model\CIC_DB\TiposNomenclaturaPDF.cs" />
+    <Compile Include="Model\CIC_DB\Whitelist.cs" />
+    <Compile Include="Model\Desmaterializacao\AlertasSite.cs" />
+    <Compile Include="Model\Desmaterializacao\AplicationLayouts.cs" />
+    <Compile Include="Model\Desmaterializacao\Cabecalho.cs" />
+    <Compile Include="Model\Desmaterializacao\CamposXML.cs" />
+    <Compile Include="Model\Desmaterializacao\InstancesMail.cs" />
+    <Compile Include="Model\Desmaterializacao\ConfigResolutions.cs" />
+    <Compile Include="Model\Desmaterializacao\DadosTemplate.cs" />
+    <Compile Include="Model\Desmaterializacao\Desmaterializacao.cs" />
+    <Compile Include="Model\Desmaterializacao\DicionarioPalavras.cs" />
+    <Compile Include="Model\Desmaterializacao\DocumentoXML.cs" />
+    <Compile Include="Model\Desmaterializacao\ExpirarFactura.cs" />
+    <Compile Include="Model\Desmaterializacao\FactProcessStatus.cs" />
+    <Compile Include="Model\Desmaterializacao\FacturasNIdent.cs" />
+    <Compile Include="Model\Desmaterializacao\Fornecedores.cs" />
+    <Compile Include="Model\Desmaterializacao\Instances.cs" />
+    <Compile Include="Model\Desmaterializacao\Linhas.cs" />
+    <Compile Include="Model\Desmaterializacao\MasterizacaoAnexos.cs" />
+    <Compile Include="Model\Desmaterializacao\MasterizacaoCabecalho.cs" />
+    <Compile Include="Model\Desmaterializacao\MasterizacaoIva.cs" />
+    <Compile Include="Model\Desmaterializacao\MasterizacaoLineItems.cs" />
+    <Compile Include="Model\Desmaterializacao\Moedas.cs" />
+    <Compile Include="Model\Desmaterializacao\NomeTemplate.cs" />
+    <Compile Include="Model\Desmaterializacao\PermissionType.cs" />
+    <Compile Include="Model\Desmaterializacao\ProcDocs.cs" />
+    <Compile Include="Model\Desmaterializacao\ResumoIva.cs" />
+    <Compile Include="Model\Desmaterializacao\sysdiagrams.cs" />
+    <Compile Include="Model\Desmaterializacao\TaxasIva.cs" />
+    <Compile Include="Model\Desmaterializacao\TextosSite.cs" />
+    <Compile Include="Model\Desmaterializacao\TipoFacturaDadosXML.cs" />
+    <Compile Include="Model\Desmaterializacao\TipoFacturas.cs" />
+    <Compile Include="Model\Desmaterializacao\Users.cs" />
+    <Compile Include="Model\Desmaterializacao\UsersPermissions.cs" />
+    <Compile Include="Model\EBC_ConfigFab.cs" />
+    <Compile Include="Model\EBC_DB\ComATPackets.cs" />
+    <Compile Include="Model\EBC_DB\ComATPackets_Guias.cs" />
+    <Compile Include="Model\EBC_DB\ConfigEnvioAT.cs" />
+    <Compile Include="Model\EBC_DB\DictionaryEntries.cs" />
+    <Compile Include="Model\EBC_DB\DocumentosErros.cs" />
+    <Compile Include="Model\EBC_DB\EBC_CertSignatureDetails.cs" />
+    <Compile Include="Model\EBC_DB\EBC_Config.cs" />
+    <Compile Include="Model\EBC_DB\EBC_ConfigTXT.cs" />
+    <Compile Include="Model\EBC_DB\EBC_CustomerMetadata.cs" />
+    <Compile Include="Model\EBC_DB\EBC_CustomerPackages.cs" />
+    <Compile Include="Model\EBC_DB\EBC_Customers.cs" />
+    <Compile Include="Model\EBC_DB\EBC_DB.cs" />
+    <Compile Include="Model\EBC_DB\EBC_EmailContent.cs" />
+    <Compile Include="Model\EBC_DB\EBC_InstanceDeniedSenders.cs" />
+    <Compile Include="Model\EBC_DB\EBC_InstanceMetadata.cs" />
+    <Compile Include="Model\EBC_DB\EBC_InstancePackages.cs" />
+    <Compile Include="Model\EBC_DB\EBC_Instances.cs" />
+    <Compile Include="Model\EBC_DB\EBC_MercadoCert.cs" />
+    <Compile Include="Model\EBC_DB\EBC_Mercados.cs" />
+    <Compile Include="Model\EBC_DB\EBC_Metadata.cs" />
+    <Compile Include="Model\EBC_DB\EBC_PackageEvents.cs" />
+    <Compile Include="Model\EBC_DB\EBC_Packages.cs" />
+    <Compile Include="Model\EBC_DB\EBC_SpecificDeliveryOptions.cs" />
+    <Compile Include="Model\EBC_DB\EBC_UnknownList.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XML.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XMLClient.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XMLHeadInbound.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XMLInbound.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XMLLines.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XMLLinesInbound.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XMLResumoIVA.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XMLResumoIVAInbound.cs" />
+    <Compile Include="Model\EBC_DB\EBC_XmlToTxtTransform.cs" />
+    <Compile Include="Model\EBC_DB\InboundPacketInfoObjectProperties.cs" />
+    <Compile Include="Model\EBC_DB\Languages.cs" />
+    <Compile Include="Model\EBC_DB\LoginAT.cs" />
+    <Compile Include="Model\EBC_DB\ManutencaoSistema.cs" />
+    <Compile Include="Model\EBC_DB\MapeamentoXML.cs" />
+    <Compile Include="Model\EBC_DB\Tickets.cs" />
+    <Compile Include="Model\EBC_DB\TipoRegexs.cs" />
+    <Compile Include="Model\EBC_DB\TiposRegioesFatura.cs" />
+    <Compile Include="Model\EBC_DB\xmlTemplate.cs" />
+    <Compile Include="Model\eBillingConfigurations\DigitalConfigurations.cs" />
+    <Compile Include="Model\eBillingConfigurations\EBC_Configurations.cs" />
+    <Compile Include="Model\eBillingConfigurations\eBC_Login.cs" />
+    <Compile Include="Model\eBillingConfigurations\eBillingConfigurations.cs" />
+    <Compile Include="Model\eBillingConfigurations\eSuitePermissions.cs" />
+    <Compile Include="Model\eBillingConfigurations\eSuiteUserPermissions.cs" />
+    <Compile Include="Model\eBillingConfigurations\eSuite_Produtos.cs" />
+    <Compile Include="Model\eBillingConfigurations\PIInfo.cs" />
+    <Compile Include="Model\eBillingConfigurations\Produtos.cs" />
+    <Compile Include="Model\eBillingConfigurations\SaphetyCredentials.cs" />
+    <Compile Include="Model\eBillingConfigurations\TicketSystemTypes.cs" />
+    <Compile Include="Model\eBillingConfigurations\SSME_Configurations.cs" />
+    <Compile Include="Model\EDI_DB\Clientes.cs" />
+    <Compile Include="Model\EDI_DB\EDI_DB.cs" />
+    <Compile Include="Model\EDI_DB\InboundAllowanceCharge.cs" />
+    <Compile Include="Model\EDI_DB\InboundLineItens.cs" />
+    <Compile Include="Model\EDI_DB\InboundPacket.cs" />
+    <Compile Include="Model\EDI_DB\InboundResumoIVA.cs" />
+    <Compile Include="Model\EDI_DB\Instancias.cs" />
+    <Compile Include="Model\EDI_DB\OutboundLineItens.cs" />
+    <Compile Include="Model\EDI_DB\OutboundPacket.cs" />
+    <Compile Include="Model\EDI_DB\OutboundProcesses.cs" />
+    <Compile Include="Model\EDI_DB\OutboundResumoIVA.cs" />
+    <Compile Include="Model\EDI_DB\Remetentes.cs" />
+    <Compile Include="Model\HelpingClasses\Dashboard.cs" />
+    <Compile Include="Model\HelpingClasses\IndicadoresFacturacaoPerf.cs" />
+    <Compile Include="Model\HelpingClasses\IndicadoresFacturacaoQtd.cs" />
+    <Compile Include="Model\HelpingClasses\IndicadoresFacturacaoQuant.cs" />
+    <Compile Include="Model\HelpingClasses\IndicadoresPerf.cs" />
+    <Compile Include="Model\HelpingClasses\IndicadoresQtd.cs" />
+    <Compile Include="Model\HelpingClasses\IndicadoresQuantias.cs" />
+    <Compile Include="Model\HelpingClasses\IntegratedFiles.cs" />
+    <Compile Include="Model\HelpingClasses\JQueryDataTableParamModel.cs" />
+    <Compile Include="Model\HelpingClasses\OutboundInbound.cs" />
+    <Compile Include="Model\HelpingClasses\RegistoEvento.cs" />
+    <Compile Include="Model\IeBillingSuiteDesmaterializacaoContext.cs" />
+    <Compile Include="Model\IeBillingSuiteConfigurationsContext.cs" />
+    <Compile Include="Model\IeBillingSuiteEDIDBContext.cs" />
+    <Compile Include="Model\IeBillingSuiteEBCDBContext.cs" />
+    <Compile Include="Model\IeBillingSuiteCICDBContext.cs" />
+    <Compile Include="Model\Paises.cs" />
+    <Compile Include="Model\xmlTemplateBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\DocErrorsRepository.cs" />
+    <Compile Include="Repositories\EBC_PackageRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorCertificatesDetailsRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorInboundPacketInfoObjectPropertiesRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorConfigInboundTXTRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorEmailContentRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorConfigTXTRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorInvoiceRegionTypesRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorRegexTypesRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorSpecificDeliveryOptionsRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorMarketsRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorMarketCertificatesRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorCertificatesRepository.cs" />
+    <Compile Include="Repositories\eConnectorConfigs\EConnectorConfigsRepository.cs" />
+    <Compile Include="Repositories\eConnectorCustomers\EConnectorXmlClientRepository.cs" />
+    <Compile Include="Repositories\eConnectorCustomers\EConnectorXmlLineItemsRepository.cs" />
+    <Compile Include="Repositories\eConnectorCustomers\EConnectorXmlResumoIvaRepository.cs" />
+    <Compile Include="Repositories\eConnectorCustomers\EConnectorXmlHeaderRepository.cs" />
+    <Compile Include="Repositories\eConnectorCustomers\EConnectorXmlTemplateRepository.cs" />
+    <Compile Include="Repositories\eConnectorCustomers\EConnectorCustomersRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorTipoNomenclaturaSenderRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorTipoNomenclaturaPDFRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorXmlMappingRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorIntegrationFiltersRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorXmlVatInboundRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorXmlLinesInboundRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorXmlHeadInboundRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorXmlInboundRepository.cs" />
+    <Compile Include="Repositories\eConnectorSenders\EConnectorSendersRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalInstancesMailRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalIntancesRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalMasterizationProcRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalMasterizationVatRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalMasterizationLinesRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalMasterizationHeaderRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalXmlFieldsRepository.cs" />
+    <Compile Include="Repositories\eEdi\EEDISentDocsDetailsRepository.cs" />
+    <Compile Include="Repositories\eMCAT\ComATPacketsGuiasRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalDocTypeRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalDocHistoryRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalSupplierXmlDataRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalDocTypeXmlDataRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalDocExpirationRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalTemplateNameRepository.cs" />
+    <Compile Include="Repositories\eDigital\EDigitalSuppliersRepository.cs" />
+    <Compile Include="Repositories\eEdi\EEDISentDocsRepository.cs" />
+    <Compile Include="Repositories\eEdi\EEDIReceivedDocsRepository.cs" />
+    <Compile Include="Repositories\eEdi\EEDISendersRepository.cs" />
+    <Compile Include="Repositories\eEdi\EEDIInstancesRepository.cs" />
+    <Compile Include="Repositories\eEdi\EEDICostumersRepository.cs" />
+    <Compile Include="Repositories\CustomersRepository.cs" />
+    <Compile Include="Repositories\ESuitePermissionsRepository.cs" />
+    <Compile Include="Repositories\InstancesDeniedSendersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorCertificatesDetailsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorCustomers\IEConnectorXmlLineItemsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorCustomers\IEConnectorXmlResumoIvaRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorCustomers\IEConnectorXmlHeaderRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorCustomers\IEConnectorXmlClientRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorCustomers\IEConnectorXmlTemplateRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorCustomers\IEConnectorCustomersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorTipoNomenclaturaSenderRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorTipoNomenclaturaPDFRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorXmlMappingRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorIntegrationFiltersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorXmlVatInboundRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorXmlLinesInboundRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorXmlHeadInboundRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorXmlInboundRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorSenders\IEConnectorSendersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalIntancesMailRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalIntancesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalMasterizationProcRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IDocsErrorsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IEBC_PackageRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IESuitePermissions.cs" />
+    <Compile Include="Repositories\Interfaces\IESuiteUserPermissions.cs" />
+    <Compile Include="Repositories\Interfaces\IInstancesDeniedSendersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\ILoginRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IOutboundInboundRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IUnknownListRepository.cs" />
+    <Compile Include="Repositories\Interfaces\SuiteConfigurations\IDigitalConfigurationsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\SuiteConfigurations\IPIInfoConfigurationsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorInboundPacketInfoObjectPropertiesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorConfigInboundTXTRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorEmailContentRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorConfigTXTRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorInvoiceRegionTypesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorRegexTypesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorSpecificDeliveryOptionsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalMasterizationVatRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalMasterizationLinesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalMasterizationHeaderRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalXmlFieldsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\ICustomersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\SuiteConfigurations\IManutencaoRepository.cs" />
+    <Compile Include="Repositories\Interfaces\SuiteConfigurations\ISaphetyCredentialsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\SuiteConfigurations\ISuiteConfigurationsRepository.cs" />
+    <Compile Include="Repositories\ESuiteUserPermissionsRepository.cs" />
+    <Compile Include="Repositories\LoginRepository.cs" />
+    <Compile Include="Repositories\OutboundInboundRepository.cs" />
+    <Compile Include="Repositories\SuiteConfigurations\DigitalConfigurationsRepository.cs" />
+    <Compile Include="Repositories\SuiteConfigurations\TicketSystemRepository.cs" />
+    <Compile Include="Repositories\SuiteConfigurations\ManutencaoRepository.cs" />
+    <Compile Include="Repositories\SuiteConfigurations\SaphetyCredentialsRepository.cs" />
+    <Compile Include="Repositories\SuiteConfigurations\SuiteConfigurationsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorMarketsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorMarketCertificatesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorCertificatesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eConnectorConfigs\IEConnectorConfigsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalDocTypeRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalDocHistoryRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalSupplierXmlDataRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalDocTypeXmlDataRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalDocExpirationRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalTemplateNameRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eDigital\IEDigitalSuppliersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eEdi\IEEDISentDocsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eEdi\IEEDIReceivedDocsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eEdi\IEEDISendersRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eEdi\IEEDIInstancesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eEdi\IEEDICostumersRepository.cs" />
+    <Compile Include="Repositories\eMCAT\MCATSendingDefinitionsRepository.cs" />
+    <Compile Include="Repositories\eMCAT\CredentialsRepository.cs" />
+    <Compile Include="Repositories\InstancesRepository.cs" />
+    <Compile Include="Repositories\DictionaryEntryRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eMCAT\IComATPacketsGuiasRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eMCAT\IMCATSendingDefinitionsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eEdi\IEEDISentDocsDetailsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IInstancesRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eMCAT\ICredentialsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IDictionaryEntryRepository.cs" />
+    <Compile Include="Repositories\Interfaces\eMCAT\IComATPacketsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IProductsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IPermissionsRepository.cs" />
+    <Compile Include="Repositories\eMCAT\ComATPacketsRepository.cs" />
+    <Compile Include="Repositories\ProductsRepository.cs" />
+    <Compile Include="Repositories\PermissionsRepository.cs" />
+    <Compile Include="Repositories\SuiteConfigurations\PIInfoConfigurationsRepository.cs" />
+    <Compile Include="Repositories\Support\TicketsRepository.cs" />
+    <Compile Include="Repositories\UnknownListRepository.cs" />
+    <Compile Include="Rules\AccessRules.cs" />
+    <Compile Include="Security\AspNetSecurityModule.cs" />
+    <Compile Include="Security\eSuiteAuthorizeAttribute.cs" />
+    <Compile Include="Security\GenericBillingSuite.cs" />
+    <Compile Include="Security\Permissions.cs" />
+    <Compile Include="Security\IEBillingSuiteIdentity.cs" />
+    <Compile Include="Security\PersonAuthorizeAttribute.cs" />
+    <Compile Include="Support\EbcConfiguration.cs" />
+    <Compile Include="Support\JQueryDataTableParamModel.cs" />
+    <Compile Include="Support\Parse.cs" />
+    <Compile Include="Support\PhysicalPackage.cs" />
+    <Compile Include="Support\Queries.cs" />
+    <Compile Include="Support\StringUtilities.cs" />
+    <Compile Include="Support\Tools.cs" />
+    <Compile Include="ViewModels\DashboardVM.cs" />
+    <Compile Include="ViewModels\OutboundPacketDetailVM.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="eBillingSuite\ViewModels\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

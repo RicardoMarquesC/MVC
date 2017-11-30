@@ -1,0 +1,1063 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Work\Publicações\ESuite2017r2</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="assets/PI/demo-list.js">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/demo.css">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/demo.js">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/dom.jsPlumb-1.6.4-min.js">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/Images/homePagePI_v2_newLogos.jpg">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/Images/IMG_17102014_142503.png">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/Images/logotipo.png">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/Images/schema_connector.gif">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/Images/schema_digital.gif">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/Images/schema_edi.gif">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/jsplumb.css">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/morris/morris.css">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/morris/morris.js">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/morris/morris.min.js">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PI/raphael-min.js">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/avatars/1.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/avatars/2.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/avatars/3.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/avatars/4.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/avatars/5.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/avatars/6.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/avatars/6over.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/demo.js">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/less-1.7.0.js">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/less/bootstrap-mixins.less">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/less/bootstrap-variables.less">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/less/colors.less">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/less/mixins.less">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/less/variables.less">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/logo-big.png">
+      <publishTime>06/20/2017 14:45:07</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/pricing-bg.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-1.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-2.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-3.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-4.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-5.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-6.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-7.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-8.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/signin-bg-9.jpg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/suporte.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/adminflare.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/asphalt.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/clean.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/default.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/dust.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/fresh.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/frost.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/purple-hills.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/silver.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/demo/themes/white.png">
+      <publishTime>06/20/2017 14:45:08</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/fonts/font-awesome/fontawesome-webfont.eot">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/fonts/font-awesome/fontawesome-webfont.svg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/fonts/font-awesome/fontawesome-webfont.ttf">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/fonts/font-awesome/fontawesome-webfont.woff">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/fonts/font-awesome/FontAwesome.otf">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/fonts/font.woff2">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/fonts/font2.woff2">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/pixel-admin/avatar.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/pixel-admin/blank.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/pixel-admin/blur.svg">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/pixel-admin/main-menu-bg.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/pixel-admin/main-navbar-bg.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/pixel-admin/main-navbar-logo.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/plugins/bootstrap-editable/loading.gif">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/plugins/jquery.minicolors.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/themes/adminflare/body-bg.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/themes/adminflare/ie-navbar-bg.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/themes/adminflare/menu-bg.png">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/images/themes/clean/body-bg.gif">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/angular.min.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/bootstrap-editable-demo.js">
+      <publishTime>06/20/2017 14:45:10</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/bootstrap-editable-demo.min.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/bootstrap.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/bootstrap.min.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/dataTables.buttons.min.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/demo-mock.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/demo-mock.min.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/ie.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/ie.min.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/jquery-ui-extras.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/jquery-ui-extras.min.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/jquery.min.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/jquery.mockjax.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/jquery.mockjax.min.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/pdfmake.min.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/pixel-admin.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/pixel-admin.min.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/javascripts/vfs_fonts.js">
+      <publishTime>06/20/2017 14:45:11</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/bootstrap.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/bootstrap.min.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/buttons.dataTables.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/pages.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/pages.min.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/pixel-admin.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/pixel-admin.min.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/rtl.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/rtl.min.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/themes.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/themes.min.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/widgets.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/PixelAdmin/stylesheets/widgets.min.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/AjaxForms.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/Images/logo-blue.png">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/Images/logo-white.png">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/Images/no-avatar.jpg">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/jqDataTableExtension.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/PeoplePortal.css">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/PeoplePortal.css.map">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/PeoplePortal.less">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/SH/portuguese.json">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="assets/Vendors/jquery.fileupload.css">
+      <publishTime>06/20/2017 14:45:06</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>06/20/2017 14:45:19</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.pdb">
+      <publishTime>06/20/2017 14:45:19</publishTime>
+    </File>
+    <File Include="bin/App_global.asax.compiled">
+      <publishTime>06/26/2017 10:54:26</publishTime>
+    </File>
+    <File Include="bin/App_global.asax.dll">
+      <publishTime>06/26/2017 10:54:26</publishTime>
+    </File>
+    <File Include="bin/assets/PixelAdmin/fonts/font.woff2">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="bin/assets/PixelAdmin/fonts/font2.woff2">
+      <publishTime>06/20/2017 14:45:09</publishTime>
+    </File>
+    <File Include="bin/assets/PixelAdmin/javascripts/jquery.min.js">
+      <publishTime>06/20/2017 14:45:12</publishTime>
+    </File>
+    <File Include="bin/BouncyCastle.Crypto.dll">
+      <publishTime>06/20/2017 14:46:02</publishTime>
+    </File>
+    <File Include="bin/CMPWs.Interop.dll">
+      <publishTime>06/20/2017 14:44:53</publishTime>
+    </File>
+    <File Include="bin/CMPWs.Interop.XmlSerializers.dll">
+      <publishTime>06/20/2017 14:44:53</publishTime>
+    </File>
+    <File Include="bin/cs/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/CsvHelper.dll">
+      <publishTime>06/20/2017 14:45:52</publishTime>
+    </File>
+    <File Include="bin/da/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/de/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/eBillingSuite.Core.dll">
+      <publishTime>06/26/2017 10:53:58</publishTime>
+    </File>
+    <File Include="bin/eBillingSuite.Core.dll.config">
+      <publishTime>06/20/2017 14:44:54</publishTime>
+    </File>
+    <File Include="bin/eBillingSuite.Core.pdb">
+      <publishTime>06/26/2017 10:53:58</publishTime>
+    </File>
+    <File Include="bin/eBillingSuite.Host.dll">
+      <publishTime>06/26/2017 10:54:07</publishTime>
+    </File>
+    <File Include="bin/eBillingSuite.Host.pdb">
+      <publishTime>06/26/2017 10:54:07</publishTime>
+    </File>
+    <File Include="bin/eBillingSuite.Host.XmlSerializers.dll">
+      <publishTime>06/26/2017 10:54:08</publishTime>
+    </File>
+    <File Include="bin/Elmah.dll">
+      <publishTime>06/20/2017 14:46:02</publishTime>
+    </File>
+    <File Include="bin/Elmah.Mvc.dll">
+      <publishTime>06/20/2017 14:46:09</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>06/20/2017 14:45:38</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.SqlServer.dll">
+      <publishTime>06/20/2017 14:45:38</publishTime>
+    </File>
+    <File Include="bin/es/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/fa/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/fi/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/FluentValidation.dll">
+      <publishTime>06/20/2017 14:45:42</publishTime>
+    </File>
+    <File Include="bin/FluentValidation.Mvc.dll">
+      <publishTime>06/20/2017 14:45:19</publishTime>
+    </File>
+    <File Include="bin/fr/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/it/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:41</publishTime>
+    </File>
+    <File Include="bin/itextsharp.dll">
+      <publishTime>06/20/2017 14:45:15</publishTime>
+    </File>
+    <File Include="bin/ko/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/LinqKit.dll">
+      <publishTime>06/20/2017 14:45:51</publishTime>
+    </File>
+    <File Include="bin/MailKit.dll">
+      <publishTime>06/20/2017 14:45:49</publishTime>
+    </File>
+    <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
+      <publishTime>06/20/2017 14:45:28</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Practices.ServiceLocation.dll">
+      <publishTime>09/30/2016 11:48:51</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>06/20/2017 14:45:33</publishTime>
+    </File>
+    <File Include="bin/MimeKit.dll">
+      <publishTime>06/20/2017 14:45:55</publishTime>
+    </File>
+    <File Include="bin/mk/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/MvcFlash.Core.dll">
+      <publishTime>06/20/2017 14:45:59</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>06/20/2017 14:45:59</publishTime>
+    </File>
+    <File Include="bin/Ninject.dll">
+      <publishTime>06/20/2017 14:45:33</publishTime>
+    </File>
+    <File Include="bin/Ninject.Web.Common.dll">
+      <publishTime>06/20/2017 14:45:36</publishTime>
+    </File>
+    <File Include="bin/Ninject.Web.Mvc.dll">
+      <publishTime>06/20/2017 14:46:02</publishTime>
+    </File>
+    <File Include="bin/nl/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/pl/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/pt/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.exe">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.exe.config">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/csc.rsp">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.exe">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.exe.config">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/csi.rsp">
+      <publishTime>06/20/2017 14:45:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Build.Tasks.CodeAnalysis.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.Scripting.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.Scripting.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CodeAnalysis.VisualBasic.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.CSharp.Core.targets">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.DiaSymReader.Native.amd64.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.DiaSymReader.Native.x86.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.VisualBasic.Core.targets">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Win32.Primitives.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.AppContext.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Collections.Immutable.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Console.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.FileVersionInfo.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.Process.dll">
+      <publishTime>06/20/2017 14:45:24</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.StackTrace.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.Compression.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.DriveInfo.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.FileSystem.Primitives.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.Pipes.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Reflection.Metadata.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.AccessControl.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Claims.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Algorithms.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Encoding.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.Primitives.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Cryptography.X509Certificates.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Security.Principal.Windows.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Text.Encoding.CodePages.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Threading.Thread.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.ValueTuple.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.ReaderWriter.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XmlDocument.dll">
+      <publishTime>06/20/2017 14:45:25</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XPath.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Xml.XPath.XDocument.dll">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.exe">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.exe.config">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/vbc.rsp">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/roslyn/VBCSCompiler.exe.config">
+      <publishTime>06/20/2017 14:45:26</publishTime>
+    </File>
+    <File Include="bin/ru/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/SgmlReaderDll.dll">
+      <publishTime>06/20/2017 14:46:15</publishTime>
+    </File>
+    <File Include="bin/Shortcut.Core.dll">
+      <publishTime>06/20/2017 14:45:28</publishTime>
+    </File>
+    <File Include="bin/Shortcut.PixelAdmin.Core.dll">
+      <publishTime>06/20/2017 14:46:03</publishTime>
+    </File>
+    <File Include="bin/SimpleCrypto.dll">
+      <publishTime>06/20/2017 14:45:40</publishTime>
+    </File>
+    <File Include="bin/sv/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>06/20/2017 14:45:35</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>06/20/2017 14:45:59</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>06/20/2017 14:46:01</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>06/20/2017 14:45:36</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>06/20/2017 14:45:35</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>06/20/2017 14:45:35</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>06/20/2017 14:45:35</publishTime>
+    </File>
+    <File Include="bin/tr/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="bin/Views/Web.config">
+      <publishTime>09/09/2015 15:57:30</publishTime>
+    </File>
+    <File Include="bin/Web.config">
+      <publishTime>06/26/2017 10:54:13</publishTime>
+    </File>
+    <File Include="bin/Web.Debug.config">
+      <publishTime>06/20/2017 14:45:13</publishTime>
+    </File>
+    <File Include="bin/Web.Release.config">
+      <publishTime>06/20/2017 14:45:06</publishTime>
+    </File>
+    <File Include="bin/WebActivatorEx.dll">
+      <publishTime>06/20/2017 14:45:58</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>06/20/2017 14:45:40</publishTime>
+    </File>
+    <File Include="bin/zh-CN/FluentValidation.resources.dll">
+      <publishTime>04/06/2017 16:29:40</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>06/20/2017 14:45:00</publishTime>
+    </File>
+    <File Include="PrecompiledApp.config">
+      <publishTime>06/26/2017 10:54:15</publishTime>
+    </File>
+    <File Include="Views/Demo/Blank.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/Demo/BreadCrumbs.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/Demo/SignIn.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnector/InactiveModule.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/AlertsConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/DigitalCertificate.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/EditInstance.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/EditTXTConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/EditTXTInboundConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/EmailConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/Index.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/InstancesConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/InstancesConfigs.old.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/PacketConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/TXTConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorConfigs/TXTInboundConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eConnectorCustomers/AddXmlConfig.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/eConnectorCustomers/EditCustomer.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/eConnectorCustomers/Index.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/eConnectorCustomers/XmlConfigs.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/CreateSender.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/CreateXmlField.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/EditSender.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/EditXmlField.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/Index.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/UnknownList.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/XmlConfiguration.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/XmlMapping.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eConnectorSenders/XmlUpload.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eDigital/CreateDocumentType.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/CreateField.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/CreateFieldSupplier.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/CreateInstance.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/CreateInstanceMail.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/CreateSupplier.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/DigitalAccountingData.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/DigitalInstances.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/DigitalProc.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/DigitalStats.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/DocumentsExpiration.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/DocumentsHistoric.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/EditField.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/EditFieldSupplier.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/EditMail.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/EditSupplier.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/InactiveModule.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/Index.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/instancesMails.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/IntegrationConfigurations.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/Synchronization.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/Template.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/XmlManagment.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/XTEMPORARAY.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/_templateCab.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/_templateCabSupplier.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/_templateLines.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/_templateLinesSupplier.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/_templateVat.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eDigital/_templateVatSupplier.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/eEDI/Costumers.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/EDIInboundDetail.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/EDIOutboundDetail.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/EditCostumer.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/EditSender.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/InactiveModule.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/ReceivedDocs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/Senders.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eEDI/SentDocs.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eMCAT/Configurations.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eMCAT/Credentials.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eMCAT/Guias.cshtml">
+      <publishTime>01/07/2015 16:25:56</publishTime>
+    </File>
+    <File Include="Views/eMCAT/InactiveModule.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eMCAT/Index.cshtml">
+      <publishTime>01/07/2015 16:25:56</publishTime>
+    </File>
+    <File Include="Views/eUser/editUser.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eUser/Index.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eUser/PermissionsList.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/eWWF/Aprovacoes.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eWWF/Configurations.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eWWF/Details.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eWWF/Index.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/eWWF/InvoiceAproval.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Home/Index.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/Home/teste.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/Home/UnderConstruction.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/readEmail/CreateSender.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/readEmail/Details.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/readEmail/Index.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/Shared/DisplayTemplates/MessageBase.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Shared/DisplayTemplates/SimpleMessage.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Shared/_DiaryTimeline.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_eConnectorConfigsLayout.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_eConnectorCustomersLayout.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_eConnectorSendersLayout.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_eDigitalLayout.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_eEDILayout.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_eMCATLayout.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Shared/_eWWFLayout.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_FilePointers.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_LayoutMainMenu.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Shared/_LayoutMainNavigation.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_LayoutSignIn.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Shared/_LayoutStats.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/SignIn/Index.cshtml">
+      <publishTime>06/20/2017 14:45:03</publishTime>
+    </File>
+    <File Include="Views/Stats/Details.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Stats/DocTransporte.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Stats/DocumentosErros.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Stats/FaturasOutros.cshtml">
+      <publishTime>06/23/2017 12:09:54</publishTime>
+    </File>
+    <File Include="Views/Stats/Index.cshtml">
+      <publishTime>06/23/2017 12:06:30</publishTime>
+    </File>
+    <File Include="Views/Stats/IndicadoresPerformance.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Stats/IndicadoresQuantias.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Stats/IndicadoresQuantidades.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Stats/IntegratedFiles.cshtml">
+      <publishTime>06/20/2017 14:45:04</publishTime>
+    </File>
+    <File Include="Views/Support/Index.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Support/RequestAcessControl.cshtml">
+      <publishTime>06/20/2017 14:45:05</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/_ViewImports.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>06/20/2017 14:45:02</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>06/26/2017 10:54:13</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

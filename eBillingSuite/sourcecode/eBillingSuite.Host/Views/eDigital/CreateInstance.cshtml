@@ -1,0 +1,50 @@
+﻿@model eBillingSuite.Model.Desmaterializacao.Instances
+@{
+	var uniqueID = "edigitalinstance-modal";
+}
+
+<script>
+	$(document).ready(function () {
+		//Close alert
+		$('.page-alert .close').click(function (e) {
+			e.preventDefault();
+			$(this).closest('.page-alert').slideUp();
+		});
+	});
+</script>
+
+<div class="page-alerts">
+	<div class="alert alert-danger page-alert" id="alert-2" style="display: none;">
+		<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		<strong>@Texts.DigitalAlertFillVat</strong>
+	</div>
+</div>
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@Texts.DigitalInstanceAdd</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("CreateDigitalInstance", "eDigital")"
+		  method="post"
+		  class="form-horizontal"
+		  data-get-on-close="true">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@*@Html.HiddenFor(e => e.pkid)*@
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Name, 6, null, InputOptions.Default, Texts.Name)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.VatNumber, 6, null, InputOptions.Default, Texts.NIF)
+                    @Html.PixelAdminTextBoxWithColFor(e => e.InternalCode, 6, null, InputOptions.Default, Texts.InternalCode)
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button id="submitBtt" type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@Texts.Submit</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@Texts.Close</button>
+</div>

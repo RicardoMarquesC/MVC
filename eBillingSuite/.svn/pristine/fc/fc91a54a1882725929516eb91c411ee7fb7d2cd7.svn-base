@@ -1,0 +1,372 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Ninject.Modules;
+using Ninject.Web.Common;
+using eBillingSuite.Model;
+using eBillingSuite.Repositories;
+using eBillingSuite.Globalization;
+using eBillingSuite.Integrations;
+using eBillingSuite.HelperTools;
+using eBillingSuite.HelperTools.Interfaces;
+using eBillingSuite.Model.Desmaterializacao;
+using eBillingSuite.Model.eBillingConfigurations;
+using eBillingSuite.Model.EDI_DB;
+using eBillingSuite.Model.EBC_DB;
+using eBillingSuite.Model.CIC_DB;
+using eBillingSuite.Repositories.eDigital;
+using eBillingSuite.Repositories.Interfaces;
+using System.Web;
+using SimpleCrypto;
+using eBillingSuite.Repositories.Support;
+using eBillingSuite.Repositories.Interfaces.eDigital;
+
+namespace eBillingSuite
+{
+
+    public class CoreModule : NinjectModule
+    {
+        public override void Load()
+        {
+            Bind<ICryptoService>()
+                .To<PBKDF2>();
+
+            Bind<IHttpModule>()
+                .To<Security.AspNetSecurityModule>()
+                .InSingletonScope();
+
+            // GENERAL BINDING
+            Bind<IEncryption>()
+                .To<Encryption>()
+                .InSingletonScope();
+
+            Bind<IeBillingSuiteCICDBContext>()
+                .To<CIC_DB>()
+                .InRequestScope();
+
+            Bind<IeBillingSuiteEBCDBContext>()
+                .To<EBC_DB>()
+                .InRequestScope();
+
+            Bind<IeBillingSuiteConfigurationsContext>()
+                .To<eBillingConfigurations>()
+                .InRequestScope();
+
+            Bind<IESuitePermissionsRepository>()
+                .To<ESuitePermissionsRepository>()
+                .InRequestScope();
+
+            Bind<IESuiteUserPermissionsRepository>()
+                .To<ESuiteUserPermissionsRepository>()
+                .InRequestScope();
+
+            Bind<IeBillingSuiteDesmaterializacaoContext>()
+                .To<Desmaterializacao>()
+                .InRequestScope();
+
+            Bind<IeBillingSuiteEDIDBContext>()
+                .To<EDI_DB>()
+                .InRequestScope();
+
+            Bind<ITimeAgoFormatter>()
+                .To<TimeAgoFormatter>()
+                .InRequestScope();
+
+            Bind<IXmlHelper>()
+                .To<XmlHelper>()
+                .InSingletonScope();
+
+
+
+            // REPOSITORIES
+            Bind<IGraphsRepository>()
+                .To<GraphsRepository>()
+                .InRequestScope();
+
+            Bind<IEBC_PackageRepository>()
+               .To<EBC_PackagedRepository>()
+               .InRequestScope();
+
+            Bind<IUnknownListRepository>()
+               .To<UnknownListRepository>()
+               .InRequestScope();
+
+            Bind<IPIInfoConfigurationsRepository>()
+                .To<PIInfoConfigurationsRepository>()
+                .InRequestScope();
+
+            Bind<IPermissionsRepository>()
+                .To<PermissionsRepository>()
+                .InRequestScope();
+
+            Bind<IProductsRepository>()
+                .To<ProductsRepository>()
+                .InRequestScope();
+
+            Bind<IComATPacketsRepository>()
+                .To<ComATPacketRepository>()
+                .InRequestScope();
+
+            Bind<IComATPacketsGuiasRepository>()
+                .To<ComATPacketsGuiasRepository>()
+                .InRequestScope();
+
+            Bind<ICredentialsRepository>()
+                .To<CredentialsRepository>()
+                .InRequestScope();
+
+            Bind<IInstancesRepository>()
+                .To<InstancesRepository>()
+                .InRequestScope();
+
+            Bind<IECertificatesDetailsRepository>()
+                .To<ECertificatesDetailsRepository>()
+                .InRequestScope();
+
+            Bind<IMCATSendingDefinitionsRepository>()
+                .To<MCATSendingDefinitionsRepository>()
+                .InRequestScope();
+
+            Bind<IEEDICostumersRepository>()
+                .To<EEDICostumersRepository>()
+                .InRequestScope();
+
+            Bind<IEEDIInstancesRepository>()
+                .To<EEDIInstancesRepository>()
+                .InRequestScope();
+
+            Bind<IEEDISendersRepository>()
+                .To<EEDISendersRepository>()
+                .InRequestScope();
+
+            Bind<IEEDIReceivedDocsRepository>()
+                .To<EEDIReceivedDocsRepository>()
+                .InRequestScope();
+
+            Bind<IEEDISentDocsRepository>()
+                .To<EEDISentDocsRepository>()
+                .InRequestScope();
+
+            Bind<IEEDISentDocsDetailsRepository>()
+                .To<EEDISentDocsDetailsRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorConfigsRepository>()
+                .To<EConnectorConfigsRepository>()
+                .InRequestScope();
+
+            Bind<IECertificatesRepository>()
+                .To<EConnectorCertificatesRepository>()
+                .InRequestScope();
+
+            Bind<IEMarketCertificatesRepository>()
+                .To<EConnectorMarketCertificatesRepository>()
+                .InRequestScope();
+
+            Bind<IEMarketsRepository>()
+                .To<EConnectorMarketsRepository>()
+                .InRequestScope();
+
+            Bind<ISuiteConfigurationsRepository>()
+                .To<SuiteConfigurationsRepository>()
+                .InRequestScope();
+
+            Bind<IConnectorSpecificDeliveryOptionsRepository>()
+                .To<EConnectorSpecificDeliveryOptionsRepository>()
+                .InRequestScope();
+
+            Bind<ICustomersRepository>()
+                .To<CustomersRepository>()
+                .InRequestScope();
+
+            Bind<IConnectorEmailContentRepository>()
+                .To<EConnectorEmailContentRepository>()
+                .InRequestScope();
+
+            Bind<IConnectorConfigTXTRepository>()
+                .To<EConnectorConfigTXTRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorRegexTypesRepository>()
+                .To<EConnectorRegexTypesRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorInvoiceRegionTypesRepository>()
+                .To<EConnectorInvoiceRegionTypesRepository>()
+                .InRequestScope();
+
+            Bind<IConnectorConfigInboundTXTRepository>()
+                .To<EConnectorConfigInboundTXTRepository>()
+                .InRequestScope();
+
+            Bind<IConnectorInboundPacketInfoObjectPropertiesRepository>()
+                .To<EConnectorInboundPacketInfoObjectPropertiesRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorCustomersRepository>()
+                .To<EConnectorCustomersRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlTemplateRepository>()
+                .To<EConnectorXmlTemplateRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlClientRepository>()
+                .To<EConnectorXmlClientRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlHeaderRepository>()
+                .To<EConnectorXmlHeaderRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlLinesRepository>()
+                .To<EConnectorXmlLinesRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlResumoIvaRepository>()
+                .To<EConnectorXmlResumoIvaRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorSendersRepository>()
+                .To<EConnectorSendersRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorIntegrationFiltersRepository>()
+                .To<EConnectorIntegrationFiltersRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlHeadInboundRepository>()
+                .To<EConnectorXmlHeadInboundRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlInboundRepository>()
+                .To<EConnectorXmlInboundRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlLinesInboundRepository>()
+                .To<EConnectorXmlLinesInboundRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlVatInboundRepository>()
+                .To<EConnectorXmlVatInboundRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorXmlMappingRepository>()
+                .To<EConnectorXmlMappingRepository>()
+                .InRequestScope();
+
+            Bind<IManutencaoRepository>()
+                .To<ManutencaoRepository>()
+                .InRequestScope();
+
+            Bind<IInstancesDeniedSendersRepository>()
+                .To<InstancesDeniedSendersRepository>()
+                .InRequestScope();
+
+            Bind<ISaphetyCredentialsRepository>()
+                .To<SaphetyCredentialsRepository>()
+                .InRequestScope();
+
+            Bind<ITicketsRepository>()
+                .To<TicketsRepository>()
+                .InRequestScope();
+
+            Bind<IDocsErrorsRepository>()
+                .To<DocsErrorsRepository>()
+                .InRequestScope();
+
+            #region eDigital
+            Bind<IEDigitalSuppliersRepository>()
+                .To<EDigitalSuppliersRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalDocTypeRepository>()
+                .To<EDigitalDocTypeRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalDocTypeXmlDataRepository>()
+                .To<EDigitalDocTypeXmlDataRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalTemplateNameRepository>()
+                .To<EDigitalTemplateNameRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalSupplierXmlDataRepository>()
+                .To<EDigitalSupplierXmlDataRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalDocExpirationRepository>()
+                .To<EDigitalDocExpirationRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalDocHistoryRepository>()
+                .To<EDigitalDocHistoryRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalXmlFieldsRepository>()
+                .To<EDigitalXmlFieldsRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalMasterizationHeaderRepository>()
+                .To<EDigitalMasterizationHeaderRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalMasterizationLinesRepository>()
+                .To<EDigitalMasterizationLinesRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalMasterizationVatRepository>()
+                .To<EDigitalMasterizationVatRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalMasterizationProcRepository>()
+                .To<EDigitalMasterizationProcRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalIntancesRepository>()
+                .To<EDigitalIntancesRepository>()
+                .InRequestScope();
+
+            Bind<IEDigitalInstancesMailRepository>()
+                .To<EDigitalInstancesMailRepository>()
+                .InRequestScope();
+
+            Bind<ISupplierSyncronization>()
+                .To<SupplierSyncronization>()
+                .InRequestScope();
+
+            Bind<IEConnectorTipoNomenclaturaPDFRepository>()
+                .To<EConnectorTipoNomenclaturaPDFRepository>()
+                .InRequestScope();
+
+            Bind<IEConnectorTipoNomenclaturaSenderRepository>()
+                .To<EConnectorTipoNomenclaturaSenderRepository>()
+                .InRequestScope();
+
+            Bind<ILoginRepository>()
+                .To<LoginRepository>()
+                .InRequestScope();
+
+            Bind<ITicketSystemRepository>()
+                .To<TicketSystemRepository>()
+                .InRequestScope();
+
+            Bind<IAccountingData>()
+                .To<AccountingData>()
+                .InRequestScope();
+
+            #endregion
+
+            #region Suite Configurations
+
+            Bind<IDigitalConfigurationsRepository>()
+                .To<DigitalConfigurationsRepository>()
+                .InRequestScope();
+
+            #endregion
+        }
+    }
+}

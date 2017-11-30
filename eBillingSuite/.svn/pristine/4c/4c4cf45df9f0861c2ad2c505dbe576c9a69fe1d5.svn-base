@@ -1,0 +1,418 @@
+﻿using eBillingSuite.Support;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace eBillingSuite.Model.HelpingClasses
+{
+    public class IndicadoresFacturacaoQuant
+    {
+        public string label { get; set; }
+        public double data { get; set; }
+        public string color { get; set; }
+
+        public static List<IndicadoresFacturacaoQuant> GetTopCostumers()
+        {
+            List<IndicadoresFacturacaoQuant> top5costumers = new List<IndicadoresFacturacaoQuant>();
+            using (var cicdbdata = new CIC_DB.CIC_DB())
+            {
+                //buscar o total
+                decimal total = 0;
+                foreach (string value in (from op in cicdbdata.OutboundPacket select op.QuantiaComIVA))
+                    total = total + Parse.ToDecimal(value, true);
+
+                //Buscar os recetores
+                var recetores = (from p in cicdbdata.OutboundPacket
+                                 group p by p.NomeReceptor into g
+                                 select new
+                                 {
+                                     NomeReceptor = g.Key,
+                                 });
+                //buscar os valores de cada um dos recetores
+                foreach (var item in recetores)
+                {
+                    IndicadoresFacturacaoQuant ii = new IndicadoresFacturacaoQuant();
+                    ii.label = item.NomeReceptor;
+                    //fazer o somatorio do valor do recetor
+                    decimal totalrecetor = 0;
+                    foreach (string value in (from op in cicdbdata.OutboundPacket
+                                                .Where(p => p.NomeReceptor.Equals(ii.label))
+                                              select op.QuantiaComIVA)
+                         )
+                        totalrecetor = totalrecetor + Parse.ToDecimal(value, true);
+
+                    ii.data = Math.Round((double.Parse(totalrecetor.ToString()) / double.Parse(total.ToString())) * 100, 2); //valor em percentagem
+                    top5costumers.Add(ii);
+                }
+
+                top5costumers = top5costumers.OrderByDescending(o => o.data).Take(5).ToList();
+                double valortotal5 = 0;
+                foreach (IndicadoresFacturacaoQuant ifq in top5costumers)
+                {
+                    valortotal5 = valortotal5 + ifq.data;
+                }
+                valortotal5 = Math.Round(valortotal5, 2);
+                IndicadoresFacturacaoQuant ifqrestante = new IndicadoresFacturacaoQuant();
+                ifqrestante.label = "OUTROS";
+                ifqrestante.data = Math.Round((100 - valortotal5), 2);
+                top5costumers.Add(ifqrestante);
+            }
+
+            return top5costumers;
+        }
+
+        public static List<IndicadoresFacturacaoQuant> GetTopFornecedores()
+        {
+            List<IndicadoresFacturacaoQuant> top5fornecedores = new List<IndicadoresFacturacaoQuant>();
+            using (var cicdbdata = new CIC_DB.CIC_DB())
+            {
+                //buscar o total
+                decimal total = 0;
+                foreach (string value in (from op in cicdbdata.InboundPacket select op.Quantia))
+                    total = total + Parse.ToDecimal(value, true);
+
+                //Buscar os recetores
+                var recetores = (from p in cicdbdata.InboundPacket
+                                 group p by p.NomeFornec into g
+                                 select new
+                                 {
+                                     NomeFornec = g.Key,
+                                 });
+                //buscar os valores de cada um dos recetores
+                foreach (var item in recetores)
+                {
+                    IndicadoresFacturacaoQuant ii = new IndicadoresFacturacaoQuant();
+                    ii.label = item.NomeFornec;
+                    //fazer o somatorio do valor do recetor
+                    decimal totalemissor = 0;
+                    foreach (string value in (from op in cicdbdata.InboundPacket
+                                                .Where(p => p.NomeFornec.Equals(ii.label))
+                                              select op.Quantia)
+                         )
+                        totalemissor = totalemissor + Parse.ToDecimal(value, true);
+                    ii.data = Math.Round((double.Parse(totalemissor.ToString()) / double.Parse(total.ToString())) * 100, 2); //valor em percentagem
+
+                    top5fornecedores.Add(ii);
+                }
+                //para mostrar apenas os maiores 5.
+                top5fornecedores = top5fornecedores.OrderByDescending(o => o.data).Take(5).ToList();
+                //colocar na lista o valor restante para dar 100%
+                double valortotal5 = 0;
+                foreach (IndicadoresFacturacaoQuant ifq in top5fornecedores)
+                {
+                    valortotal5 = valortotal5 + ifq.data;
+                }
+                valortotal5 = Math.Round(valortotal5, 2);
+                IndicadoresFacturacaoQuant ifqrestante = new IndicadoresFacturacaoQuant();
+                ifqrestante.label = "OUTROS";
+                ifqrestante.data = Math.Round((100 - valortotal5), 2);
+                top5fornecedores.Add(ifqrestante);
+            }
+
+            return top5fornecedores;
+        }
+
+        public static List<IndicadoresFacturacaoQuant> GetDocsLastYearOUT()
+        {
+            List<IndicadoresFacturacaoQuant> DocsLastYear = new List<IndicadoresFacturacaoQuant>();
+
+            //QuantiaComIVA
+            decimal totalmes;
+            using (var cicdbdata = new CIC_DB.CIC_DB())
+            {
+                for (int i = 1; i < 13; i++)
+                {
+                    totalmes = 0;
+                    IndicadoresFacturacaoQuant ifq = new IndicadoresFacturacaoQuant();
+                    string mes = String.Empty;
+                    if (i < 10)
+                        mes = "0" + i.ToString();
+                    else
+                        mes = i.ToString();
+
+                    DateTime inicio = new DateTime(DateTime.Now.AddYears(-1).Year, 1, 1);
+                    DateTime fim = new DateTime(DateTime.Now.AddYears(-1).Year, 12, 31, 23, 59, 59);
+
+                    //BUSCAR OS DADOS PARA CADA UM DOS MESES
+                    foreach (string value in (from op in cicdbdata.OutboundPacket
+                                            .Where(p => p.CreationDate.Value.Month == i)
+                                            .Where(p => p.CreationDate >= inicio)
+                                            .Where(p => p.CreationDate <= fim)
+                                              select op.QuantiaComIVA)
+                         )
+                    {
+                        totalmes = totalmes + decimal.Parse(value);
+                    }
+                    ifq.data = double.Parse(Math.Round(totalmes, 2).ToString());
+                    //Para devolver o mês
+                    //ifq.mes = i;
+
+                    DocsLastYear.Add(ifq);
+                }
+            }
+            return DocsLastYear;
+        }
+
+        public static List<IndicadoresFacturacaoQuant> GetDocsLastYearIN()
+        {
+            List<IndicadoresFacturacaoQuant> DocsLastYear = new List<IndicadoresFacturacaoQuant>();
+
+            decimal totalmes;
+            using (var cicdbdata = new CIC_DB.CIC_DB())
+            {
+                for (int i = 1; i < 13; i++)
+                {
+                    totalmes = 0;
+                    IndicadoresFacturacaoQuant ifq = new IndicadoresFacturacaoQuant();
+                    string mes = String.Empty;
+                    if (i < 10)
+                        mes = "0" + i.ToString();
+                    else
+                        mes = i.ToString();
+
+                    DateTime inicio = new DateTime(DateTime.Now.AddYears(-1).Year, 1, 1);
+                    DateTime fim = new DateTime(DateTime.Now.AddYears(-1).Year, 12, 31, 23, 59, 59);
+
+                    //BUSCAR OS DADOS PARA CADA UM DOS MESES
+                    foreach (string value in (from op in cicdbdata.InboundPacket
+                                            .Where(p => p.ReceptionDate.Value.Month == i)
+                                            .Where(p => p.ReceptionDate >= inicio)
+                                            .Where(p => p.ReceptionDate < fim)
+                                              select op.Quantia)
+                         )
+                    {
+                        totalmes = totalmes + decimal.Parse(value);
+                    }
+                    ifq.data = double.Parse(Math.Round(totalmes, 2).ToString());
+                    //Para devolver o mês
+                    //ifq.mes = i;
+
+                    DocsLastYear.Add(ifq);
+                }
+            }
+
+            return DocsLastYear;
+        }
+
+        public static string[] GetDocsByType()
+        {
+            string[] dados = new string[18];
+
+            //variaveis valores out
+            decimal ftoutvalor = 0; decimal ncoutvalor = 0;
+            decimal ndoutvalor = 0; decimal rcoutvalor = 0;
+            decimal gtoutvalor = 0; decimal groutvalor = 0;
+            decimal gdoutvalor = 0; decimal gaoutvalor = 0;
+            decimal sopdfoutvalor = 0;
+
+            //variaveis valores in
+            decimal ftinvalor = 0; decimal ncinvalor = 0;
+            decimal ndinvalor = 0; decimal rcinvalor = 0;
+            decimal gtinvalor = 0; decimal grinvalor = 0;
+            decimal gdinvalor = 0; decimal gainvalor = 0;
+            decimal sopdfinvalor = 0;
+
+            using (var cicdbdata = new CIC_DB.CIC_DB())
+            {
+                //buscar tipos de documentos outbound
+                var query = (from p in cicdbdata.OutboundPacket
+                             group p by p.TipoDocumento.ToLower() into g
+                             select new
+                             {
+                                 //Valor = g.Count(),
+                                 TipoDocumento = g.Key.ToLower()
+
+                             });
+                //.OrderByDescending(x => x.Valor);
+
+                //para cada tipo de documento fazer o somatório
+                decimal totaltipodocumento = 0;
+                foreach (var item in query)
+                {
+                    totaltipodocumento = 0;
+                    //BUSCAR OS DADOS PARA CADA UM DOS MESES
+                    foreach (string value in (from op in cicdbdata.OutboundPacket
+                                            .Where(p => p.TipoDocumento.ToLower().Equals(item.TipoDocumento))
+                                              select op.QuantiaComIVA)
+                         )
+                        totaltipodocumento = totaltipodocumento + Parse.ToDecimal(value, true);
+
+
+                    IndicadoresFacturacaoQuant ii = new IndicadoresFacturacaoQuant();
+                    if (item.TipoDocumento == null)
+                    {
+                        sopdfoutvalor = sopdfoutvalor + totaltipodocumento;
+                        //dados[8] = item.Valor.ToString();
+                        ii.label = "Só PDF";
+                    }
+                    else
+                    {
+                        if (item.TipoDocumento.ToLower().Equals("fact") || item.TipoDocumento.ToLower().Equals("factura") || item.TipoDocumento.ToLower().Equals("ft") || item.TipoDocumento.ToLower().Equals("fatura") || item.TipoDocumento.ToLower().Equals("fc") || item.TipoDocumento.ToLower().Equals("invoice") || item.TipoDocumento.ToLower().Equals("fs"))
+                        {
+                            //dados[0] = item.Valor.ToString();
+                            ftoutvalor = ftoutvalor + totaltipodocumento;
+                            ii.label = "FT";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("ncred") || item.TipoDocumento.ToLower().Equals("cred") || item.TipoDocumento.ToLower().Equals("nota credito") || item.TipoDocumento.ToLower().Equals("nota de credito") || item.TipoDocumento.ToLower().Equals("nota de crédito") || item.TipoDocumento.ToLower().Equals("nc"))
+                        {
+                            //dados[1] = item.Valor.ToString();
+                            ncoutvalor = ncoutvalor + totaltipodocumento;
+                            ii.label = "NC";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("ndebt") || item.TipoDocumento.ToLower().Equals("debt") || item.TipoDocumento.ToLower().Equals("nota debito") || item.TipoDocumento.ToLower().Equals("nota de debito") || item.TipoDocumento.ToLower().Equals("nota de débito") || item.TipoDocumento.ToLower().Equals("nd") || item.TipoDocumento.ToLower().Equals("debit note"))
+                        {
+                            //dados[2] = item.Valor.ToString();
+                            ndoutvalor = ndoutvalor + totaltipodocumento;
+                            ii.label = "ND";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("receipt") || item.TipoDocumento.ToLower().Equals("recibo") || item.TipoDocumento.ToLower().Equals("rc"))
+                        {
+                            //dados[3] = item.Valor.ToString();
+                            rcoutvalor = rcoutvalor + totaltipodocumento;
+                            ii.label = "RC";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia transporte") || item.TipoDocumento.ToLower().Equals("guia de transporte") || item.TipoDocumento.ToLower().Equals("gt"))
+                        {
+                            //dados[4] = item.Valor.ToString();
+                            gtoutvalor = gtoutvalor + totaltipodocumento;
+                            ii.label = "GT";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia remessa") || item.TipoDocumento.ToLower().Equals("guia de remessa") || item.TipoDocumento.ToLower().Equals("gr"))
+                        {
+                            //dados[5] = item.Valor.ToString();
+                            groutvalor = groutvalor + totaltipodocumento;
+                            ii.label = "GR";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia devolucao") || item.TipoDocumento.ToLower().Equals("guia de devolucao") || item.TipoDocumento.ToLower().Equals("gd") || item.TipoDocumento.ToLower().Equals("guia de devolução"))
+                        {
+                            //dados[6] = item.Valor.ToString();
+                            gdoutvalor = gdoutvalor + totaltipodocumento;
+                            ii.label = "GD";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia anulacao") || item.TipoDocumento.ToLower().Equals("guia de anulacao") || item.TipoDocumento.ToLower().Equals("ga") || item.TipoDocumento.ToLower().Equals("guia de anulacao"))
+                        {
+                            //dados[7] = item.Valor.ToString();
+                            gaoutvalor = gaoutvalor + totaltipodocumento;
+                            ii.label = "GA";
+                        }
+                    }
+
+                }
+
+                query = null;
+                //buscar tipos de documentos outbound
+                query = (from p in cicdbdata.InboundPacket
+                         group p by p.TipoDoc.ToLower() into g
+                         select new
+                         {
+                             //Valor = g.Count(),
+                             TipoDocumento = g.Key.ToLower()
+
+                         });
+
+
+                foreach (var item in query)
+                {
+                    totaltipodocumento = 0;
+                    //BUSCAR OS DADOS PARA CADA UM DOS MESES
+                    foreach (string value in (from op in cicdbdata.InboundPacket
+                                            .Where(p => p.TipoDoc.ToLower().Equals(item.TipoDocumento))
+                                              select op.Quantia)
+                         )
+                        totaltipodocumento = totaltipodocumento + Parse.ToDecimal(value, true);
+
+                    IndicadoresFacturacaoQuant ii = new IndicadoresFacturacaoQuant();
+                    if (item.TipoDocumento == null)
+                    {
+                        sopdfinvalor = sopdfinvalor + totaltipodocumento;
+                        //dados[8] = dados[8].ToString() + " : " + item.Valor.ToString();
+                        ii.label = "Só PDF";
+                    }
+                    else
+                    {
+                        if (item.TipoDocumento.ToLower().Equals("fact") || item.TipoDocumento.ToLower().Equals("factura") || item.TipoDocumento.ToLower().Equals("ft") || item.TipoDocumento.ToLower().Equals("fatura") || item.TipoDocumento.ToLower().Equals("fc") || item.TipoDocumento.ToLower().Equals("invoice") || item.TipoDocumento.ToLower().Equals("fs"))
+                        {
+                            //dados[0] = dados[0].ToString() + " : " + item.Valor.ToString();
+                            ftinvalor = ftinvalor + totaltipodocumento;
+                            ii.label = "FT";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("ncred") || item.TipoDocumento.ToLower().Equals("cred") || item.TipoDocumento.ToLower().Equals("nota credito") || item.TipoDocumento.ToLower().Equals("nota de credito") || item.TipoDocumento.ToLower().Equals("nota de crédito") || item.TipoDocumento.ToLower().Equals("nc"))
+                        {
+                            //dados[1] = dados[1].ToString() + " : " + item.Valor.ToString();
+                            ncinvalor = ncinvalor + totaltipodocumento;
+                            ii.label = "NC";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("ndebt") || item.TipoDocumento.ToLower().Equals("debt") || item.TipoDocumento.ToLower().Equals("nota debito") || item.TipoDocumento.ToLower().Equals("nota de debito") || item.TipoDocumento.ToLower().Equals("nota de débito") || item.TipoDocumento.ToLower().Equals("nd") || item.TipoDocumento.ToLower().Equals("debit note"))
+                        {
+                            //dados[2] = dados[2].ToString() + " : " + item.Valor.ToString();
+                            ndinvalor = ndinvalor + totaltipodocumento;
+                            ii.label = "ND";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("receipt") || item.TipoDocumento.ToLower().Equals("recibo") || item.TipoDocumento.ToLower().Equals("rc"))
+                        {
+                            //dados[3] = dados[3].ToString() + " : " + item.Valor.ToString();
+                            rcinvalor = rcinvalor + totaltipodocumento;
+                            ii.label = "RC";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia transporte") || item.TipoDocumento.ToLower().Equals("guia de transporte") || item.TipoDocumento.ToLower().Equals("gt"))
+                        {
+                            //dados[4] = dados[4].ToString() + " : " + item.Valor.ToString();
+                            gtinvalor = gtinvalor + totaltipodocumento;
+                            ii.label = "GT";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia remessa") || item.TipoDocumento.ToLower().Equals("guia de remessa") || item.TipoDocumento.ToLower().Equals("gr"))
+                        {
+                            //dados[5] = dados[5].ToString() + " : " + item.Valor.ToString();
+                            grinvalor = grinvalor + totaltipodocumento;
+                            ii.label = "GR";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia devolucao") || item.TipoDocumento.ToLower().Equals("guia de devolucao") || item.TipoDocumento.ToLower().Equals("gd") || item.TipoDocumento.ToLower().Equals("guia de devolução"))
+                        {
+                            //dados[6] = dados[6].ToString() + " : " + item.Valor.ToString();
+                            gdinvalor = gdinvalor + totaltipodocumento;
+                            ii.label = "GD";
+                        }
+                        else if (item.TipoDocumento.ToLower().Equals("guia anulacao") || item.TipoDocumento.ToLower().Equals("guia de anulacao") || item.TipoDocumento.ToLower().Equals("ga") || item.TipoDocumento.ToLower().Equals("guia de anulacao"))
+                        {
+                            //dados[7] = dados[7].ToString() + " : " + item.Valor.ToString();
+                            gainvalor = gainvalor + totaltipodocumento;
+                            ii.label = "GA";
+                        }
+                    }
+                }
+
+                //    dados[0] = ftoutvalor.ToString() + " : " + ftinvalor.ToString();
+                //    dados[1] = ncoutvalor.ToString() + " : " + ncinvalor.ToString();
+                //    dados[2] = ndoutvalor.ToString() + " : " + ndinvalor.ToString();
+                //    dados[3] = rcoutvalor.ToString() + " : " + rcinvalor.ToString();
+                //    dados[4] = gtoutvalor.ToString() + " : " + gtinvalor.ToString();
+                //    dados[5] = groutvalor.ToString() + " : " + grinvalor.ToString();
+                //    dados[6] = gdoutvalor.ToString() + " : " + gdinvalor.ToString();
+                //    dados[7] = gaoutvalor.ToString() + " : " + gainvalor.ToString();
+                //    dados[8] = sopdfoutvalor.ToString() + " : " + sopdfinvalor.ToString();
+                dados[0] = ftoutvalor.ToString();
+                dados[1] = ncoutvalor.ToString();
+                dados[2] = ndoutvalor.ToString();
+                dados[3] = rcoutvalor.ToString();
+                dados[4] = gtoutvalor.ToString();
+                dados[5] = groutvalor.ToString();
+                dados[6] = gdoutvalor.ToString();
+                dados[7] = gaoutvalor.ToString();
+                dados[8] = sopdfoutvalor.ToString();
+                dados[9] = ftinvalor.ToString();
+                dados[10] = ncinvalor.ToString();
+                dados[11] = ndinvalor.ToString();
+                dados[12] = rcinvalor.ToString();
+                dados[13] = gtinvalor.ToString();
+                dados[14] = grinvalor.ToString();
+                dados[15] = gdinvalor.ToString();
+                dados[16] = gainvalor.ToString();
+                dados[17] = sopdfinvalor.ToString();
+            }
+
+            return dados;
+        }
+    }
+}

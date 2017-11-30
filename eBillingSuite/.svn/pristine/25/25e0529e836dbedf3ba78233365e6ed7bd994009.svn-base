@@ -1,0 +1,93 @@
+﻿@model eBillingSuite.ViewModels.EEDIOutboundDetailVM
+@{
+	char[] delimitador = { '\\' };
+	var tooltip = Model.outboundpacket.Ficheiro;
+	var ficheirovalues = Model.outboundpacket.Ficheiro.Split(delimitador);
+	var ficheiro = ficheirovalues[ficheirovalues.Length - 1];
+}
+@helper RenderRow(string label, string value, string tooltip)
+{
+	<div class="row">
+		<div class="col-sm-4 text-right-sm">
+			<strong>@label</strong>
+		</div>
+		<div class="col-sm-8">
+			@if (label == "FileERP")
+			{
+				<p style="cursor:pointer" title=@tooltip>@value&nbsp;</p>
+			}
+			else
+			{
+				<p>@value&nbsp;</p>
+			}
+		</div>
+	</div>
+}
+
+@helper RenderRowSwitcher(string label, string value)
+{
+	<div class="row">
+		<div class="col-sm-4 text-right-sm">
+			<strong>@label</strong>
+		</div>
+		<div class="col-sm-8">
+			@if (value == this.Get(DictionaryEntryKeys.Sim))
+			{
+				<p class="label label-success label-tag">@value</p>
+			}
+			else
+			{
+				<p class="label label-danger label-tag">@value</p>
+			}
+		</div>
+	</div>
+}
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.OutboundDocDetail)</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<span class="panel-title">@this.Get(DictionaryEntryKeys.OutboundDocDetailData)</span>
+				</div>
+				<div class="panel-body">
+					@RenderRow("Identificador", Model.outboundpacket.PKEDIPacketID == null ? "" : Model.outboundpacket.PKEDIPacketID.ToString(), null)
+					@RenderRow("DMSID", Model.outboundpacket.DMSID == null ? "" : Model.outboundpacket.DMSID, null)
+					@RenderRow("Nome Cliente", Model.outboundpacket.NomeReceptor == null ? "" : Model.outboundpacket.NomeReceptor, null)
+					@RenderRow("NIF Receptor", Model.outboundpacket.NIFReceptor == null ? "" : Model.outboundpacket.NIFReceptor, null)
+					@RenderRow("Nome Emissor", Model.outboundpacket.NomeEmissor == null ? "" : Model.outboundpacket.NomeEmissor, null)
+					@RenderRow("NIF Emissor", Model.outboundpacket.NIFEmissor == null ? "" : Model.outboundpacket.NIFEmissor, null)
+					@RenderRow("Num. Doc.", Model.outboundpacket.NumFactura == null ? "" : Model.outboundpacket.NumFactura, null)
+					@RenderRow("Data Doc.", Model.outboundpacket.DataFactura == null ? "" : Model.outboundpacket.DataFactura, null)
+					@RenderRow("Quantid Doc.", Model.outboundpacket.QuantiaComIVA == null ? "" : Model.outboundpacket.QuantiaComIVA, null)
+					@RenderRow("Doc. Originial", Model.outboundpacket.DocOriginal == null ? "" : Model.outboundpacket.DocOriginal, null)
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-info panel-dark">
+				<div class="panel-heading">
+					<span class="panel-title">@this.Get(DictionaryEntryKeys.OutboundDocIntegrationInfo)</span>
+				</div>
+				<div class="panel-body">
+					@RenderRow("ID Processo", Model.outboundprocess.PKOutboundProcessID == null ? "" : Model.outboundprocess.PKOutboundProcessID.ToString(), null)
+					@RenderRow("Data Criação Processo", Model.outboundpacket.DataCriacao == null ? "" : Model.outboundpacket.DataCriacao.ToDataTableShortFormat(), null)
+					@RenderRow("Ficheiro Processo", Model.outboundprocess.FicheiroOriginal == null ? "" : Model.outboundprocess.FicheiroOriginal, null)
+					@RenderRow("Estado Processo", Model.outboundpacket.Estado == null ? "" : Model.outboundpacket.Estado, null)
+					@RenderRow("Última Atualização", Model.outboundpacket.UltimaActualizacao == null ? "" : Model.outboundpacket.UltimaActualizacao.ToDataTableShortFormat(), null)
+					@RenderRow("Última Atualização SAP", Model.outboundpacket.UltimoRelatorioGerado == null ? "" : Model.outboundpacket.UltimoRelatorioGerado.ToDataTableShortFormat(), null)
+					@RenderRow("Ficheiro Metadata", Model.outboundpacket.Ficheiro == null ? "" : ficheiro, tooltip)					
+					@RenderRow("Num. Linhas Processadas", Model.outboundprocess.NumeroLinhasProcessadas == null ? "" : Model.outboundprocess.NumeroLinhasProcessadas.ToString(), null)
+					@RenderRow("Num. Linhas Totais", Model.outboundprocess.TotalLinhas == null ? "" : Model.outboundprocess.TotalLinhas.ToString(), null)					
+					@RenderRowSwitcher("Processado Corretamente", Model.outboundprocess.ProcessadoCorrectamente == false ? this.Get(DictionaryEntryKeys.Nao) : this.Get(DictionaryEntryKeys.Sim))
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">@Texts.Close</button>
+</div>

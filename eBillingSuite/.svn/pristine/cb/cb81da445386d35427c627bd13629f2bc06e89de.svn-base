@@ -1,0 +1,17 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel panel-transparent">
+			<div class="panel-body">
+				<div class="alert alert-info alert-dark">
+					<button type="button" class="close" data-dismiss="alert">×</button>
+					<strong>Módulo inativo!</strong>&nbsp;Caro utilizador, este módulo encontra-se inativo. Para mais informações, sobre este e outros produtos, consulte o nosso <a href="http://www.pi-co.com/ebilling-connector" target="_blank"><strong>site</strong></a> .
+				</div>
+				<img class="img-responsive" src="~/assets/PI/Images/schema_connector.gif" alt="Arquitetura eBilling Connector" style="margin-left: auto; margin-right:auto;" />
+			</div>
+		</div>
+	</div>
+</div>
+

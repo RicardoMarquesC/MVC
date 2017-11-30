@@ -1,0 +1,36 @@
+﻿@model eBillingSuite.ViewModels.SupportChatVM
+@{
+    var pc = ViewBag.PixelAdminPageContext as IPixelAdminPageContext;
+}
+
+<script>
+    $('#submitBtt').on('click', function () {
+        location.href = "https://get.teamviewer.com/pi_nosinovamos";
+    });
+</script>
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">Pedido de Acesso Remoto</h4>
+</div>
+<div class="modal-body">
+    <form id="doc-edit-form"
+          action="@Url.Action("RemoteAcessRequest", "Support")"
+          method="post"
+          class="form-horizontal">
+        <div class="tab-content">
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.Email, 6, null, InputOptions.Default)
+            </div>
+            <div class="row">
+                @*@Html.PixelAdminTextBoxWithColFor("Empresa", 6, null, InputOptions.Default)*@
+                @Html.PixelAdminTextBoxWithColFor(e => e.Descricao, 12, null, InputOptions.Default)
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="submitBtt" type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@Texts.Submit</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">@Texts.Close</button>
+</div>

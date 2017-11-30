@@ -1,0 +1,1 @@
+Update DictionaryEntries set Value = 'Email(s)' where [key] = 'EBCSendersVM_EmailAddress'

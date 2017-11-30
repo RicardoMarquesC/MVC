@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace eBillingSuite.Globalization
+{
+	public class TimeAgoFormatter : eBillingSuite.Globalization.ITimeAgoFormatter
+	{
+		const int Hour = 1;
+		const int HoursPerDay = 24 * Hour;
+		const int HoursPerMonth = 30 * HoursPerDay;
+
+		private IeBillingSuiteRequestContext _context;
+
+		public TimeAgoFormatter(IeBillingSuiteRequestContext context)
+		{
+			_context = context;
+		}
+
+		public string ToTimeAgo(DateTime value)
+		{
+			var ts = DateTime.Now.Subtract(value);
+			var delta = ts.TotalHours;
+
+			if (delta < 0)
+			{
+				return _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoNotYet);
+			}
+			if (delta < 1 * Hour)
+			{
+				return _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoLessThanAnHour);
+			}
+			if (delta < 2 * Hour)
+			{
+				return _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoAnHour);
+			}
+			if (delta < 24 * Hour)
+			{
+				return ts.Hours + _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoHours);
+			}
+			if (delta < 48 * Hour)
+			{
+				return _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoYesterday);
+			}
+			if (delta < 30 * HoursPerDay)
+			{
+				return ts.Days + _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoDays);
+			}
+			if (delta < 12 * HoursPerMonth)
+			{
+				int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
+				return months <= 1 ? _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoOneMonth) : months + _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoMonths);
+			}
+			else
+			{
+				int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
+				return years <= 1 ? _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoOneYear) : years + _context.GetDictionaryValue(DictionaryEntryKeys.TimeAgoYears);
+			}
+		}
+	}
+}

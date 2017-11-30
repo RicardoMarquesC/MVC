@@ -1,0 +1,26 @@
+﻿@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eWWFLayout.cshtml";
+}
+<!-- ÁREAS DO XML -->
+<div class="panel colourable">
+	<div class="panel-heading">
+		<span class="panel-title">Worflows disponíveis</span>
+		<ul class="nav nav-tabs nav-tabs-xs">
+			<li class="active">
+				<a href="#tab-cab" data-toggle="tab">Aprovação Documental</a>
+			</li>
+			<li class="">
+				<a href="#tab-lines" data-toggle="tab">Requisições</a>
+			</li>			
+		</ul> <!-- / .nav -->
+	</div> <!-- / .panel-heading -->
+	<div class="panel-body">
+		<div class="tab-content tab-content">
+			<div class="tab-pane fade active in" id="tab-cab">
+				@Html.Partial("~/Views/eWWF/InvoiceAproval.cshtml")
+			</div>
+			<div class="tab-pane fade" id="tab-lines">
+			</div>			
+		</div>
+	</div>
+</div>

@@ -1,0 +1,87 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+	var routeDataValues = Request.RequestContext.RouteData.Values;
+	var action = routeDataValues["action"].ToString().ToLower();
+
+
+}
+
+@section header{
+}
+
+<script>
+	init.push(function () {
+		$('#x-tabs').tabdrop();
+	});
+</script>
+<div>
+	<ul id="x-tabs" style="margin-top: 5px;" class="nav nav-tabs">
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_FORNECEDORES))
+		{
+			<li class="@(action == "index" ? "active" : null)">
+				<a href="@Url.Action("Index", "eDigital")">@this.Get(DictionaryEntryKeys.Fornecedores)</a>
+            </li>}
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_TEMPLATES))
+		{
+			<li class="@(action == "template" ? "active" : null)">
+				<a href="@Url.Action("Template", "eDigital")">@this.Get(DictionaryEntryKeys.Templates)</a>
+            </li>}
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_GESTAOXML))
+		{
+			<li class="@(action == "xmlmanagment" ? "active" : null)">
+				<a href="@Url.Action("XmlManagment", "eDigital")">@this.Get(DictionaryEntryKeys.GestaoXml)</a>
+            </li>}
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_EXPIRACAODOCUMENTOS))
+		{
+			<li class="@(action == "documentsexpiration" ? "active" : null)">
+				<a href="@Url.Action("DocumentsExpiration", "eDigital")">@this.Get(DictionaryEntryKeys.ExpiracaoDocumentos)</a>
+            </li>}
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_HISTORICODOCUMENTOS))
+		{
+			<li class="@(action == "documentshistoric" ? "active" : null)">
+				<a href="@Url.Action("DocumentsHistoric", "eDigital")">@this.Get(DictionaryEntryKeys.HistoricoDocumentos)</a>
+            </li>}
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_SINCRONIZACAO))
+		{
+			<li class="@(action == "synchronization" ? "active" : null)">
+				<a href="@Url.Action("Synchronization", "eDigital")">@this.Get(DictionaryEntryKeys.Sincronizacao)</a>
+            </li>}
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_INTEGRACAO))
+		{
+			<li class="@(action == "integrationconfigurations" ? "active" : null)">
+				<a href="@Url.Action("IntegrationConfigurations", "eDigital")">@this.Get(DictionaryEntryKeys.Integracao)</a>
+            </li>}
+		@if (user.Permissions.Contains(Permissions.EDIGITAL_STATS))
+		{
+			<li class="@(action == "digitalstats" ? "active" : null)">
+				<a href="@Url.Action("DigitalStats", "eDigital")">@this.Get(DictionaryEntryKeys.Estatisticas)</a>
+            </li>}
+        @if (user.Permissions.Contains(Permissions.EDIGITAL_PROCESSAMENTO))
+        {
+            <li class="@(action == "digitalproc" ? "active" : null)">
+                <a href="@Url.Action("DigitalProc", "eDigital")">@this.Get(DictionaryEntryKeys.Porcessamento)</a>
+            </li>
+        }
+        @if (user.Permissions.Contains(Permissions.EDIGITAL_MAIL))
+        {
+            <li class="@(action == "instancesmail" ? "active" : null)">
+                <a href="@Url.Action("instancesMails", "eDigital")">@this.Get(DictionaryEntryKeys.instancesMail)</a>
+            </li>
+        }
+        @if (user.Permissions.Contains(Permissions.EDIGITAL_INSTANCES))
+        {
+            <li class="@(action == "digitalinstances" ? "active" : null)">
+                <a href="@Url.Action("DigitalInstances", "eDigital")">@this.Get(DictionaryEntryKeys.Instances)</a>
+            </li>}
+        @if (user.Permissions.Contains(Permissions.EDIGITAL_ACCOUNTING_DATA))
+        {
+            <li class="@(action == "digitalaccountingdata" ? "active" : null)">
+                <a href="@Url.Action("DigitalAccountingData", "eDigital")">@this.Get(DictionaryEntryKeys.LoadAccountingData)</a>
+            </li>}
+	</ul>
+	<div class="tab-content tab-content-bordered no-padding">
+		@RenderBody()
+	</div> <!-- / .tab-content -->
+</div>

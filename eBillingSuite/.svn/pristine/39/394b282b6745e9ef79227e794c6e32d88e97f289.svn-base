@@ -1,0 +1,1105 @@
+﻿@model eBillingSuite.ViewModels.PacketDetailVM
+
+@{
+    var pc = ViewBag.PixelAdminPageContext as IPixelAdminPageContext;
+}
+
+@*
+    <script>
+            $('#submitBtt').on('click', function () {
+                location.href = "https://get.teamviewer.com/pi_nosinovamos";
+            });
+    </script>*@
+
+@if (Model.outboundDetail != null)
+{
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Detalhes</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-group panel-group-info" id="accordion-info-example">
+                    <!-- Detalhes do documento -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle" style="background-color: cornflowerblue" data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseOne-info">
+                                Detalhes do documento
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseOne-info" style="background-color: cornflowerblue" class="panel-collapse in">
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Identificador:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.EbcPackageId</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Identificador DMSID:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.Dmsid</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Nome Cliente:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.ClientName</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Email Cliente:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.ClientEmail</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            NIF Receptor:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.ClientNif</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            NIF Emissor:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.SupplierNif</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Doc. Original:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.OriginalDoc</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Nº do Documento:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.DocNumber</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Data do Documento:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.DocDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Quantia:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentDetails.Amount</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> <!-- / .panel-body -->
+                        </div> <!-- / .collapse -->
+                    </div>
+                    <!-- Informação acerca do processo de Integração -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" style="background-color:darkseagreen" data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseTwo-info">
+                                Informação acerca do processo de Integração
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseTwo-info" style="background-color:darkseagreen" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            ID Processo:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.ProcessId</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Data de Criação:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.CreationDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Origem do Processo:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.ProcessOrigin</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Estado do Processo:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.ProcessState</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Última Actualização de Estado:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.StateLastUpdate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Último Relatório SAP:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.SapLastReport</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Nome do Ficheiro Metadados:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.MetadataFilename</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Nome do Ficheiro Digital:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.DigitalFileName</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Número Total de Linhas:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.TotalLines</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Número de Linhas Processadas:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.TotalProcessedLines</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Processado em:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.ProcessedDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Processado Correctamente:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentIntegrationDetails.ProcessedCorrectly</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> <!-- / .panel-body -->
+                        </div> <!-- / .collapse -->
+                    </div>
+                    <!-- Informação do envelope -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" style="background-color: tomato" data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseOne-danger">
+                                Informação do envelope
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseOne-danger" style="background-color: tomato" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Instância:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.InstanceName</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Modo de Integração:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.IntegrationMode</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Aplicação:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.AplicationName</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Criado em:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.CreationDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Última actividade:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.LastActivityDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Agendamento da resposta:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.AcknowledgeSchedule</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Tentativas de reenvio:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.FollowupAttempts</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Agendamento de reenvio:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.FollowupSchedule</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Notificações Funcionais:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.EmailFunctional</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Notificações de Monotorização:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.EmailMonitoring</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Notificações Técnicas:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.outboundDetail.documentEnvelopeInformation.EmailTechnical</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> <!-- / .panel-body -->
+                        </div> <!-- / .collapse -->
+                    </div>
+                    <!-- Ficheiros do envelope -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" style="background-color: ForestGreen " data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseTwo-danger">
+                                Ficheiros do envelope
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseTwo-danger" style="background-color: ForestGreen" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            PDF Não Assinado:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.PdfUnsigned))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.PdfUnsigned + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            PDF Assinado:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.PdfSigned))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.PdfSigned + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Ficheiro Postscript:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.Postscript))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.Postscript + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Ficheiro Básico Metadados:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.BasicMetadata))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.BasicMetadata + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Anexo #1:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.AttachOne))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.AttachOne + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Anexo #2:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.AttachTwo))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.AttachTwo + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Anexo #3:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.AttachThree))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.AttachThree + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Doc. Cancelamento:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.Cancellation))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.Cancellation + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Email enviado:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.EmailSent))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.EmailSent + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Recibo Não Entrega:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.UndeliveredReceipt))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.UndeliveredReceipt + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Recibo Entrega:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.DeliveredReceipt))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.DeliveredReceipt + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Recibo Leitura:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.ReadReceipt))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.ReadReceipt + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Recibo Transmissão:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.TransmissionReceipt))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.TransmissionReceipt + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Recibo Atraso:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.DelayReceipt))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.DelayReceipt + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Resposta Explícita:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.ExplicitReceipt))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.ExplicitReceipt + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Email de Suspensão:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.outboundDetail.documentEnvelopeFiles.SuspensionEmail))
+                                            {
+                                            <a>
+                                                <i class="fa fa-times text-danger"></i>
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.outboundDetail.documentEnvelopeFiles.SuspensionEmail + "&sentido=out&ano=" + Model.outboundDetail.AnoCriacaoPacote + "&mes=" + Model.outboundDetail.MesCriacaoPacote;
+                                            <a href="@link" target="_blank">
+                                                <i class="fa fa-check text-success"></i>
+                                                VER
+                                            </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> <!-- / .panel-body -->
+                        </div> <!-- / .collapse -->
+                    </div>
+                    <!--Historico de eventos-->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" style="background-color: black" data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseThree-info">
+                                Histórico de eventos do envelopee
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseThree-info" style="background-color:darkseagreen" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                    @foreach (var ev in Model.outboundDetail.documentEnvelopeEvents)
+                                    {
+                                        <div class="timeline-item clearfix">
+                                            <div class="timeline-info" style="display: flex;">
+                                                <div style="display:inline-block">
+                                                    @if (ev.EventType == 0)
+                                                    {
+                                                        <i class="timeline-indicator icon-ok btn btn-success no-hover green">@ev.EventTypeLabel<br />@ev.Date</i>
+                                                    }
+                                                    else if (ev.EventType == 1)
+                                                    {
+                                                        <i class="timeline-indicator icon-warning-sign btn btn-warning no-hover green">@ev.EventTypeLabel<br />@ev.Date</i>
+                                                    }
+                                                    else if (ev.EventType == 2)
+                                                    {
+                                                        <i class="timeline-indicator icon-info btn btn-info no-hover green">@ev.EventTypeLabel<br />@ev.Date</i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="timeline-indicator icon-ok btn btn-success no-hover green">@ev.EventTypeLabel<br />@ev.Date</i>
+                                                    }
+                                                </div>
+                                                
+                                                <div style="display:inline-block;padding-top: 5px;">
+                                                    <div>
+                                                        <i class="icon-time bigger-110" style="margin-left:10px;"></i>@ev.Detail
+                                                    </div>
+                                                    <div>
+                                                        @if (ev.Obs != null)
+                                                        {
+                                                            <text>
+                                                                <i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-left:10px;"></i> Observações: @ev.Obs
+                                                            </text>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            @if (ev != Model.outboundDetail.documentEnvelopeEvents[Model.outboundDetail.documentEnvelopeEvents.Count - 1])
+                                            {
+                                                <hr />
+                                            }
+                                        </div>
+                                    }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="col-lg-12">
+            </div>
+        </div>
+    </div>
+}
+else
+{
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Detalhes</h4>
+    </div>
+    <div class="modal-body modal-lg">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-group panel-group-info" id="accordion-info-example">
+                    <!-- Detalhes do documento -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle" style="background-color: cornflowerblue" data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseOne-info">
+                                Detalhes do documento
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseOne-info" style="background-color: cornflowerblue" class="panel-collapse in">
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Nome Fornecedor:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.SupplierName</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Email Fornecedor:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.SupplierEmail</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            NIF Fornecedor:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.SupplierNif</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            NIF Recetor:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.ClientNif</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;<i class="icon-caret-right blue"></i>
+                                            Doc. Original:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.OriginalDoc</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Número Documento:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.DocNumber</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Data Documento:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.DocDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Quantia:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.Amount</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Quantia sem IVA:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.AmountWithoutTax</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Nota Encomenda:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentDetail.OrderNumber</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> <!-- / .panel-body -->
+                        </div> <!-- / .collapse -->
+                    </div>
+                    <!-- Informação acerca do processo de Integração -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" style="background-color:darkseagreen" data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseTwo-info">
+                                Informação acerca do processo de Integração
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseTwo-info" style="background-color:darkseagreen" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            ID Processo:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.ProcessId</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Método de Transformação:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.TransformationMethod</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Data de Receção:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.ReceptionDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Requer Validação Manual?
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.RequiresManualValidaiton</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Validado?
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.IsValid</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Data de Validação:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.ValidationDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Submetido para integração em:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.SubmissionDate</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Submetido para integração via:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.SubmissionFile</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Devolvido:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.Returned</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Observações:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            <b class="text-danger">@Model.inboundDetail.inboundDocumentIntegrationDetail.Observations</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> <!-- / .panel-body -->
+                        </div> <!-- / .collapse -->
+                    </div>
+                    <!-- Ficheiros do envelope -->
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle collapsed" style="background-color: tomato" data-toggle="collapse" data-parent="#accordion-info-example" href="#collapseTwo-danger">
+                                Ficheiros do envelope
+                            </a>
+                        </div> <!-- / .panel-heading -->
+                        <div id="collapseTwo-danger" style="background-color: tomato" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Documento Email:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.inboundDetail.inboundDocumentEnvelopeFiles.Email))
+                                            {
+                                                <a>
+                                                    <i class="fa fa-times text-danger"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {                                               
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.inboundDetail.inboundDocumentEnvelopeFiles.Email + "&sentido=in&ano=" + Model.inboundDetail.inboundDocumentIntegrationDetail.ReceptionDateYear + "&mes=" + Model.inboundDetail.inboundDocumentIntegrationDetail.ReceptionDateMonth;
+                                                 <a href="@link" target="_blank">
+        
+                                                            <i class="fa fa-check text-success"></i>
+                                                    VER
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Documento Metadados:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.inboundDetail.inboundDocumentEnvelopeFiles.Xml))
+                                            {
+                                                <a>
+                                                    <i class="fa fa-times text-danger"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.inboundDetail.inboundDocumentEnvelopeFiles.Xml + "&sentido=in&ano=" + Model.inboundDetail.inboundDocumentIntegrationDetail.ReceptionDateYear + "&mes=" + Model.inboundDetail.inboundDocumentIntegrationDetail.ReceptionDateMonth;
+                                                <a href="@link" target="_blank">
+                                                    <i class="fa fa-check text-success"></i>
+                                                    VER
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-share"></i>&nbsp;&nbsp;
+                                            Documento Digital:
+                                        </td>
+                                        <td class="padding-sm-hr">
+                                            @if (String.IsNullOrWhiteSpace(Model.inboundDetail.inboundDocumentEnvelopeFiles.Pdf))
+                                            {
+                                                <a>
+                                                    <i class="fa fa-times text-danger"></i>
+                                                </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        var link = Url.Action("DownloadFile", "Stats") + "?filename=" + Model.inboundDetail.inboundDocumentEnvelopeFiles.Pdf + "&sentido=in&ano=" + Model.inboundDetail.inboundDocumentIntegrationDetail.ReceptionDateYear + "&mes=" + Model.inboundDetail.inboundDocumentIntegrationDetail.ReceptionDateMonth;
+                                                <a href="@link" target="_blank">
+                                                    <i class="fa fa-check text-success"></i>
+                                                    VER
+                                                </a>
+                                            }
+                                        </td>
+                                </table>
+                            </div> <!-- / .panel-body -->
+                        </div> <!-- / .collapse -->
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="col-lg-12">
+
+            </div>
+        </div>
+    </div>
+}
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>

@@ -1,0 +1,51 @@
+﻿@model eBillingSuite.ViewModels.EDigitalSupplierSyncVM
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+}
+<script>
+	init.push(function () {
+		$(document).ready(function () {
+			var cb = $('#WantSync');
+
+			hideElements(cb);
+
+			cb.change(function () {
+				hideElements($(this));
+			});
+		});
+
+		function hideElements(elem) {
+			var checked = elem.prop('checked');
+			elem.closest('div[class="row"]').nextAll('div').each(function (i) {
+				if (checked == false) {
+					$(this).hide();
+				} else {
+					$(this).show();
+				}
+			});
+		}
+	});
+</script>
+<form method="post">
+	<div class="panel-heading">
+		<span class="panel-title">@Texts.DigitalSupplierSync</span>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			@Html.PixelAdminSwitcherWithColFor(e => e.WantSync, 6, null, InputOptions.Default, Texts.WantSync)
+		</div>
+		<div class="row">
+			@Html.HiddenFor(e => e.SyncUrlConfigPkid)
+			@Html.PixelAdminTextBoxWithColFor(e => e.SyncUrlConfig, 12, null, InputOptions.Default, Texts.SyncUrlConfig)
+		</div>
+		<div class="row">
+			@Html.HiddenFor(e => e.SyncUserConfigPkid)
+			@Html.PixelAdminTextBoxWithColFor(e => e.SyncUserConfig, 6, null, InputOptions.Default, Texts.SyncUserConfig)
+			@Html.HiddenFor(e => e.SyncPassConfigPkid)
+			@Html.PixelAdminPasswordWithColFor(e => e.SyncPassConfig, 6, null, InputOptions.Default, Texts.SyncPassConfig)
+		</div>
+	</div>
+	<div class="panel-footer text-right">
+		<button class="btn btn-primary">@Texts.Submit</button>
+	</div>
+</form>

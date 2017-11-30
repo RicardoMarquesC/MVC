@@ -1,0 +1,232 @@
+﻿@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_LayoutStats.cshtml";
+}
+<script>
+    function InitTable() {
+        $('#jq-datatables').dataTable({
+            "ajax": {
+                "url": '@Url.Action("DocTransporte", "Stats")'
+            },
+            "order": [[0, "asc"]],
+            "columnDefs": [
+							{
+							    "targets": 0,
+							    "data": "NDocumento",
+							},
+							{
+							    "targets": 1,
+							    "data": "CodRetorno",
+							},
+							{
+							    "targets": 2,
+							    "data": "Estado",
+							},
+                            {
+                                "targets": 3,
+                                "data": "MsgRetornoAT",
+                            },
+                            {
+                                "targets": 4,
+                                "data": "UltimoEnvio",
+                            },
+            ],
+            "language": {
+                "sUrl": '@this.GetjQDataTableLanguageUrl()'
+            }
+        });
+
+        $('#jq-datatables_wrapper .table-caption').text('');
+        $('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+
+        $('#jq-datatables').on('draw.dt', function () {
+
+            $('#jq-datatables form').submit(function (e) {
+                e.preventDefault();
+                $.post($(this).prop('action'), $(this).serialize())
+                    .success(function (data) {
+                        if (data == "ok") {
+                            var table = $('#jq-datatables').DataTable();
+                            table.ajax.reload();
+                        }
+                    });
+            });
+        });
+
+
+        var table = $('#jq-datatables').DataTable();
+
+        $.fn.dataTableExt.afnFiltering.push(
+            function filtragem(oSettings, aData, iDataIndex) {
+                var iFini = $('#start').val();
+                var iFfin = $('#end').val();
+                if (iFini === "" && iFfin === "") {
+                    return true;
+                }
+                var column = 4;
+
+                var valoriFini = trocarValor(iFini.substring(3, 6));
+                var valoriFfin = trocarValor(iFfin.substring(3, 6));
+
+                iFini = iFini.substring(7, 9) + valoriFini + iFini.substring(0, 2);
+                iFfin = iFfin.substring(7, 9) + valoriFfin + iFfin.substring(0, 2);
+
+                var val = trocarValor(aData[column].substring(3, 6));
+
+                var datofini = aData[column].substring(7, 9) + val + aData[column].substring(0, 2);
+
+                if (iFini <= datofini && iFfin === "") {
+                    return true;
+                }
+                else if (iFfin >= datofini && iFini === "") {
+                    return true;
+                }
+                else if (iFini <= datofini && iFfin >= datofini) {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        function trocarValor(val) {
+            if (val == "Jan")
+                return "01";
+            else if (val == "Feb")
+                return "02";
+            else if (val == "Mar")
+                return "03";
+            else if (val == "Apr")
+                return "04";
+            else if (val == "May")
+                return "05";
+            else if (val == "Jun")
+                return "06";
+            else if (val == "Jul")
+                return "07";
+            else if (val == "Aug")
+                return "08";
+            else if (val == "Sep")
+                return "09";
+            else if (val == "Oct")
+                return "10";
+            else if (val == "Nov")
+                return "11";
+            else if (val == "Dec")
+                return "12";
+        }
+        function parseDateValue(rawDate) {
+            var dateArray = rawDate.split("-");
+            var parsedDate = dateArray[2] + dateArray[0] + dateArray[1];
+            return parsedDate;
+        }
+
+        $('#jq-datatables tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+
+            }
+        });
+
+        $('#ok').on('click', function () {
+            //function filtragem() { table.draw(); };
+            table.column(2).search($("#Estados").val()).draw();
+            table.column(0).search($("#NumDoc").val()).draw();
+        });
+
+
+        $('#ok').on('click', function () {
+            $('.dataTables_filter input').text($('#datepicker').val());
+        });
+        function exportToCsv() {
+            var value = $('input[aria-controls=jq-datatables]').val();
+            var params = "filter=" + value;
+            document.location = '@Url.Action("ToCsv")?' + params;
+        }
+
+        function exportToPdf() {
+            var value = $('input[aria-controls=jq-datatables]').val();
+            var params = "filter=" + value;
+            document.location = '@Url.Action("ToPdf")?' + params;
+        }
+    }
+    init.push(function () {
+        $('a[data-toggle=tooltip]').tooltip();
+
+        InitTable();
+
+        ajaxInitPanelFunctions['init-jqtable'] = InitTable;
+
+        var options = {
+            orientation: $('body').hasClass('right-to-left') ? "auto right" : 'auto auto',
+            format: 'dd-M-yy'
+        }
+        $('#bs-datepicker-range').datepicker(options);
+
+    });
+</script>
+
+<div class="panel panel-transparent">
+    <div data-rel="ajax-update-panel" data-update-init="init-jqtable" data-modal-size="modal-lg">
+        <div class="panel-heading">
+            <span class="panel-title">@Texts.DocumentoTransporte</span>
+            <br />
+        </div>
+        <div class="panel-body">
+            <div class="row">                
+                <div class="col-sm-6 col-sm-offset-6">
+                    <div style="float:right;">
+                        <button class="btn btn-app btn-grey btn-xxs radius-4" onclick="exportToPdf();">
+                            <i class="fa  fa-file-text-o bigger-110"></i><br />
+                            PDF
+                        </button>
+
+                        <button class="btn btn-app btn-grey btn-xxs radius-4" onclick="exportToCsv();">
+                            <i class="fa fa-save bigger-110"></i><br />
+                            CSV
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="Data"><small class="text-success">@Texts.Data</small></label>
+                    <div class="input-daterange input-group" id="bs-datepicker-range">
+                        <input class="input-sm form-control" id="start" name="start" placeholder="Start date" type="text">
+                        <span class="input-group-addon">to</span>
+                        <input class="input-sm form-control" id="end" name="end" placeholder="End date" type="text">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="Estado"><small class="text-success">@Texts.Estado</small></label>
+                    <select class="form-control" id="Estados">
+                        <option value="">&nbsp;</option>
+                        <option value="0">0 - À espera de comunicação</option>
+                        <option value="1">1 - Comunicado com sucesso</option>
+                        <option value="2">2 - Erro na comunicação</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label><small class="text-success">@Texts.NumDocumento</small></label>
+                    <input class="form-control" id="NumDoc" placeholder="NumDoc" type="text">
+                </div>
+                <label><small>&nbsp;</small></label><br />
+                <button class="btn btn-primary btn" id="ok">OK</button>
+            </div>
+            <br />
+            <div class="table-primary">
+                <table cellpadding="0" width="100%" style="cursor:pointer" cellspacing="0" border="0" class="table table-striped table-hover table-bordered " id="jq-datatables" data-rel="ajax-update-panel" data-modal-size="modal-lg">
+                    <thead>
+                        <tr>
+                            <th>Nº Documento</th>
+                            <th>Código Retorno AT</th>
+                            <th>Estado</th>
+                            <th>Mensagem Retorno AT</th>
+                            <th>Último Envio</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

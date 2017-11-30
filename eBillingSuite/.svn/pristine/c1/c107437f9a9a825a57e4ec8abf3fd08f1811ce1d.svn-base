@@ -1,0 +1,53 @@
+﻿@model eBillingSuite.ViewModels.EBCEmailConfigVM
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eConnectorConfigsLayout.cshtml";
+}
+
+<script>
+	init.push(function () {
+		$('#FKInstanceID').change(function () {
+			console.log($('#FKInstanceID').find(":selected").val());
+			window.location = '@Url.Action("EmailConfigs", "eConnectorConfigs", new { ID = "Guid" })'.replace('Guid', $('#FKInstanceID').find(":selected").val());
+		});
+		
+	});
+</script>
+
+<form method="post" action="@Url.Action("EmailConfigs", "eConnectorConfigs", new { ID = Model.FKInstanceID})">
+	<div class="panel-heading">
+		<span class="panel-title"><i class="panel-title-icon fa fa-calendar"></i>@this.Get(DictionaryEntryKeys.eConnectorEmailConfigsTitle)</span>
+	</div> <!-- / .panel-heading -->
+	<div class="panel-body">
+		@Html.HiddenFor(e => e.PKID)
+		<div class="row">
+			@Html.PixelAdminSelectWithColFor(e => e.FKInstanceID, Model.AvailableInstances, 6, null, InputOptions.Default)
+			@Html.PixelAdminSelectWithColFor(e => e.FKCustomerID, Model.AvailableCustomers, 6, null, InputOptions.Default)
+		</div>
+		<div class="row">
+			@Html.PixelAdminTextBoxWithColFor(e => e.NotificationEmailTecnical, 6, null, InputOptions.Default)
+			@Html.PixelAdminTextBoxWithColFor(e => e.NotificationEmailFunctional, 6, null, InputOptions.Default)
+		</div>		
+		<div class="row">
+			@Html.PixelAdminTextBoxWithColFor(e => e.WaitForEfectiveResponseUnit, 3, null, InputOptions.Default)
+			@Html.PixelAdminSelectWithColFor(e => e.WaitForEffectiveResponseUnitType, Model.AvailableTypes, 3, null, InputOptions.Default)
+		</div>
+
+		<div class="row">
+			@Html.PixelAdminTextBoxWithColFor(e => e.resendAfterCount, 3, null, InputOptions.Default)			
+			@Html.PixelAdminTextBoxWithColFor(e => e.resendAfterPeriodUnit, 3, null, InputOptions.Default)
+			@Html.PixelAdminSelectWithColFor(e => e.resendAfterPeriodUnitType, Model.AvailableTypes, 3, null, InputOptions.Default)
+		</div>
+
+		@*<div class="row">
+			@for (int pos = 0; pos < Model.Configs.Count; pos++)
+			{
+				var ci = Model.Configs[pos];
+				@Html.HiddenFor(e => e.Configs[pos].PKID)
+				@Html.PixelAdminSwitcherWithColFor(e => e.Configs[pos].Value, 6, null, InputOptions.Default, ci.Text)
+			}
+		</div>*@
+	</div>
+	<div class="panel-footer text-right">
+		<button class="btn btn-primary">@this.Get(DictionaryEntryKeys.Submit)</button>
+	</div>
+</form>

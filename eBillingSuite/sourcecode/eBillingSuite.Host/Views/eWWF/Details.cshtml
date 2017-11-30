@@ -1,0 +1,123 @@
+﻿@{
+	var uniqueID = "longtermabsence-modal";
+}
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">Detalhe Processo</h4>
+</div>
+<div class="modal-body">
+	<form id="wt-edit-form"
+		  action="@Url.Action("Edit", "LongTermAbsence")"
+		  method="post" class="form-horizontal"
+		  data-get-on-close="true">
+
+		<ul class="nav nav-tabs nav-tabs-xs" style="margin-top: 20px">
+			<li class="active">
+				<a href="#@uniqueID-details" data-toggle="tab">Detalhes</a>
+			</li>
+			<li>
+				<a href="#@uniqueID-diary" data-toggle="tab">Histórico Processo <span class="badge badge-info">4</span></a>
+			</li>
+			<li>
+				<a href="#@uniqueID-attachments" data-toggle="tab">Anexos <span id="fileinput-counter" class="badge badge-info">2</span></a>
+			</li>
+		</ul>
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="Documento" class="control-label">Documento</label>
+							<input type="text" id="Documento" name="Documento" class="form-control" value="Documento 1" readonly="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="DataDocumento" class="control-label">Data de entrada do Documento</label>
+							<input type="text" id="DataDocumento" name="DataDocumento" class="form-control" value="9/30/2014 4:29:12 PM" readonly="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="" class="control-label">Data da última aprovação</label>
+							<input type="text" id="" name="Última Aprovação" class="form-control" value="10/3/2014 5:29:12 AM" readonly="">
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="" class="control-label">Nome último aprovador</label>
+							<input type="text" id="" name="Último Aprovador" class="form-control" value="Felisberto Moreira" readonly="">
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="Data_limite_Aprova__o" class="control-label">Data limite para a próxima aprovação</label>
+							<input type="text" id="Data_limite_Aprova__o" name="Data limite Aprovação" class="form-control" value="10/10/2014" readonly="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="Estado" class="control-label">Estado Atual</label>
+							<input type="text" id="Estado" name="Estado" class="form-control" value="Pendente" readonly="">
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="Aprovador" class="control-label">Nome próximo Aprovador</label>
+							<input type="text" id="Aprovador" name="Aprovador" class="form-control" value="Joaquim Alegre" readonly="">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="FKEstadoID" class="control-label">Estado</label><select class="form-control" id="FKEstadoID" name="FKEstadoID">
+								<option selected="selected" value="1">Pendente</option>
+								<option value="2">Validado</option>
+								<option value="3">Rejeitado</option>
+								<option value="4">Aprovado</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="FKAprovadorID" class="control-label">Seleccione Aprovador</label>
+								<select class="form-control" id="FKAprovadorID" name="FKAprovadorID">
+									<option value="1">Joaquim Alegre</option>
+									<option selected="selected" value="2">Tiago Esteves</option>
+									<option value="3">Ricardo Alcântara</option>
+									<option value="4">Joana Barbosa</option>
+								</select>
+						</div>
+					</div>
+				</div>
+					
+				<div class="row">
+					@Html.PixelAdminTextAreaWithCol("Comentários", "Comentários", 12, null, 5, InputOptions.Default)
+				</div>
+				
+				</div>
+			<div id="@uniqueID-diary" class="tab-pane fade">
+				@Html.Partial("_DiaryTimeline")
+			</div>
+
+			<div id="@uniqueID-attachments" class="tab-pane fade">
+				@Html.Partial("_FilePointers")
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">	
+	<button type="button" class="btn btn-primary" data-rel="submit" data-form="wt-edit-form">Guardar</button>		
+	<button type="button" class="btn btn-danger" data-rel="delete" data-confirm-message="Quer apagar este registo?" data-url="">Remover</button>	
+	<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+</div>
+
+
+

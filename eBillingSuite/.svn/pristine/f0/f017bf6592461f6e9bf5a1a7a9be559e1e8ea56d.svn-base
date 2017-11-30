@@ -1,0 +1,221 @@
+﻿using eBillingSuite.Enumerations;
+using eBillingSuite.Model.CIC_DB;
+using eBillingSuite.Model.EBC_DB;
+using eBillingSuite.Model.eBillingConfigurations;
+using eBillingSuite.Repositories.Interfaces;
+using MimeKit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace eBillingSuite.ViewModels
+{
+    public class unknownListVM
+    {
+        private IUnknownListRepository _unknownListRepository;
+        #region Properties
+        public Guid Pkid { get; set; }
+
+        public string EmailName { get; set; }
+        public string EmailAddress { get; set; }
+        public string Nif { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableIntegrationMethods { get; private set; }
+        public Guid FkIntegrationMethod { get; set; }
+
+        public bool Enabled { get; set; }
+        public bool ConcatAnexos { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableMarkets { get; private set; }
+        public string Mercado { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableXmlTypes { get; private set; }
+        public string XmlType { get; set; }
+
+        public IEnumerable<SelectListItem> AvailableNomenclaturaPDFTypes { get; private set; }
+        public string NomenclaturaPDFType { get; set; }
+
+        public bool XMLAss { get; set; }
+        public bool XMLNAss { get; set; }
+        public bool PDFAss { get; set; }
+        public bool PDFNAss { get; set; }
+
+        public bool PdfLink { get; set; }
+        public string PdfLinkBaseURL { get; set; }
+
+        public bool IsFromCreate { get; set; }
+
+        public bool DoYouWantForward { get; set; }
+        public bool? DoYouWantForwardEmail { get; set; }
+        public bool? DoYouWantForwardFTP { get; set; }
+
+        public bool isNomenclaturaPDF { get; set; }
+
+        public string counterValue { get; set; }
+
+        #region FTP
+        public string username { get; set; }
+        public string ftpServer { get; set; }
+        public string password { get; set; }
+        public string port { get; set; }
+        #endregion
+
+        #region email
+        public string listEmails { get; set; }
+
+        #endregion
+        #endregion
+
+
+
+        public int _id { get; set; }
+        public string sender { get; set; }
+        public string senderName { get; set; }
+        public string subject { get; set; }
+        public string body { get; set; }
+        public DateTime dateSend { get; set; }
+        public bool haveAttach { get; set; }
+        public List<string> listFiles { get; set; }
+
+        public unknownListVM(IUnknownListRepository unknownListRepository, int id)
+        {
+            _unknownListRepository = unknownListRepository;
+            _id = id;
+            string pathFile = System.IO.Path.Combine(getUnknownPath(), _unknownListRepository.Where(o => o.id == id).Select(o => o.emlPath).FirstOrDefault());
+
+            var mimeMessage = MimeMessage.Load(pathFile);
+            sender = mimeMessage.From.ToString();
+            senderName = sender.Split('@')[0];
+            subject = mimeMessage.Subject;
+            body = mimeMessage.HtmlBody;
+            dateSend = mimeMessage.Date.DateTime;
+            haveAttach = mimeMessage.Attachments.Count() > 0 ? true : false;
+            var listAttach = mimeMessage.Attachments.ToList();
+            listFiles = listAttach.Select(o => ((MimePart)o).FileName).ToList();
+
+
+
+        }
+
+
+        public unknownListVM(IUnknownListRepository unknownListRepository, int id, Whitelist model, string senderXmlType, IECCListRepositories _eBCConfigurationsRepository, Guid tipoNomenclaturaSender, bool isNomenclaturaPDF, string counter)
+        {
+            _unknownListRepository = unknownListRepository;
+            _id = id;
+            string pathFile = System.IO.Path.Combine(getUnknownPath(), _unknownListRepository.Where(o => o.id == id).Select(o => o.emlPath).FirstOrDefault());
+
+            var mimeMessage = MimeMessage.Load(pathFile);
+            sender = mimeMessage.From.ToString();
+            senderName = sender.Split('@')[0];
+            subject = mimeMessage.Subject;
+            body = mimeMessage.HtmlBody;
+            dateSend = mimeMessage.Date.DateTime;
+            haveAttach = mimeMessage.Attachments.Count() > 0 ? true : false;
+            var listAttach = mimeMessage.Attachments.ToList();
+            listFiles = listAttach.Select(o => ((MimePart)o).FileName).ToList();
+
+
+            senderXmlType = senderXmlType == null ? "" : senderXmlType;
+
+            AvailableIntegrationMethods = _eBCConfigurationsRepository
+                .eConnectorIntegrationFiltersRepository
+                .Set
+                .Select(v => new SelectListItem
+                {
+                    Text = v.FriendlyName,
+                    Value = v.PKIntegrationFilterID.ToString(),
+                    Selected = v.FriendlyName.ToLower() == IntegrationFiltersName.DEFAULT.ToLower()
+                })
+                .ToList();
+
+            AvailableMarkets = _eBCConfigurationsRepository
+                .eBCMarketsRepository
+                .Set
+                .Select(v => new SelectListItem
+                {
+                    Text = v.Mercado,
+                    Value = v.Mercado,
+                    Selected = v.Mercado.ToLower() == model.Mercado.ToLower()
+                })
+                .ToList();
+
+            //Get the NomenclaturaPDF Types
+            AvailableNomenclaturaPDFTypes = _eBCConfigurationsRepository
+                .eConnectorTipoNomenclaturaPDFRepository
+                .Set
+                .Select(v => new SelectListItem
+                {
+                    Text = v.tiponomenclatura,
+                    Value = v.pkid.ToString(),
+                    Selected = (tipoNomenclaturaSender == Guid.Empty ? false : v.pkid.ToString() == tipoNomenclaturaSender.ToString())
+                })
+                .ToList();
+
+            // get available XML Types
+            var temp = _eBCConfigurationsRepository
+                .eConnectorXmlTemplateRepository
+                .GetExistingXmlTypes();
+
+            List<string> xmlList = new List<string>();
+            xmlList.Add("");
+            foreach (IGrouping<string, xmlTemplate> item in temp)
+                xmlList.Add(item.Key);
+
+            AvailableXmlTypes = xmlList
+                .Select(a => new SelectListItem
+                {
+                    Text = a,
+                    Value = a,
+                    Selected = a.ToLower() == senderXmlType.ToLower()
+                })
+                .ToList();
+
+
+            this.Pkid = model.PKWhitelistID;
+            this.EmailName = model.EmailName;
+            this.EmailAddress = model.EmailAddress;
+            this.Nif = model.NIF;
+            this.Enabled = model.Enabled;
+            this.ConcatAnexos = model.ConcatAnexos;
+            this.XMLAss = model.XMLAss.Value;
+            this.XMLNAss = model.XMLNAss.Value;
+            this.PDFAss = model.PDFAss.Value;
+            this.PDFNAss = model.PDFNAss.Value;
+            this.PdfLink = model.PdfLink.Value;
+            this.PdfLinkBaseURL = model.PdfLinkBaseURL;
+            this.DoYouWantForwardEmail = model.DoYouWantForwardEmail;
+            this.DoYouWantForwardFTP = model.DoYouWantForwardFTP;
+            this.ftpServer = model.ftpServer;
+            this.username = model.username;
+            this.password = model.password;
+            this.port = model.port;
+            this.listEmails = model.listEmails;
+
+
+            if (String.IsNullOrWhiteSpace(this.Nif))
+                this.IsFromCreate = true;
+            else
+                this.IsFromCreate = false;
+
+            this.isNomenclaturaPDF = isNomenclaturaPDF;
+            this.counterValue = counter;
+        }
+
+
+        private string getUnknownPath()
+        {
+            string installDir = String.Empty;
+            using (eBillingConfigurations ebillingConfigurations = new eBillingConfigurations())
+            {
+                installDir = ebillingConfigurations
+                                .EBC_Configurations
+                                .Where(config => config.Name == "InstallDir")
+                                .Select(config => config.Data).FirstOrDefault();
+            }
+
+            return System.IO.Path.Combine(installDir, "Unknown");
+        }
+    }
+}

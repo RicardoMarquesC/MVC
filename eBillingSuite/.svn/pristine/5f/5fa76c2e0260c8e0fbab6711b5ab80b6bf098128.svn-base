@@ -1,0 +1,133 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    var test = 0;
+    function InitTable() {
+        $('#jq-datatables').dataTable({
+            "ajax": {
+                "url": '@Url.Action("","readEmail")',
+            },
+            "order": [[0, "asc"]],
+            "columnDefs": [
+							{
+							    "targets": 0,
+							    "data": "id",
+							},
+							{
+							    "targets": 1,
+							    "data": "sender",
+							},
+							{
+							    "targets": 2,
+							    "data": "data",
+                                "type": "Date.parse()"
+							},
+                            {
+                                "targets": 3,
+                                "data": "caminho",
+                            },
+                            {
+                                "targets": 4,
+                                "data": "sender",
+                                "render": function (data, type, full, meta) {
+                                    if (!full.existSender) {
+                                        var detail = '<button type="button" data-rel="ajax-edit-trigger" style="float:right;" class="btn btn-info btn-rounded" data-url="@Url.Action("CreateSender", "readEmail", new { Sender = "sender"})">'.replace('sender', data) + '<i class="fa fa-user"></i></button>';
+                                    }
+                                    else {
+                                        var detail = '<button type="button"  style="float:right;" class="btn btn-info btn-rounded" data-rel="ajax-edit-trigger" data-url="@Url.Action("CreateSender", "readEmail", new { Sender = "sender"})" disabled>'.replace('sender', data) + '<i class="fa fa-user"></i></button>';
+                                    }
+                                    //detail += '<a id="help" class="btn btn-info btn-rounded"  style="float:right;" data-toggle="modal" data-target="#uidemo-modals-alerts-warning"><span class="fa fa-question-circle"></span></a>';
+                                    detail += '<button type="button" data-rel="ajax-edit-trigger" style="float:right;" class="btn btn-danger btn-rounded" onclick="openEml(ID)">'.replace('ID', full.id) + '<i class="fa fa-search-plus"></i></button>';
+                                    detail += '<button type="button" data-rel="ajax-edit-trigger" style="float:right;"  class="btn btn-info btn-rounded"  data-url="@Url.Action("Reprocessed", "readEmail", new { Id = "id"})">'.replace('id', full.id) + '<i class="fa fa fa-refresh"></i></button>'
+                                    return detail;
+                                }
+                            }
+            ],
+            "language": {
+                "sUrl": '@this.GetjQDataTableLanguageUrl()'
+            },
+        });
+
+        $('#jq-datatables_wrapper .table-caption').text('');
+        $('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+
+        $('#jq-datatables').on('draw.dt', function () {
+
+            $('#jq-datatables form').submit(function (e) {
+                e.preventDefault();
+                $.post($(this).prop('action'), $(this).serialize())
+                    .success(function (data) {
+                        if (data == "ok") {
+                            var table = $('#jq-datatables').DataTable();
+                            table.ajax.reload();
+                        }
+                    });
+            });
+        });
+    }
+
+    init.push(function () {
+        $('a[data-toggle=tooltip]').tooltip();
+
+        InitTable();
+
+        ajaxInitPanelFunctions['init-jqtable'] = InitTable;
+    });
+
+    $(document).ready(function () {
+        $('#okClick').click(function () {
+            window.location.href = '@Url.Action("Details","readEmail", new {Id = "id" })'.replace('id', test);
+        });
+    });
+
+    function openEml(id) {
+        $('#uidemo-modals-alerts-warning').modal('show');
+        test = id;
+    }
+
+</script>
+<div class="tab-pane panel no-padding no-border fade in active">
+    <div data-rel="ajax-update-panel"
+         id="IndexEDICostumers"
+         data-update-init="init-jqtable"
+         data-modal-size="modal-lg">
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.UnknownList)</span>
+        </div>
+        <div class="panel-body">
+            <div class="table-primary">
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="jq-datatables" data-rel="ajax-update-panel" data-modal-size="modal-lg" width="100%">
+                    <thead>
+                        <tr>
+                            <th>@this.Get(DictionaryEntryKeys.readEmail_id)</th>
+                            <th>@this.Get(DictionaryEntryKeys.readEmail_Sender)</th>
+                            <th>@this.Get(DictionaryEntryKeys.readEmail_Data)</th>
+                            <th>@this.Get(DictionaryEntryKeys.readEmail_Caminho)</th>
+                            <th></th>
+                            @*<th></th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="uidemo-modals-alerts-warning" class="modal modal-alert modal-warning fade" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa fa-warning"></i>
+            </div>
+            <div class="modal-title">@this.Get(DictionaryEntryKeys.Warning)</div>
+            <div class="modal-body">@this.Get(DictionaryEntryKeys.WarningBody)</div>
+            <div class="modal-footer">
+                @*<button onclick="something()" id="okClick" type="button" class="btn btn-warning" data-dismiss="modal">@this.Get(DictionaryEntryKeys.OK)</button>*@
+                <button id="okClick" type="button" class="btn btn-warning" data-dismiss="modal">@this.Get(DictionaryEntryKeys.OK)</button>
+                <button type="button" class="btn close" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Cancel)</button>
+            </div>
+        </div> <!-- / .modal-content -->
+    </div> <!-- / .modal-dialog -->
+</div>

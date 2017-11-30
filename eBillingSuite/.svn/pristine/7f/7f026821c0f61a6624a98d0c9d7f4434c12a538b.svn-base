@@ -1,0 +1,266 @@
+﻿using eBillingSuite.Model;
+using eBillingSuite.Model.Desmaterializacao;
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Linq;
+
+namespace eBillingSuite.Support
+{
+    public class Queries
+    {
+        //private const string InsertMastCab = "INSERT INTO MasterizacaoCabecalho(pkid,FKNomeTemplate,NomeCampo,Topo,Fundo,Esquerda,Direita,RegionId,LinhaId,WordId,WordPage,Word)" +
+        //    " SELECT NEWID(), NT.pkid, @NomeCampo, @Topo, @Fundo, @Esquerda, @Direita, @RegionId, @LinhaId, @WordId, @WordPage, @Word" +
+        //    " FROM dbo.NomeTemplate NT WHERE fktipofact = @fkTipoDoc and NT.pkid in (SELECT FkNomeTemplate FROM dbo.MasterizacaoCabecalho);";
+        private const string InsertMastCab = "INSERT INTO MasterizacaoCabecalho(pkid,FKNomeTemplate,NomeCampo,Topo,Fundo,Esquerda,Direita,RegionId,LinhaId,WordId,WordPage,Word)" +
+            " SELECT NEWID(), NT.pkid, @NomeCampo, @Topo, @Fundo, @Esquerda, @Direita, @RegionId, @LinhaId, @WordId, @WordPage, @Word" +
+            " FROM dbo.NomeTemplate NT WHERE fktipofact = @fkTipoDoc;";
+
+        //private const string InsertMastLine = "INSERT INTO MasterizacaoLineItems(pkid,FKNomeTemplate,NomeCampo,Topo,Fundo,Esquerda,Direita,RegionId,LinhaId,WordId,WordPage,Word)" +
+        //    " SELECT NEWID(), NT.pkid, @NomeCampo, @Topo, @Fundo, @Esquerda, @Direita, @RegionId, @LinhaId, @WordId, @WordPage, @Word" +
+        //    " FROM dbo.NomeTemplate NT WHERE fktipofact = @fkTipoDoc and NT.pkid in (SELECT FkNomeTemplate FROM dbo.MasterizacaoLineItems);";
+        private const string InsertMastLine = "INSERT INTO MasterizacaoLineItems(pkid,FKNomeTemplate,NomeCampo,Topo,Fundo,Esquerda,Direita,RegionId,LinhaId,WordId,WordPage,Word)" +
+            " SELECT NEWID(), NT.pkid, @NomeCampo, @Topo, @Fundo, @Esquerda, @Direita, @RegionId, @LinhaId, @WordId, @WordPage, @Word" +
+            " FROM dbo.NomeTemplate NT WHERE fktipofact = @fkTipoDoc;";
+
+        //private const string InsertMastVat = "INSERT INTO MasterizacaoIva(pkid,FKNomeTemplate,NomeCampo,Topo,Fundo,Esquerda,Direita,RegionId,LinhaId,WordId,WordPage,Word)" +
+        //    " SELECT NEWID(), NT.pkid, @NomeCampo, @Topo, @Fundo, @Esquerda, @Direita, @RegionId, @LinhaId, @WordId, @WordPage, @Word" +
+        //    " FROM dbo.NomeTemplate NT WHERE fktipofact = @fkTipoDoc and NT.pkid in (SELECT FkNomeTemplate FROM dbo.MasterizacaoIva);";
+        private const string InsertMastVat = "INSERT INTO MasterizacaoIva(pkid,FKNomeTemplate,NomeCampo,Topo,Fundo,Esquerda,Direita,RegionId,LinhaId,WordId,WordPage,Word)" +
+            " SELECT NEWID(), NT.pkid, @NomeCampo, @Topo, @Fundo, @Esquerda, @Direita, @RegionId, @LinhaId, @WordId, @WordPage, @Word" +
+            " FROM dbo.NomeTemplate NT WHERE fktipofact = @fkTipoDoc;";
+
+        private const string InsertDadosTemplate = "INSERT INTO DadosTemplate(pkid, fkNomeTemplate, NomeCampo, Localizacao, Posicao, Formato, Obrigatorio, Regex, DeOrigem, TipoExtraccao, Formula, UserExpression, isComboBox, isReadOnly, LabelUI)" +
+            " SELECT NEWID(), NT.pkid, @NomeCampo, @local," +
+            " (SELECT TOP(1) Posicao + 1 FROM (SELECT Posicao FROM DadosTemplate WHERE fkNomeTemplate=NT.pkid and Localizacao=@local UNION SELECT -1 as Posicao) A ORDER BY Posicao desc)," +
+            " @formato, @obrig," +
+            " (SELECT TOP(1) Regex FROM (SELECT Regex FROM CamposXML WHERE Tipo=@local and NomeCampo=@NomeCampo UNION SELECT '' as Posicao) A ORDER BY Regex desc)," +
+            " @deOrigem, @tipoExt, @formula, @expressao, @isComboBox, @isReadOnly, @labelUI" +
+            " FROM dbo.NomeTemplate NT" +
+            " WHERE fktipofact = @fkTipoDoc;";
+
+        private const string InsertTemplateName = "INSERT INTO NomeTemplate(pkid, NomeTemplate, TipoXML, fkfornecedor, fktipofact, Masterizado, NomeOriginal)" +
+            " SELECT NEWID(), (@nomeOriginal + '_' + FO.Contribuinte), @tipoXML, FO.pkid, @fkTipoDoc, @masterizado, @nomeOriginal" +
+            " FROM Fornecedores FO";
+
+        public static void InsertHeaderMasterization(MasterizacaoCabecalho masterizacaoCabecalho, Guid fkTipoDoc, DbTransaction dbTransaction)
+        {
+            try
+            {
+                SqlConnection conn = (SqlConnection)dbTransaction.Connection;
+
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                using (SqlCommand command = new SqlCommand(InsertMastCab, conn, (SqlTransaction)dbTransaction))
+                {
+                    command.CommandTimeout = 120;
+
+                    command.Parameters.Add("@fkTipoDoc", System.Data.SqlDbType.UniqueIdentifier).Value = fkTipoDoc;
+                    command.Parameters.Add("@NomeCampo", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.NomeCampo;
+                    command.Parameters.Add("@Topo", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.Topo;
+                    command.Parameters.Add("@Fundo", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.Fundo;
+                    command.Parameters.Add("@Esquerda", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.Esquerda;
+                    command.Parameters.Add("@Direita", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.Direita;
+                    command.Parameters.Add("@RegionId", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.RegionId;
+                    command.Parameters.Add("@LinhaId", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.LinhaId;
+                    command.Parameters.Add("@WordId", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.WordId;
+                    command.Parameters.Add("@WordPage", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.WordPage;
+                    command.Parameters.Add("@Word", System.Data.SqlDbType.NVarChar).Value = masterizacaoCabecalho.Word;
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void InsertLineMasterization(MasterizacaoLineItems masterizacaoLineItems, Guid fkTipoDoc, DbTransaction dbTransaction)
+        {
+            try
+            {
+                SqlConnection conn = (SqlConnection)dbTransaction.Connection;
+
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                using (SqlCommand command = new SqlCommand(InsertMastLine, conn, (SqlTransaction)dbTransaction))
+                {
+                    command.CommandTimeout = 120;
+
+                    command.Parameters.Add("@fkTipoDoc", System.Data.SqlDbType.UniqueIdentifier).Value = fkTipoDoc;
+                    command.Parameters.Add("@NomeCampo", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.NomeCampo;
+                    command.Parameters.Add("@Topo", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.Topo;
+                    command.Parameters.Add("@Fundo", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.Fundo;
+                    command.Parameters.Add("@Esquerda", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.Esquerda;
+                    command.Parameters.Add("@Direita", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.Direita;
+                    command.Parameters.Add("@RegionId", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.RegionId;
+                    command.Parameters.Add("@LinhaId", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.LinhaId;
+                    command.Parameters.Add("@WordId", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.WordId;
+                    command.Parameters.Add("@WordPage", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.WordPage;
+                    command.Parameters.Add("@Word", System.Data.SqlDbType.NVarChar).Value = masterizacaoLineItems.Word;
+
+                    int rows = command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void InsertVatMasterization(MasterizacaoIva masterizacaoIva, Guid fkTipoDoc, DbTransaction dbTransaction)
+        {
+            try
+            {
+                SqlConnection conn = (SqlConnection)dbTransaction.Connection;
+
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                using (SqlCommand command = new SqlCommand(InsertMastVat, conn, (SqlTransaction)dbTransaction))
+                {
+                    command.CommandTimeout = 120;
+
+                    command.Parameters.Add("@fkTipoDoc", System.Data.SqlDbType.UniqueIdentifier).Value = fkTipoDoc;
+                    command.Parameters.Add("@NomeCampo", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.NomeCampo;
+                    command.Parameters.Add("@Topo", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.Topo;
+                    command.Parameters.Add("@Fundo", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.Fundo;
+                    command.Parameters.Add("@Esquerda", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.Esquerda;
+                    command.Parameters.Add("@Direita", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.Direita;
+                    command.Parameters.Add("@RegionId", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.RegionId;
+                    command.Parameters.Add("@LinhaId", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.LinhaId;
+                    command.Parameters.Add("@WordId", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.WordId;
+                    command.Parameters.Add("@WordPage", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.WordPage;
+                    command.Parameters.Add("@Word", System.Data.SqlDbType.NVarChar).Value = masterizacaoIva.Word;
+
+                    int rows = command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void InsertTemplateDataToAllEntitiesByDocType(string xmlFieldName, string local, bool origin, int format,
+            bool obrig, string extractionType, string formula, string expression, Guid fkTipoDoc, DbTransaction dbTransaction, bool isComboBox,
+            bool isReadOnly, string labelUI, string defaultVal,
+            Repositories.IEDigitalSupplierXmlDataRepository _eDigitalSupplierXmlDataRepository, Repositories.IEDigitalXmlFieldsRepository _eDigitalXmlFieldsRepository,
+            bool fromNewDocType)
+        {
+            try
+            {
+
+                SqlConnection conn = (SqlConnection)dbTransaction.Connection;
+
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                // if it's a document type creation, we need to insert a line in DadosTemplate for each supplier with no xml fields
+                if (fromNewDocType)
+                {
+                    string q1 = "INSERT INTO DadosTemplate (FKNomeTemplate, XmlFields)" +
+                        "SELECT NT.pkid, '[]' FROM NomeTemplate NT, TipoFacturas TF WHERE TF.pkid = @docTypePkid and NT.fktipofact = TF.pkid";
+                    using (SqlCommand command = new SqlCommand(q1, conn, (SqlTransaction)dbTransaction))
+                    {
+                        command.Parameters.Add("@docTypePkid", System.Data.SqlDbType.UniqueIdentifier).Value = fkTipoDoc;
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+
+                List<DadosTemplate> dadosTemplates = new List<DadosTemplate>();
+                string q = "SELECT ID, FKNomeTemplate, XmlFields FROM DadosTemplate WHERE FKNomeTemplate in (SELECT pkid FROM NomeTemplate WHERE fktipofact = @fkTipoFact)";
+                using (SqlCommand command = new SqlCommand(q, conn, (SqlTransaction)dbTransaction))
+                {
+                    command.Parameters.Add("@fkTipoFact", System.Data.SqlDbType.UniqueIdentifier).Value = fkTipoDoc;
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            dadosTemplates.Add(new DadosTemplate { ID = reader.GetInt32(0), FKNomeTemplate = reader.GetGuid(1), XmlFields = reader.GetString(2) });
+                        }
+                    }
+                }
+
+                foreach (var dadosTemplate in dadosTemplates)
+                {
+                    var xmlFieldsDeserialized = _eDigitalSupplierXmlDataRepository.GetDeserializedFields(dadosTemplate);
+
+                    int xmlFieldsCount = xmlFieldsDeserialized.Count;
+
+                    var xmlField = _eDigitalXmlFieldsRepository.Set.FirstOrDefault(c => c.Tipo.ToLower() == local.ToLower() && c.NomeCampo.ToLower() == xmlFieldName.ToLower());
+
+                    xmlFieldsDeserialized.Add(new HelperTools.DadosTemplateXmlDBTable
+                    {
+                        Pkid = Guid.NewGuid(),
+                        NomeCampo = xmlFieldName,
+                        Localizacao = local,
+                        CasasDecimais = format,
+                        Obrigatorio = obrig,
+                        DeOrigem = origin,
+                        TipoExtraccao = extractionType,
+                        Formula = String.IsNullOrWhiteSpace(formula) ? "" : formula,
+                        Expressao = String.IsNullOrWhiteSpace(expression) ? "" : expression,
+                        IsComboBox = isComboBox,
+                        IsReadOnly = isReadOnly,
+                        LabelUI = labelUI,
+                        CampoXmlRegex = xmlField != null ? (xmlField.Regex ?? "") : "",
+                        Fknometemplate = dadosTemplate.FKNomeTemplate,
+                        Posicao = xmlFieldsCount,
+                        PersistValueToNextDoc = false,
+                        DefaultValue = defaultVal
+                    });
+
+                    string xmlFieldsSerialized = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(xmlFieldsDeserialized);
+
+                    string query = "UPDATE DadosTemplate SET XmlFields = @xmlFields WHERE ID = @id";
+                    using (SqlCommand command = new SqlCommand(query, conn, (SqlTransaction)dbTransaction))
+                    {
+                        command.Parameters.Add("@xmlFields", System.Data.SqlDbType.NVarChar).Value = xmlFieldsSerialized;
+                        command.Parameters.Add("@id", System.Data.SqlDbType.Int).Value = dadosTemplate.ID;
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void InsertTemplateNameToAllEntitiesByDocType(NomeTemplate newDBNomeTemplate, DbTransaction dbTransaction)
+        {
+            try
+            {
+                SqlConnection conn = (SqlConnection)dbTransaction.Connection;
+
+                if (conn.State == System.Data.ConnectionState.Closed)
+                    conn.Open();
+
+                using (SqlCommand command = new SqlCommand(InsertTemplateName, conn, (SqlTransaction)dbTransaction))
+                {
+                    command.CommandTimeout = 120;
+
+                    command.Parameters.Add("@nomeOriginal", System.Data.SqlDbType.NVarChar).Value = newDBNomeTemplate.NomeOriginal;
+                    command.Parameters.Add("@tipoXML", System.Data.SqlDbType.NVarChar).Value = newDBNomeTemplate.TipoXML;
+                    command.Parameters.Add("@masterizado", System.Data.SqlDbType.Bit).Value = newDBNomeTemplate.Masterizado;
+                    command.Parameters.Add("@fkTipoDoc", System.Data.SqlDbType.UniqueIdentifier).Value = newDBNomeTemplate.fktipofact;
+
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+    }
+}

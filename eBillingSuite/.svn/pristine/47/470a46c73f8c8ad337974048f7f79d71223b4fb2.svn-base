@@ -1,0 +1,93 @@
+﻿using eBillingSuite.Globalization.Generators;
+using eBillingSuite.Model;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.Entity;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Shortcut.Repositories;
+using eBillingSuite.Model.EBC_DB;
+
+namespace eBillingSuite.Data
+{
+	public partial class Form1 : Form
+	{
+		public Form1()
+		{
+			InitializeComponent();
+		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			labelInfo.Text = "";
+		}
+
+		private void atualizarToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			labelInfo.Text = "Atualizando o dicionário de dados...";
+			using (var context = new EBC_DB())
+			{
+				if (context.Database.Connection.State == ConnectionState.Closed)
+					context.Database.Connection.Open();
+
+				using (var trans = context.Database.BeginTransaction())
+				{
+					try
+					{
+						LogBox.AppendText(context.Database.Connection.ConnectionString + Environment.NewLine);
+
+						var langs = context.Languages.ToList();
+
+						foreach (var lang in langs)
+						{
+							BaseDictionaryEntriesGenerator generator = null;
+
+							switch (lang.IsoCode)
+							{
+								case "PT":
+									generator = new DictionaryEntriesForPT(lang);
+									break;
+								default:
+									LogBox.AppendText("Unsupported ISO code: " + lang.IsoCode);
+									break;
+							}
+
+							if (generator != null)
+							{
+								var entries = generator
+									.GenerateEntries()
+									.ToArray();
+
+								foreach (var entry in entries)
+								{
+									var match = context.DictionaryEntries.FirstOrDefault(de => de.LanguageID == lang.ID && de.Key == entry.Key);
+									if (match != null && match.Value != entry.Value)
+									{
+										match.Value = entry.Value;
+										context.Entry(match).State = EntityState.Modified;
+									}
+									else if (match == null)
+										context.DictionaryEntries.Add(entry);
+								}
+								LogBox.AppendText("Updated " + lang.Name);
+							}
+						}
+
+						context.SaveChanges();
+						trans.Commit();
+					}
+					catch (Exception ex)
+					{
+						trans.Rollback();
+						LogBox.AppendText(ex.StackTrace.ToString());
+					}
+				}
+			};
+		}
+	}
+}

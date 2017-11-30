@@ -1,0 +1,60 @@
+﻿@model eBillingSuite.Controllers.User_Produtos
+
+
+@{
+    var uniqueID = "eUser-modal";
+    int count = 0;
+}
+<script>
+    function showProducts() {
+        var x = document.getElementById('lista');
+        if (x.style.display === 'none') {
+            x.style.display = 'block';
+        } else {
+            x.style.display = 'none';
+        }
+    }
+</script>
+
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">@this.Get(DictionaryEntryKeys.UserAdd)</h4>
+</div>
+<div class="modal-body">
+    @if (Model.lista != null)
+    {
+        <form id="doc-edit-form"
+              action="@Url.Action("createUserP", "eUser")"
+              method="post"
+              class="form-horizontal">
+            <div class="tab-content">
+                <div id="@uniqueID-details" class="tab-pane fade in active">
+                    @Html.HiddenFor(e => e.user.CodUtilizador)
+                    <div class="row">
+                        @Html.PixelAdminTextBoxWithColFor(e => e.user.username, 6, null, InputOptions.Default)
+                        @Html.PixelAdminPasswordWithColFor(e => e.user.password, 6, null, InputOptions.Default)
+                    </div>
+                    <div class="row">
+                        @Html.PixelAdminSwitcherWithColFor(e => e.user.allPermission, 6, null, InputOptions.Default)
+                        <a class="btn btn-lg btn-success btn-rounded" onclick="showProducts()">@this.Get(DictionaryEntryKeys.verProdutos)</a>
+                    </div>
+                    <div id="lista" class="row" style="display: none;">
+                        @for (int i = 0; i < Model.lista.Count; i++)
+                        {
+                            @Html.HiddenFor(e => e.lista[i].ProductName)
+                            @Html.PixelAdminSwitcherWithColFor(e => e.lista[i].Checked, 6, null, InputOptions.Default, Model.lista[i].ProductName)
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+    
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>
+

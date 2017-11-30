@@ -1,0 +1,327 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Security;
+using System.Web.Services;
+using System.Web.Services.Protocols;
+
+/// <summary>
+/// Summary description for ebcExternalWS
+/// </summary>
+[WebService(Namespace = "http://tempuri.org/")]
+[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+// To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
+// [System.Web.Script.Services.ScriptService]
+public class ebcExternalWS : System.Web.Services.WebService
+{
+    public ebcExternalWS()
+    {
+
+        //Uncomment the following line if using designed components 
+        //InitializeComponent(); 
+    }
+
+    [WebMethod]
+    public string HelloWorld()
+    {
+        //return "Hello World";
+        return Context.User.Identity.Name + ", Authen. type: " + Context.User.Identity.AuthenticationType +
+       ", Authenticated: " + Context.User.Identity.IsAuthenticated.ToString() + ", " +
+       DateTime.Now.Minute + ":".ToString() + DateTime.Now.Second;
+    }
+
+    [WebMethod]
+    //retorna tudo o que existe na base de dados Out e In
+    public string GetAll()
+    {
+        string json = "";
+        //obter os dados pretendidos
+        json = GetAllInboundinDB();
+        json += "|";
+        json += GetAllOutboundinDB();
+
+        //transformar em objecto json
+        return json;
+    }
+
+    [WebMethod]
+    public string GetAllOutbound()
+    {
+        string json = "";
+        //retorna tudo o que é Outbound
+        return json = GetAllOutboundinDB();
+    }
+
+    [WebMethod]
+    public string GetAllInbound()
+    {
+        string json = "";
+        //retorna tudo o que é Inbound
+        return json = GetAllInboundinDB();
+
+    }
+
+
+    [WebMethod(Description = "Out = 0 | In = 1")]
+    public string GetByID(int ID, int OutOrIn)
+    {
+        if (OutOrIn == 0)
+        {
+            List<OutboundPacket> listOutboundP = new List<OutboundPacket>();
+
+            string connectionString = ConfigurationManager.ConnectionStrings["CIC_DB"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                if (conn.State != System.Data.ConnectionState.Open)
+                    conn.Open();
+
+                string query = "SELECT [DMSID],[NomeReceptor],[EmailReceptor],[NIFReceptor],[NumFactura],[DataFactura],[QuantiaComIVA],[CreationDate],[CurrentEBCState],[LastUpdate],[DocOriginal],[QuantiaSemIVA],[Moeda],[QuantiaComIVAMoedaInterna],[QuantiaSemIVAMoedaInterna],[TaxaCambio],[CondicaoPagamento],[SWIFT],[IBAN],[TipoDocumento],[NomeEmissor],[NIFEmissor],[Referencia],[Contentor],[CGA],[NumEncomenda],[Identificador] FROM [dbo].[OutboundPacket] where Identificador=@num";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.Add("@num", SqlDbType.Int).Value = ID;
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            OutboundPacket outboundP = new OutboundPacket();
+
+                            #region passar os dados para a variavel inboundP
+                            outboundP.DMSID = dr.GetValue(0).ToString();
+                            outboundP.NomeReceptor = dr.GetValue(1).ToString();
+                            outboundP.EmailReceptor = dr.GetValue(2).ToString();
+                            outboundP.NIFReceptor = dr.GetValue(3).ToString();
+                            outboundP.NumFactura = dr.GetValue(4).ToString();
+                            outboundP.DataFactura = dr.GetValue(5).ToString();
+                            outboundP.QuantiaComIVA = dr.GetValue(6).ToString();
+                            outboundP.CreationDate = DateTime.Parse(dr.GetValue(7).ToString());
+                            outboundP.CurrentEBCState = dr.GetValue(8).ToString();
+                            outboundP.LastUpdate = DateTime.Parse(dr.GetValue(9).ToString());
+                            outboundP.DocOriginal = dr.GetValue(10).ToString();
+                            outboundP.QuantiaSemIVA = dr.GetValue(11).ToString();
+                            outboundP.Moeda = dr.GetValue(12).ToString();
+                            outboundP.QuantiaComIVAMoedaInterna = dr.GetValue(13).ToString();
+                            outboundP.QuantiaSemIVAMoedaInterna = dr.GetValue(14).ToString();
+                            outboundP.TaxaCambio = dr.GetValue(15).ToString();
+                            outboundP.CondicaoPagamento = dr.GetValue(16).ToString();
+                            outboundP.SWIFT = dr.GetValue(17).ToString();
+                            outboundP.IBAN = dr.GetValue(18).ToString();
+                            outboundP.TipoDocumento = dr.GetValue(19).ToString();
+                            outboundP.NomeEmissor = dr.GetValue(20).ToString();
+                            outboundP.NIFEmissor = dr.GetValue(21).ToString();
+                            outboundP.Referencia = dr.GetValue(22).ToString();
+                            outboundP.Contentor = dr.GetValue(23).ToString();
+                            outboundP.CGA = dr.GetValue(24).ToString();
+                            outboundP.NumEncomenda = dr.GetValue(25).ToString();
+                            outboundP.Identificador = int.Parse(dr.GetValue(26).ToString());
+                            outboundP.InorOut = false;
+                            #endregion
+
+                            listOutboundP.Add(outboundP);
+                        }
+                    }
+                }
+            }
+            return JsonConvert.SerializeObject(listOutboundP);
+        }
+        else
+        {
+            List<InboundPacket> listInboundP = new List<InboundPacket>();
+
+            string connectionString = ConfigurationManager.ConnectionStrings["CIC_DB"].ToString();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                if (conn.State != System.Data.ConnectionState.Open)
+                    conn.Open();
+
+                string query = "SELECT [NIF],[NumEncomenda],[NumFactura],[DataFactura],[Quantia],[ReceptionDate],[FKWhiteListID],[NIFE],[DocOriginal],[Obs],[Devolvido],[QuantiaSemIVA],[NomeFornec],[Moeda],[QuantIVAMI],[QuantSIVAMI],[TCambio],[CondicaoPag],[SWIFT],[IBAN],[TipoDoc],[NomeReceptor],[EmailCliente],[Referencia],[ImportExport],[ViagemPartida],[CGA],[Contentor],[Identificador] FROM [dbo].[InboundPacket] where Identificador=@num";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.Add("@num", SqlDbType.Int).Value = ID;
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            InboundPacket inboundP = new InboundPacket();
+
+                            #region passar os dados para a variavel inboundP
+                            inboundP.NIF = dr.GetValue(0).ToString();
+                            inboundP.NumEncomenda = dr.GetValue(1).ToString();
+                            inboundP.NumFactura = dr.GetValue(2).ToString();
+                            inboundP.DataFactura = dr.GetValue(3).ToString();
+                            inboundP.Quantia = dr.GetValue(4).ToString();
+                            inboundP.ReceptionDate = DateTime.Parse(dr.GetValue(5).ToString());
+                            inboundP.FKWhiteListID = Guid.Parse(dr.GetValue(6).ToString());
+                            inboundP.NIFE = dr.GetValue(7).ToString();
+                            inboundP.DocOriginal = dr.GetValue(8).ToString();
+                            inboundP.Obs = dr.GetValue(9).ToString();
+                            inboundP.Devolvido = bool.Parse(dr.GetValue(10).ToString());
+                            inboundP.QuantiaSemIVA = dr.GetValue(11).ToString();
+                            inboundP.NomeFornec = dr.GetValue(12).ToString();
+                            inboundP.Moeda = dr.GetValue(13).ToString();
+                            inboundP.QuantIVAMI = dr.GetValue(14).ToString();
+                            inboundP.QuantSIVAMI = dr.GetValue(15).ToString();
+                            inboundP.TCambio = dr.GetValue(16).ToString();
+                            inboundP.CondicaoPag = dr.GetValue(17).ToString();
+                            inboundP.SWIFT = dr.GetValue(18).ToString();
+                            inboundP.IBAN = dr.GetValue(19).ToString();
+                            inboundP.TipoDoc = dr.GetValue(20).ToString();
+                            inboundP.NomeReceptor = dr.GetValue(21).ToString();
+                            inboundP.EmailCliente = dr.GetValue(22).ToString();
+                            inboundP.Referencia = dr.GetValue(23).ToString();
+                            inboundP.ImportExport = dr.GetValue(24).ToString();
+                            inboundP.ViagemPartida = dr.GetValue(25).ToString();
+                            inboundP.CGA = dr.GetValue(26).ToString();
+                            inboundP.Contentor = dr.GetValue(27).ToString();
+                            inboundP.Identificador = int.Parse(dr.GetValue(28).ToString());
+                            inboundP.InorOut = true;
+                            #endregion
+
+                            listInboundP.Add(inboundP);
+                        }
+                    }
+                }
+            }
+
+            return JsonConvert.SerializeObject(listInboundP);
+        }
+    }
+
+
+    #region HELPERS
+    private string GetAllOutboundinDB()
+    {
+        List<OutboundPacket> listOutboundP = new List<OutboundPacket>();
+
+        string connectionString = ConfigurationManager.ConnectionStrings["CIC_DB"].ToString();
+
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            if (conn.State != System.Data.ConnectionState.Open)
+                conn.Open();
+
+            string query = "SELECT [DMSID],[NomeReceptor],[EmailReceptor],[NIFReceptor],[NumFactura],[DataFactura],[QuantiaComIVA],[CreationDate],[CurrentEBCState],[LastUpdate],[DocOriginal],[QuantiaSemIVA],[Moeda],[QuantiaComIVAMoedaInterna],[QuantiaSemIVAMoedaInterna],[TaxaCambio],[CondicaoPagamento],[SWIFT],[IBAN],[TipoDocumento],[NomeEmissor],[NIFEmissor],[Referencia],[Contentor],[CGA],[NumEncomenda],[Identificador] FROM [dbo].[OutboundPacket]";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        OutboundPacket outboundP = new OutboundPacket();
+
+                        #region passar os dados para a variavel inboundP
+                        outboundP.DMSID = dr.GetValue(0).ToString();
+                        outboundP.NomeReceptor = dr.GetValue(1).ToString();
+                        outboundP.EmailReceptor = dr.GetValue(2).ToString();
+                        outboundP.NIFReceptor = dr.GetValue(3).ToString();
+                        outboundP.NumFactura = dr.GetValue(4).ToString();
+                        outboundP.DataFactura = dr.GetValue(5).ToString();
+                        outboundP.QuantiaComIVA = dr.GetValue(6).ToString();
+                        outboundP.CreationDate = DateTime.Parse(dr.GetValue(7).ToString());
+                        outboundP.CurrentEBCState = dr.GetValue(8).ToString();
+                        outboundP.LastUpdate = DateTime.Parse(dr.GetValue(9).ToString());
+                        outboundP.DocOriginal = dr.GetValue(10).ToString();
+                        outboundP.QuantiaSemIVA = dr.GetValue(11).ToString();
+                        outboundP.Moeda = dr.GetValue(12).ToString();
+                        outboundP.QuantiaComIVAMoedaInterna = dr.GetValue(13).ToString();
+                        outboundP.QuantiaSemIVAMoedaInterna = dr.GetValue(14).ToString();
+                        outboundP.TaxaCambio = dr.GetValue(15).ToString();
+                        outboundP.CondicaoPagamento = dr.GetValue(16).ToString();
+                        outboundP.SWIFT = dr.GetValue(17).ToString();
+                        outboundP.IBAN = dr.GetValue(18).ToString();
+                        outboundP.TipoDocumento = dr.GetValue(19).ToString();
+                        outboundP.NomeEmissor = dr.GetValue(20).ToString();
+                        outboundP.NIFEmissor = dr.GetValue(21).ToString();
+                        outboundP.Referencia = dr.GetValue(22).ToString();
+                        outboundP.Contentor = dr.GetValue(23).ToString();
+                        outboundP.CGA = dr.GetValue(24).ToString();
+                        outboundP.NumEncomenda = dr.GetValue(25).ToString();
+                        outboundP.Identificador = int.Parse(dr.GetValue(26).ToString());
+                        outboundP.InorOut = false;
+                        #endregion
+
+                        listOutboundP.Add(outboundP);
+                    }
+                }
+            }
+        }
+        return JsonConvert.SerializeObject(listOutboundP);
+    }
+
+    private string GetAllInboundinDB()
+    {
+        List<InboundPacket> listInboundP = new List<InboundPacket>();
+
+        string connectionString = ConfigurationManager.ConnectionStrings["CIC_DB"].ToString();
+
+        using (SqlConnection conn = new SqlConnection(connectionString))
+        {
+            if (conn.State != System.Data.ConnectionState.Open)
+                conn.Open();
+
+            string query = "SELECT [NIF],[NumEncomenda],[NumFactura],[DataFactura],[Quantia],[ReceptionDate],[FKWhiteListID],[NIFE],[DocOriginal],[Obs],[Devolvido],[QuantiaSemIVA],[NomeFornec],[Moeda],[QuantIVAMI],[QuantSIVAMI],[TCambio],[CondicaoPag],[SWIFT],[IBAN],[TipoDoc],[NomeReceptor],[EmailCliente],[Referencia],[ImportExport],[ViagemPartida],[CGA],[Contentor],[Identificador] FROM [dbo].[InboundPacket]";
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        InboundPacket inboundP = new InboundPacket();
+
+                        #region passar os dados para a variavel inboundP
+                        inboundP.NIF = dr.GetValue(0).ToString();
+                        inboundP.NumEncomenda = dr.GetValue(1).ToString();
+                        inboundP.NumFactura = dr.GetValue(2).ToString();
+                        inboundP.DataFactura = dr.GetValue(3).ToString();
+                        inboundP.Quantia = dr.GetValue(4).ToString();
+                        inboundP.ReceptionDate = DateTime.Parse(dr.GetValue(5).ToString());
+                        inboundP.FKWhiteListID = Guid.Parse(dr.GetValue(6).ToString());
+                        inboundP.NIFE = dr.GetValue(7).ToString();
+                        inboundP.DocOriginal = dr.GetValue(8).ToString();
+                        inboundP.Obs = dr.GetValue(9).ToString();
+                        inboundP.Devolvido = bool.Parse(dr.GetValue(10).ToString());
+                        inboundP.QuantiaSemIVA = dr.GetValue(11).ToString();
+                        inboundP.NomeFornec = dr.GetValue(12).ToString();
+                        inboundP.Moeda = dr.GetValue(13).ToString();
+                        inboundP.QuantIVAMI = dr.GetValue(14).ToString();
+                        inboundP.QuantSIVAMI = dr.GetValue(15).ToString();
+                        inboundP.TCambio = dr.GetValue(16).ToString();
+                        inboundP.CondicaoPag = dr.GetValue(17).ToString();
+                        inboundP.SWIFT = dr.GetValue(18).ToString();
+                        inboundP.IBAN = dr.GetValue(19).ToString();
+                        inboundP.TipoDoc = dr.GetValue(20).ToString();
+                        inboundP.NomeReceptor = dr.GetValue(21).ToString();
+                        inboundP.EmailCliente = dr.GetValue(22).ToString();
+                        inboundP.Referencia = dr.GetValue(23).ToString();
+                        inboundP.ImportExport = dr.GetValue(24).ToString();
+                        inboundP.ViagemPartida = dr.GetValue(25).ToString();
+                        inboundP.CGA = dr.GetValue(26).ToString();
+                        inboundP.Contentor = dr.GetValue(27).ToString();
+                        inboundP.Identificador = int.Parse(dr.GetValue(28).ToString());
+                        inboundP.InorOut = true;
+                        #endregion
+
+                        listInboundP.Add(inboundP);
+                    }
+                }
+            }
+        }
+
+        return JsonConvert.SerializeObject(listInboundP);
+    }
+    #endregion
+
+}

@@ -1,0 +1,129 @@
+﻿namespace eBillingSuite.Data
+{
+	partial class Form1
+	{
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
+
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		#region Windows Form Designer generated code
+
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.ficheiroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.sairToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.dicionárioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.atualizarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.labelInfo = new System.Windows.Forms.Label();
+			this.LogBox = new System.Windows.Forms.TextBox();
+			this.menuStrip1.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// menuStrip1
+			// 
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ficheiroToolStripMenuItem,
+            this.dicionárioToolStripMenuItem});
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(561, 24);
+			this.menuStrip1.TabIndex = 0;
+			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// ficheiroToolStripMenuItem
+			// 
+			this.ficheiroToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sairToolStripMenuItem});
+			this.ficheiroToolStripMenuItem.Name = "ficheiroToolStripMenuItem";
+			this.ficheiroToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+			this.ficheiroToolStripMenuItem.Text = "Ficheiro";
+			// 
+			// sairToolStripMenuItem
+			// 
+			this.sairToolStripMenuItem.Name = "sairToolStripMenuItem";
+			this.sairToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.sairToolStripMenuItem.Text = "Sair";
+			// 
+			// dicionárioToolStripMenuItem
+			// 
+			this.dicionárioToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.atualizarToolStripMenuItem});
+			this.dicionárioToolStripMenuItem.Name = "dicionárioToolStripMenuItem";
+			this.dicionárioToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+			this.dicionárioToolStripMenuItem.Text = "Dicionário";
+			// 
+			// atualizarToolStripMenuItem
+			// 
+			this.atualizarToolStripMenuItem.Name = "atualizarToolStripMenuItem";
+			this.atualizarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.atualizarToolStripMenuItem.Text = "Atualizar";
+			this.atualizarToolStripMenuItem.Click += new System.EventHandler(this.atualizarToolStripMenuItem_Click);
+			// 
+			// labelInfo
+			// 
+			this.labelInfo.AutoSize = true;
+			this.labelInfo.Location = new System.Drawing.Point(12, 286);
+			this.labelInfo.Name = "labelInfo";
+			this.labelInfo.Size = new System.Drawing.Size(35, 13);
+			this.labelInfo.TabIndex = 1;
+			this.labelInfo.Text = "label1";
+			// 
+			// LogBox
+			// 
+			this.LogBox.Location = new System.Drawing.Point(15, 37);
+			this.LogBox.Multiline = true;
+			this.LogBox.Name = "LogBox";
+			this.LogBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.LogBox.Size = new System.Drawing.Size(534, 246);
+			this.LogBox.TabIndex = 2;
+			// 
+			// Form1
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(561, 308);
+			this.Controls.Add(this.LogBox);
+			this.Controls.Add(this.labelInfo);
+			this.Controls.Add(this.menuStrip1);
+			this.MainMenuStrip = this.menuStrip1;
+			this.Name = "Form1";
+			this.Text = "Consola de dados";
+			this.Load += new System.EventHandler(this.Form1_Load);
+			this.menuStrip1.ResumeLayout(false);
+			this.menuStrip1.PerformLayout();
+			this.ResumeLayout(false);
+			this.PerformLayout();
+
+		}
+
+		#endregion
+
+		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem ficheiroToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem sairToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem dicionárioToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem atualizarToolStripMenuItem;
+		private System.Windows.Forms.Label labelInfo;
+		private System.Windows.Forms.TextBox LogBox;
+	}
+}
+

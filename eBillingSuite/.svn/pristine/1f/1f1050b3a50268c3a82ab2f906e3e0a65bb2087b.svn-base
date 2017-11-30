@@ -1,0 +1,117 @@
+﻿using eBillingSuite.Globalization.Generators;
+using eBillingSuite.Model;
+using eBillingSuite.Model.EBC_DB;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
+
+namespace eBillingSuite.ViewModels
+{
+	public class EBCTXTConfigsVM
+	{
+		private IECCListRepositories _eCConfigRepositories;
+		private IeBillingSuiteRequestContext _context;
+		public Guid FKInstanceID { get; set; }
+		public List<EBC_ConfigTXT> listOfConfigs;
+		//public List<IEnumerable<SelectListItem>> AvailableFieldsToChoose = new List<IEnumerable<SelectListItem>>();
+		//public List<IEnumerable<SelectListItem>> AvailableRegexsToChoose = new List<IEnumerable<SelectListItem>>();
+		//public List<IEnumerable<SelectListItem>> AvailableInvoiceRegionsToChoose = new List<IEnumerable<SelectListItem>>();
+		
+		public EBCTXTConfigsVM(List<EBC_ConfigTXT> model,IECCListRepositories _eCConfigRepositories,IeBillingSuiteRequestContext _context,Guid instancia)
+		{
+			this.listOfConfigs = model;
+			this._eCConfigRepositories = _eCConfigRepositories;
+			this._context = _context;
+			this.FKInstanceID = instancia;
+
+			var values = _eCConfigRepositories.instancesRepository.GetEBC_Instances();
+			AvailableInstances = values
+					.Select(v => new SelectListItem
+					{
+						Text = v.Name,
+						Value = v.PKID.ToString(),
+						Selected = v.PKID == FKInstanceID
+					})
+					.ToList();
+
+
+			foreach (EBC_ConfigTXT cct in listOfConfigs)
+					cct.Regex = _eCConfigRepositories.connectorRegexTypesRepository.GetRegexTypeByName(cct.Regex);
+		
+		}
+
+		public EBCTXTConfigsVM(EBC_ConfigTXT model,IECCListRepositories _eCConfigRepositories,IeBillingSuiteRequestContext _context,Guid instancia,Guid ConfigTXTid)
+		{
+			this.FKInstanceID = instancia;
+			this.pkid = model.pkid;
+			this.Posicao = model.Posicao;
+			this.NomeCampo = model.NomeCampo;
+			this.Regex = model.Regex;
+			this.Tipo = model.Tipo;
+
+			var fields = _eCConfigRepositories.connectorConfigTXTRepository
+				.Set
+				.GroupBy(ect => ect.NomeCampo)
+				.Select(g => new { NomeCampo = g.FirstOrDefault().NomeCampo, pkid = g.FirstOrDefault().pkid }).ToList();
+
+			var regiontypes = _eCConfigRepositories.connectorInvoiceRegionTypesRepository.Set.ToList();
+			var regexs = _eCConfigRepositories.connectorRegexTypesRepository.Set.ToList();
+
+			
+			AvailableFields = fields
+			.Select(v => new SelectListItem
+			{
+				Text = v.NomeCampo,
+				Value = v.NomeCampo.ToString(),
+				Selected = v.NomeCampo == model.NomeCampo
+			})
+			.ToList();
+
+			AvailableInvoiceRegionTypes = regiontypes
+				.Select(v => new SelectListItem
+				{
+					Text = v.Tipo,
+					Value = v.Tipo.ToString(),
+					Selected = v.Tipo == model.Tipo
+				})
+				.ToList();
+
+
+			AvailableRegexs = regexs
+				.Select(v => new SelectListItem
+				{
+					Text = v.TipoRegex,
+					Value = v.TipoRegex,
+					Selected = v.Regex == model.Regex
+				})
+				.ToList();
+				
+		}
+
+
+        public string NomeCampo { get; set; }
+
+        public string Posicao { get; set; }
+
+        public string Regex { get; set; }
+
+        public string Tipo { get; set; }
+		[DoNotGenerateDictionaryEntry]
+        public System.Guid pkid { get; set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableFields { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableInstances { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableRegexs { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableInvoiceRegionTypes { get; private set; }
+	}
+}

@@ -1,0 +1,125 @@
+﻿@model eBillingSuite.ViewModels.EDigitalTemplatesVM
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+}
+<script type="text/javascript">
+	init.push(function () {
+		$('#FkDocumentType').change(function () {
+			var val = $(this).val();
+			if (val != "00000000-0000-0000-0000-000000000000") {
+				$.ajax({
+					type: 'POST',
+					url: '@Url.Action("TemplateStructureExists", "eDigital")',
+					data: {
+						'docTypeId': val
+					},
+					success: function (data) {
+						if (data != null) {
+							if (data == "nok") {
+								$('#alert-2').slideDown();
+							} else {
+								var action = data == true ? "edit" : "insert";
+								$('#Action').val(action);
+								var docId = $('#FkDocumentType').val();
+								window.location = '@Url.Action("Template", "eDigital", new { docTypeId = "Guid" })'.replace('Guid', docId);
+							}
+						}
+					}
+				});
+			}
+			else {
+				var docId = $('#FkDocumentType').val();
+				window.location = '@Url.Action("Template", "eDigital", new { docTypeId = "Guid" })'.replace('Guid', docId);
+			}
+		});
+
+		//Close alert
+		$('.page-alert .close').click(function (e) {
+			e.preventDefault();
+			$(this).closest('.page-alert').slideUp();
+		});
+	});
+</script>
+
+<div class="page-alerts">
+	<div class="alert alert-danger page-alert" id="alert-2" style="display: none;">
+		<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		<strong>@Texts.DigitalAlertGenericError</strong>
+	</div>
+</div>
+
+<form method="post">
+	@Html.HiddenFor(e => e.Action)
+	<div class="tab-pane panel no-padding no-border fade in active">
+		<div class="panel-heading">
+			<span class="panel-title">@Texts.TemplateManagment</span>
+		</div>
+
+		<!-- TIPO DOCUMENTOS -->
+		<div class="panel-body">
+			<div class="row">
+				@Html.PixelAdminSelectWithColFor(e => e.FkDocumentType, Model.AvailableDocTypes, 4, null, InputOptions.Default, Texts.AvailableDocTypes)
+			</div>
+
+			<div class="row">
+				<div data-rel="ajax-update-panel"
+					 id="IndexDigitalTemplates"
+					 data-create-url="@Url.Action("CreateDocumentType", "eDigital")"
+					 data-modal-size=" modal-lg">
+					<div class="col-sm-6">
+						<a class="btn btn-primary" data-rel="ajax-create-trigger" data-method="get">@Texts.InsertDocType</a>
+						@*<a id="edit" class="btn btn-info">@this.Get(DictionaryEntryKeys.EditTemplate)</a>*@
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				&nbsp;
+			</div>
+
+			<div class="row">
+				@Html.PixelAdminTextBoxWithColFor(e => e.NomeTemplate, 4, null, InputOptions.Disabled, Texts.NomeTemplate)
+				@Html.PixelAdminTextBoxWithColFor(e => e.DocumentTypeTags, 8, null, InputOptions.Disabled, Texts.RecognitionTags)
+				@Html.PixelAdminSwitcherWithColFor(e => e.IsGenericDocument, 2, null, InputOptions.Disabled, Texts.isGenericDocument)
+			</div>
+
+			@if (Model.FkDocumentType != null && Model.FkDocumentType != Guid.Empty)
+			{
+				<div class="row">
+					&nbsp;
+				</div>
+
+				<!-- ÁREAS DO XML -->
+				<div class="panel colourable">
+					<div class="panel-heading">
+						<span class="panel-title">@Texts.Seccoes</span>
+						<ul class="nav nav-tabs nav-tabs-xs">
+							<li class="active">
+								<a href="#tab-cab" data-toggle="tab">@Texts.TemplateHeader</a>
+							</li>
+							<li class="">
+								<a href="#tab-lines" data-toggle="tab">@Texts.TemplateLines</a>
+							</li>
+							<li class="">
+								<a href="#tab-iva" data-toggle="tab">@Texts.TemplateVat</a>
+							</li>
+						</ul> <!-- / .nav -->
+					</div> <!-- / .panel-heading -->
+					<div class="panel-body">
+						<div class="tab-content tab-content">
+							<div class="tab-pane fade active in" id="tab-cab">
+								@Html.Partial("~/Views/eDigital/_templateCab.cshtml", Model.DadosXmlCabecalho, new ViewDataDictionary { { "docTypePkid", Model.FkDocumentType } })
+							</div>
+							<div class="tab-pane fade" id="tab-lines">
+								@Html.Partial("~/Views/eDigital/_templateLines.cshtml", Model.DadosXmlLinhas, new ViewDataDictionary { { "docTypePkid", Model.FkDocumentType } })
+							</div>
+							<div class="tab-pane fade" id="tab-iva">
+								@Html.Partial("~/Views/eDigital/_templateVat.cshtml", Model.DadosXmlIva, new ViewDataDictionary { { "docTypePkid", Model.FkDocumentType } })
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</form>

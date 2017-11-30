@@ -1,0 +1,104 @@
+﻿<#@ template debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Core" #>
+<#@ Assembly Name="System.Windows.Forms" #>
+<#@ Assembly Name="System.Web" #>
+<#@ Assembly Name="System.ComponentModel.DataAnnotations" #>
+<#@ Assembly Name="System" #>
+<#@ Assembly Name="System.Data" #>
+<#@ Assembly Name="System.Xml" #>
+<#@ Assembly Name="System.Xml.Linq" #>
+<#@ Assembly Name="System.Web" #>
+<#@ assembly name="$(SolutionDir)\eBillingSuite.Core\Bin\Debug\EntityFramework.dll" #>
+<#@ assembly name="$(SolutionDir)\eBillingSuite.Core\Bin\Debug\Ninject.dll" #>
+<#@ assembly name="$(SolutionDir)\eBillingSuite.Core\Bin\Debug\Ninject.Web.Common.dll" #>
+<#@ assembly name="$(SolutionDir)\eBillingSuite.Core\Bin\Debug\Shortcut.Core.dll" #>
+<#@ assembly name="$(SolutionDir)\eBillingSuite.Core\Bin\Debug\eBillingSuite.Core.dll" #>
+<#@ assembly name="$(SolutionDir)\eBillingSuite.Host\Bin\eBillingSuite.Host.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Threading.Tasks" #>
+<#@ import namespace="System.Collections.Generic" #> 
+<#@ import namespace="eBillingSuite" #>
+<#@ import namespace="eBillingSuite.Model" #>
+<#@ import namespace="eBillingSuite.Model.EBC_DB" #>
+<#@ import namespace="eBillingSuite.Globalization" #>
+<#@ import namespace="eBillingSuite.Globalization.Generators" #>
+<#
+	var languageID = 1;
+	var languageAlias = "PT";
+	var keysFromEnum = typeof(DictionaryEntryKeys)
+		.GetEnumNames()
+		.OrderBy(key => key)
+		.ToList();
+
+	var g = new DictionaryEntriesForPT(null);
+	var keysFromCoreModel = typeof(IeBillingSuiteEBCDBContext)
+		.Assembly
+		.GetTypes()
+		.Where(t => 
+			(
+				((t.IsClass || t.IsEnum) && t.Namespace == "eBillingSuite.Model")
+				||
+				(t.IsEnum && t.Namespace == "eBillingSuite.Security")
+			)
+			&& 
+			!t.IsDefined(typeof(DoNotGenerateDictionaryEntryAttribute),false) )
+		.SelectMany(t =>  t.IsClass ? 
+			t.GetProperties()
+				.Where(p => !p.IsDefined(typeof(DoNotGenerateDictionaryEntryAttribute),true))
+				.Select(p => t.Name.ToString() + "_" + p.Name):
+			t.GetEnumNames()
+				.Select(em => t.Name.ToString() + "_" + em))
+		.Distinct()
+		.OrderBy(key => key)
+		.ToList();
+
+	var keysFromHostModels = typeof(EBillingSuiteRequestContext)
+		.Assembly
+		.GetTypes()
+		.Where(t =>(t.IsClass || t.IsEnum) && (t.Namespace == "eBillingSuite.Models" || t.Namespace == "eBillingSuite.ViewModels") && !t.IsDefined(typeof(DoNotGenerateDictionaryEntryAttribute),false) )
+		.SelectMany(t =>  t.IsClass ? 
+			t.GetProperties()
+				.Where(p => !p.IsDefined(typeof(DoNotGenerateDictionaryEntryAttribute),true))
+				.Select(p => t.Name.ToString() + "_" + p.Name):
+			t.GetEnumNames()
+				.Select(em => t.Name.ToString() + "_" + em))
+		.Distinct()
+		.OrderBy(key => key)
+		.ToList();
+
+	var union = keysFromEnum
+		.Union(keysFromCoreModel)
+		.Union(keysFromHostModels)
+		.OrderBy(key => key)
+		.ToList();
+#>
+using eBillingSuite.Model;
+using System.Collections.Generic;
+
+namespace eBillingSuite.Globalization.Generators
+{
+	public class DictionaryEntriesFor<#=languageAlias#>: BaseDictionaryEntriesGenerator
+	{
+		public DictionaryEntriesFor<#=languageAlias#>(Languages l):base(l)
+		{
+<#foo(union,g);#>
+		}
+	}
+}
+ 
+<#+
+  // Insert any template procedures here
+  void foo(List<string> keys,BaseDictionaryEntriesGenerator g){
+	  foreach(var key in keys)
+	  {
+#>			Add("<#=key#>", "<#=g.Get(key) ?? "["+ key + "]"#>");
+<#+
+	  }
+  }
+#>

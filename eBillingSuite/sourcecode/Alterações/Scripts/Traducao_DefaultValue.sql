@@ -1,0 +1,1 @@
+insert into DictionaryEntries (LanguageID, [Key], Value) values (1, 'DefaultValue', 'Valor por defeito')

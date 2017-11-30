@@ -1,0 +1,52 @@
+﻿@*@model eBillingSuite.ViewModels.EDigitalSupplierSyncVM*@
+@{
+    var isAjax = Request.IsAjaxRequest();
+    Layout = isAjax ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+}
+<script type="text/javascript">
+    init.push(function () {
+        $('#FicheiroCSV').pixelFileInput();
+
+        $("form").submit(function () {
+            var val = $('#FicheiroCSV').val().toLowerCase();
+
+            console.log('val = ' + val);
+
+            var regex = new RegExp("(.*?)\.(csv)$");
+            if (!(regex.test(val))) {
+                $(this).val('');
+                alert('Só são permitidos ficheiros CSV.');
+                return false;
+            }
+        });
+    });
+</script>
+
+<div class="tab-pane panel no-padding no-border fade in active">
+    <form method="post" action="@Url.Action("UploadAccountingData", "eDigital")" enctype="multipart/form-data">
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.DigitalUploadAccountingData)</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group no-margin-hr">
+                        <label for="FicheiroCSV" class="control-label">@this.Get(DictionaryEntryKeys.CSVFile)</label>
+                        <input type="file" name="FicheiroCSV" id="FicheiroCSV" value="" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group no-margin-hr">
+                        <p class="help-block">Formato do ficheiro CSV Contabilidade</p>
+                        <p class="help-block">Entidade;NIFTerceiro;CodigoTerceiro;ContaTerceiro;TipoDoc;ContaBase;CodIVA;ContaIVA;ContaIVAintraC;ContaIS;ContaBaseRed;CodIVARed;ContaIVARed;ContaBaseInt;CodIVAInt;ContaIVAInt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary">@this.Get(DictionaryEntryKeys.Upload)</button>
+        </div>
+    </form>
+</div>

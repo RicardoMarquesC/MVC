@@ -1,0 +1,38 @@
+﻿@model eBillingSuite.ViewModels.EDigitalCreateDocTypeVM
+@{
+	var uniqueID = "edigitaldocumenttype-modal";
+
+}
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@Texts.DigitalDocumentTypeAdd</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("CreateDocumentType", "eDigital")"
+		  method="post"
+		  class="form-horizontal">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.TipoFactura.pkid)
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.TipoFactura.nome, 6, null, InputOptions.Default, Texts.TipoFatura)
+					@Html.PixelAdminTextBoxWithColFor(e => e.NomeTemplate, 6, null, InputOptions.Default, Texts.NomeTemplate)
+				</div>
+				<div class="row">
+						@Html.PixelAdminTextBoxWithColFor(e => e.TipoFactura.RecognitionTags, 12, null, InputOptions.Default, Texts.RecognitionTags)
+				</div>
+				<div class="row">
+					@Html.PixelAdminSwitcherWithColFor(e => e.IsGenericDocument, 12, null, InputOptions.Default, Texts.isGenericDocument)
+				</div>
+				<p class="help-block">@Texts.DigitalDocTypeTagsHelpLine</p>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button id="submitBtt" type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@Texts.Submit</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@Texts.Close</button>
+</div>
+

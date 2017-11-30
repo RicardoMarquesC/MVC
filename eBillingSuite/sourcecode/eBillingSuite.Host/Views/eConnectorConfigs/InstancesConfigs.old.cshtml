@@ -1,0 +1,32 @@
+﻿@model eBillingSuite.ViewModels.EBCInstancesConfigsVM
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eConnectorConfigsLayout.cshtml";
+}
+
+<script>
+	init.push(function () {
+		$('#FKInstanceID').change(function () {
+			window.location = '@Url.Action("InstancesConfigs", "eConnectorConfigs", new { id = "Guid" })'.replace('Guid', $('#FKInstanceID').find(":selected").val());
+		});
+	});
+</script>
+
+<form method="post" action="@Url.Action("InstancesConfigs", "eConnectorConfigs", new { ID = Model.FKInstanceID })">
+	<div class="panel-heading">
+		<span class="panel-title"><i class="panel-title-icon fa fa-calendar"></i>@this.Get(DictionaryEntryKeys.eConnectorRealTimeAlertsTitle)</span>
+	</div> <!-- / .panel-heading -->
+	<div class="panel-body">
+		<div class="row">
+			<div class="row">
+				@Html.PixelAdminSelectWithColFor(e => e.FKInstanceID, Model.AvailableInstances, 6, null, InputOptions.Default)
+			</div>
+			<div class="row">
+				@Html.PixelAdminTextBoxWithColFor(e => e.instance.Name,6,null,InputOptions.Default)
+				@Html.PixelAdminTextBoxWithColFor(e => e.instance.NIF, 6, null, InputOptions.ReadOnly)
+			</div>
+	</div>
+	<div class="panel-footer text-right">
+		<button class="btn btn-primary">@this.Get(DictionaryEntryKeys.Submit)</button>
+	</div>
+</form>
+

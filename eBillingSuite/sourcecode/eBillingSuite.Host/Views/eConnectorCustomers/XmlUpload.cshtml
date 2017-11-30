@@ -1,0 +1,48 @@
+﻿@model eBillingSuite.ViewModels.EBCSenderXmlUploadVM
+@{
+	var isAjax = Request.IsAjaxRequest();
+	Layout = isAjax ? null : "~/Views/Shared/_eConnectorSendersLayout.cshtml";
+}
+<script type="text/javascript">
+	init.push(function () {
+		$('#FicheiroXml').pixelFileInput({ placeholder: '@(Model.NovoCaminho == null || Model.NovoCaminho == String.Empty ? Model.NovoCaminho : "No file selected...")' });
+
+		var sender = $('#FkSender').val();
+		if (sender != null && sender != '00000000-0000-0000-0000-000000000000') {
+			$('#xmlUploadDiv').show();
+		}
+
+		$('#FkSender').change(function () {
+			var val = $(this).val();
+			if (val != null && val != '00000000-0000-0000-0000-000000000000') {
+				$('#xmlUploadDiv').show();
+			} else {
+				$('#xmlUploadDiv').hide();
+			}
+		});
+	});
+</script>
+
+<div class="tab-pane panel no-padding no-border fade in active">
+	<form method="post" action="@Url.Action("XmlUpload", "eConnectorSenders")" enctype="multipart/form-data">
+		<div class="panel-heading">
+			<span class="panel-title">@this.Get(DictionaryEntryKeys.eConnectorXmlSenderUploadTitle)</span>
+		</div> <!-- / .panel-heading -->
+		<div class="panel-body">
+			<div class="row">
+				@Html.PixelAdminSelectWithColFor(e => e.FkSender, Model.AvailableSenders, 6, null, InputOptions.Default)
+			</div>
+			<div id="xmlUploadDiv" class="row" style="display:none;">
+				<div class="col-lg-6">
+					<div class="form-group no-margin-hr">
+						<label for="FicheiroXml" class="control-label">@this.Get(DictionaryEntryKeys.XmlToMap)</label>
+						<input type="file" name="FicheiroXml" id="FicheiroXml" value="@Model.NovoCaminho">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-footer text-right">
+			<button class="btn btn-primary">@this.Get(DictionaryEntryKeys.Submit)</button>
+		</div>
+	</form>
+</div>

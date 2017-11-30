@@ -1,0 +1,16 @@
+﻿using System.Collections.Generic;
+using Shortcut.Repositories;
+using eBillingSuite.Security;
+using eBillingSuite.Model.eBillingConfigurations;
+
+namespace eBillingSuite.Repositories
+{
+    public interface IPermissionsRepository : IGenericRepository<IeBillingSuiteConfigurationsContext, eSuite_Produtos>
+    {
+        List<eSuite_Produtos> GetProductsByUser(IeBillingSuiteIdentity user);
+        List<eSuite_Produtos> GetProductsByUser(string userName);
+        List<Permissions> GetPermissionsByUser(IeBillingSuiteIdentity user);
+        List<Permissions> GetPermissionsByUser(string user);
+        List<Permissions> GetAll();
+    }
+}

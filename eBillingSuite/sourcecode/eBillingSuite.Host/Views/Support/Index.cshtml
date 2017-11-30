@@ -1,0 +1,42 @@
+﻿@{
+    var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+
+<div id="content-wrapper">
+    <form method="post">
+        <div class="panel-heading">
+            @*<span class="panel-title"><i class="panel-title-icon fa fa-calendar"></i>@this.Get(DictionaryEntryKeys.TitleForTicketRequest)</span>*@
+            <span class="panel-title"><i class="panel-title-icon fa fa-envelope"></i>Diga-nos qual o seu problema:</span>
+        </div> <!-- / .panel-heading -->
+        <p></p>
+        <div class="panel-body">
+            <div ng-controller="AppCtrl" ng-app="MyApp">
+                @*<select ng-model="selectOption" ng-options="x for x in options"></select>*@
+                <select>
+                        <option value="Manutencao">Manutenção</option>
+                        <option value="ReportBug">Reportar Bug</option>
+                        <option value="UpdateSystem">Atualizar o Sistema</option>
+                </select>
+                <p>&nbsp;</p>
+                <p>Para a solução do problema ser mais eficaz, queira nos deixar uma breve descrição</p>
+                <textarea class="note-codable"></textarea>
+                <div class="panel-footer text-right">
+                    <button class="btn btn-primary">@Texts.Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @*<p>Se preferir pode contactar-nos para o telefone: 221234567</p>
+
+    <p>Clique aqui para conversar connosco em tempo real:</p>
+    <button>CHAT</button>*@
+</div> <!-- / #content-wrapper -->
+<div id="main-menu-bg"></div>
+
+@*<script>
+    var app = angular.module('myApp', []);
+    app.controller('AppCtrl', function ($scope) {
+        $scope.options = ["Manutencao", "ReportBug", "UpdateSystem"];
+    });
+</script>*@
+

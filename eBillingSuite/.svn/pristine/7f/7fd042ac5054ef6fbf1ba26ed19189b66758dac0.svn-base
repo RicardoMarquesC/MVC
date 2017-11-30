@@ -1,0 +1,56 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace eBillingSuite.Globalization
+{
+	using eBillingSuite.Repositories;
+	using Ninject;
+	using DictionaryEntriesIndex = Dictionary<string, string>;
+
+	public class InMemoryDictionaryDataSource : IDictionaryDataSource
+	{
+		private Dictionary<int, DictionaryEntriesIndex> _indexesByLang;
+
+		[Inject]
+		public InMemoryDictionaryDataSource(IDictionaryEntryRepository dictionaryEntryRepository)
+		{
+			// variable that presists the DB content by languageID
+			_indexesByLang = new Dictionary<int, Dictionary<string, string>>();
+
+			// get entries from DB
+			var entriesFromRep = dictionaryEntryRepository
+				.Set
+				.ToList();
+
+			// group the entries by language and build the index
+			foreach (var entry in entriesFromRep)
+			{
+				// try get index, if index does not exist, create new
+				DictionaryEntriesIndex index;
+				if (!_indexesByLang.TryGetValue(entry.LanguageID, out index))
+					_indexesByLang.Add(entry.LanguageID, index = new DictionaryEntriesIndex());
+
+				// add to index
+				index.Add(entry.Key, entry.Value);
+			}
+		}
+
+		public string this[int languageID, string key]
+		{
+			get
+			{
+				string value;
+				DictionaryEntriesIndex index;
+
+				if (_indexesByLang.TryGetValue(languageID, out index))
+					if (index.TryGetValue(key, out value))
+						return value;
+
+				return key;
+			}
+		}
+	}
+}

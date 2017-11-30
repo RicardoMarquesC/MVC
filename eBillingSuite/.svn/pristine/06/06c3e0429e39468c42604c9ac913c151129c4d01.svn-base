@@ -1,0 +1,24 @@
+---------- BD ----------
+- Script "Traducao_DefaultValue.sql"
+- Script "Traducao_EBCSendersVM_EmailAddress.sql"
+- Novo campo na tabela "WhiteList" -> "ReplyToAddress" nvarchar(250) NULL
+- Novo campo na tabela "WhiteList" -> "PdfLinkBaseURL" nvarchar(250) NULL
+- Novo campo na tabela "EBC_UnknownList -> "subject" nvarchar(255) NULL
+- Script "usergraphs.sql"
+- Utilizador "tastas" com a password "#testeshpi" -> SuperUser
+- Novo campo na tabela "eBC_Login" -> "Instances" nvarchar(MAX) NULL
+
+---------- REGISTO ------------
+- 
+
+---------- GRUPOS DE UTILIZADORES ----------
+- 
+
+---------- PROJECTO "Digital" -----------
+- 
+
+---------- PROJECTO "CheckImageOrientation" ------------
+-
+
+---------- PROJECTO "AppSDK" ------------
+- 

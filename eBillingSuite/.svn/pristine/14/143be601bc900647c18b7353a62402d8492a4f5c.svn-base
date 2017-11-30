@@ -1,0 +1,381 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.Web.Mvc;
+using Shortcut.PixelAdmin;
+using System.Security.Principal;
+using eBillingSuite.Security;
+using eBillingSuite.ViewModels;
+using Newtonsoft.Json;
+using System.Data.Entity.Infrastructure;
+using eBillingSuite.Models;
+using eBillingSuite.Model.HelpingClasses;
+using eBillingSuite.Model;
+using eBillingSuite.Model.eBillingConfigurations;
+using System.Net;
+using eBillingSuite.Repositories.Interfaces;
+using eBillingSuite.Repositories;
+using Shortcut.Web;
+using eBillingSuite.Model.EBC_DB;
+using System.IO;
+
+namespace eBillingSuite.Controllers
+{
+    public class HomeController : Controller
+    {
+        private IPixelAdminPageContext _pixelAdminPageContext;
+        private IECCListRepositories _eCConfigRepositories;
+        private IOutboundInboundRepository _outboundInboundRepository;
+        private IComATPacketsRepository _comATPacketRepository;
+        private IComATPacketsGuiasRepository _comATPacketGuiasRepository;
+        private IeBillingSuiteRequestContext _context;
+        private IGraphsRepository _graphsRepository;
+        private List<InboundPackets> lIP;
+        private List<OutboundPackets> lOP;
+
+
+
+        public HomeController(IPixelAdminPageContext pixelAdminPageContext,
+            IECCListRepositories eCConfigRepositories,
+            IeBillingSuiteRequestContext context,
+            IOutboundInboundRepository outboundInboundRepository,
+            IDocsErrorsRepository docsErrorsRepository,
+            IComATPacketsRepository comATPacketRepository,
+            IGraphsRepository graphsRepository
+            )
+        {
+            _pixelAdminPageContext = pixelAdminPageContext;
+            _eCConfigRepositories = eCConfigRepositories;
+            _context = context;
+            _outboundInboundRepository = outboundInboundRepository;
+            _comATPacketRepository = comATPacketRepository;
+            _graphsRepository = graphsRepository;
+        }
+
+        #region Index        
+        public ActionResult Index()
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+            //var model = new HomeVM(_eCConfigRepositories, _pixelAdminPageContext, _context);
+
+            if (_context.UserIdentity.Name != null)
+            {
+                var data = new HomeVM(_eCConfigRepositories, _pixelAdminPageContext, _graphsRepository, _context);
+
+                try
+                {
+                    data.feEvents = Dashboard
+                        .GetLastEvents("fe", 3)
+                        .Select(c => new HomeVM.DashboardEventData
+                        {
+                            evento = c.eventName,
+                            eventInfo = c.eventInfo,
+                            eventDate = c.eventDate.ToString(),
+                            eventState = c.eventState,
+                            eventIdentifier = c.eventIdentifier,
+                            eventDirection = c.eventDirection
+                        })
+                        .ToList();
+                    DateTime now6 = DateTime.Now;
+
+                    data.atEvents = Dashboard
+                        .GetLastEvents("at", 3)
+                        .Select(c => new HomeVM.DashboardEventData
+                        {
+                            evento = c.eventName,
+                            eventInfo = c.eventInfo,
+                            eventDate = c.eventDate.ToString(),
+                            eventState = c.eventState
+                        })
+                        .ToList();
+                    DateTime now11 = DateTime.Now;
+
+                }
+                catch (Exception e)
+                {
+                    if (Request.IsAjaxRequest())
+                    {
+                        data.error = "Erro ao carregar valores: " + e.Message;
+                        return Json(data, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+                //SetBreadcrumb(new BreadcrumbStep(Url, "Dashboard", ""));
+                ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+
+
+                if (Request.IsAjaxRequest())
+                    return Json(data, JsonRequestBehavior.AllowGet);
+
+                return View(data);
+                //}
+                //    else
+                //    {
+                //        return null;
+                //    }
+                //}
+            }
+            //return View(model);
+            else
+                return RedirectToAction("Index", "SignIn");
+
+        }
+        #endregion
+
+        #region UnderConstruction
+        public ActionResult UnderConstruction()
+        {
+            return View();
+        }
+        #endregion
+
+        #region teste
+        public ActionResult teste(JQueryDataTableParamModel param)
+        {
+            ebcExternalWS.ebcExternalWS a = new ebcExternalWS.ebcExternalWS();
+            NetworkCredential rptCred = new NetworkCredential("tiago", "teste");
+            CredentialCache cc = new CredentialCache();
+            cc.Add(new Uri(a.Url), "Basic", rptCred);
+            a.Credentials = cc;
+
+            string json = a.GetAll();
+
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+            if (!Request.IsAjaxRequest())
+            {
+                return View("teste");
+            }
+
+            lIP = new List<Models.InboundPackets>();
+            lOP = new List<OutboundPackets>();
+
+            string[] jsonSplit = json.Split('|');
+
+            lIP = JsonConvert.DeserializeObject<List<Models.InboundPackets>>(jsonSplit[0]);
+            lOP = JsonConvert.DeserializeObject<List<Models.OutboundPackets>>(jsonSplit[1]);
+
+
+            List<Model.HelpingClasses.OutboundInbound> final = GetAllPackets();
+
+            var result = final.Select(o => new
+            {
+                ID = o.ID,
+                NomeEmiss = o.NomeEmiss,
+                NifEmiss = o.NifEmiss,
+                InOrOut = o.InOrOut
+            });
+
+
+            if (param.iDisplayLength != 0)
+            {
+                var recordCount = result.Count();
+
+                var records = result
+                    .Skip(param.iDisplayStart)
+                    .Take(param.iDisplayLength)
+                    .ToList();
+
+                var reply = new JsonNetResult();
+                reply.Data = new
+                {
+                    sEcho = param.sEcho,
+                    iTotalRecords = recordCount,
+                    iTotalDisplayRecords = param.iDisplayLength,
+                    aaData = records
+                };
+
+                return reply;
+            }
+            else
+            {
+                var records = result.Take(10).ToList();
+
+                var reply = new JsonNetResult();
+                reply.Data = new
+                {
+                    sEcho = param.sEcho,
+                    iTotalRecords = result.Count(),
+                    iTotalDisplayRecords = records.Count,
+                    aaData = result
+                };
+
+                return reply;
+            }
+        }
+
+        public List<Model.HelpingClasses.OutboundInbound> GetAllPackets()
+        {
+            List<Model.HelpingClasses.OutboundInbound> finalList = new List<Model.HelpingClasses.OutboundInbound>();
+
+            try
+            {
+
+                //guardar ambos na lista que será retornada ao controlador
+                foreach (OutboundPackets outPack in lOP)
+                {
+                    Model.HelpingClasses.OutboundInbound outObj = new Model.HelpingClasses.OutboundInbound();
+                    outObj.ID = outPack.Identificador;
+
+                    outObj.Sentido = Model.HelpingClasses.OutboundInbound.outbound;
+
+                    if (outPack.NomeEmissor != null)
+                        outObj.NomeEmiss = outPack.NomeEmissor;
+                    else
+                        outObj.NomeEmiss = String.Empty;
+
+                    if (outPack.NIFEmissor != null)
+                        outObj.NifEmiss = outPack.NIFEmissor;
+                    else
+                        outObj.NifEmiss = String.Empty;
+
+                    if (outPack.NomeReceptor != null)
+                        outObj.NomeRecept = outPack.NomeReceptor;
+                    else
+                        outObj.NomeRecept = String.Empty;
+
+                    if (outPack.NIFReceptor != null)
+                        outObj.NifRecept = outPack.NIFReceptor;
+                    else
+                        outObj.NifRecept = String.Empty;
+
+                    if (!String.IsNullOrEmpty(outPack.QuantiaComIVA))
+                    {
+                        //se o sinal de "-" estiver no fim, coloca-lo no início, senão dá erro no cast para float
+                        if (outPack.QuantiaComIVA.EndsWith("-"))
+                            outPack.QuantiaComIVA = "-" + outPack.QuantiaComIVA.Replace("-", String.Empty);
+                        outObj.Quantia = float.Parse(outPack.QuantiaComIVA.Replace(".", ","));
+                    }
+                    else
+                        outObj.Quantia = 0;
+
+                    if (outPack.DataFactura != null)
+                    {
+                        DateTime docDate = DateTime.Parse(outPack.DataFactura);
+                        outObj.Ano = docDate.Year.ToString();
+                        outObj.Mes = docDate.Month.ToString();
+                        outObj.Dia = docDate.Day.ToString();
+                    }
+                    else
+                    {
+                        outObj.Ano = "0000";
+                        outObj.Mes = "00";
+                        outObj.Dia = "00";
+                    }
+
+                    if (outPack.CreationDate != null && outPack.CreationDate.Value != null)
+                    {
+                        outObj.DataCriacao = outPack.CreationDate.Value.Year.ToString() + "-" + outPack.CreationDate.Value.Month.ToString()
+                            + "-" + outPack.CreationDate.Value.Day.ToString();
+                    }
+                    else
+                    {
+                        outObj.DataCriacao = "0000-00-00";
+                    }
+
+                    if (outPack.TipoDocumento != null)
+                        outObj.TipoDoc = outPack.TipoDocumento;
+                    else
+                        outObj.TipoDoc = String.Empty;
+
+                    if (outPack.NumFactura != null)
+                        outObj.NumDoc = outPack.NumFactura;
+                    else
+                        outObj.NumDoc = String.Empty;
+
+                    outObj.InOrOut = outPack.InOrOut;
+
+                    finalList.Add(outObj);
+                }
+
+                foreach (InboundPackets inPack in lIP)
+                {
+                    Model.HelpingClasses.OutboundInbound inObj = new Model.HelpingClasses.OutboundInbound();
+                    inObj.ID = inPack.Identificador;
+
+                    inObj.Sentido = Model.HelpingClasses.OutboundInbound.inbound;
+
+                    if (inPack.NomeFornec != null)
+                        inObj.NomeEmiss = inPack.NomeFornec;
+                    else
+                        inObj.NomeEmiss = String.Empty;
+
+                    if (inPack.NIFE != null)
+                        inObj.NifEmiss = inPack.NIFE;
+                    else
+                        inObj.NifEmiss = String.Empty;
+
+                    if (inPack.NomeReceptor != null)
+                        inObj.NomeRecept = inPack.NomeReceptor;
+                    else
+                        inObj.NomeRecept = String.Empty;
+
+                    if (inPack.NIF != null)
+                        inObj.NifRecept = inPack.NIF;
+                    else
+                        inObj.NifRecept = String.Empty;
+
+                    if (!String.IsNullOrEmpty(inPack.Quantia))
+                    {
+                        //se o sinal de "-" estiver no fim, coloca-lo no início, senão dá erro no cast para float
+                        if (inPack.Quantia.EndsWith("-"))
+                            inPack.Quantia = "-" + inPack.Quantia.Replace("-", String.Empty);
+                        inObj.Quantia = float.Parse(inPack.Quantia.Replace(".", ","));
+                    }
+                    else
+                        inObj.Quantia = 0;
+
+                    if (!String.IsNullOrEmpty(inPack.DataFactura))
+                    {
+                        DateTime docDate = DateTime.Parse(inPack.DataFactura);
+                        inObj.Ano = docDate.Year.ToString();
+                        inObj.Mes = docDate.Month.ToString();
+                        inObj.Dia = docDate.Day.ToString();
+                    }
+                    else
+                    {
+                        inObj.Ano = "0000";
+                        inObj.Mes = "00";
+                        inObj.Dia = "00";
+                    }
+
+                    if (inPack.ReceptionDate != null && inPack.ReceptionDate.Value != null)
+                    {
+                        inObj.DataCriacao = inPack.ReceptionDate.Value.Year.ToString() + "-" + inPack.ReceptionDate.Value.Month.ToString()
+                            + "-" + inPack.ReceptionDate.Value.Day.ToString();
+                    }
+                    else
+                    {
+                        inObj.DataCriacao = "0000-00-00";
+                    }
+
+                    if (inPack.TipoDoc != null)
+                        inObj.TipoDoc = inPack.TipoDoc;
+                    else
+                        inObj.TipoDoc = String.Empty;
+
+                    if (inPack.NumFactura != null)
+                        inObj.NumDoc = inPack.NumFactura;
+                    else
+                        inObj.NumDoc = String.Empty;
+
+                    inObj.InOrOut = inPack.InOrOut;
+
+                    finalList.Add(inObj);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return finalList;
+        }
+
+        #endregion
+
+    }
+}

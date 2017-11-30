@@ -1,0 +1,100 @@
+﻿@using eBillingSuite.Enumerations
+@using eBillingSuite.Model.Desmaterializacao
+@model List<TipoFacturaDadosXML>
+@{
+	ViewBag.Title = "_cabTemplate";
+
+	var docTypePkid = ViewData["docTypePkid"];
+}
+
+<script>
+	function InitTable2() {
+		$('#jq-datatables2').dataTable({
+
+			"language": {
+				"url": '@this.GetjQDataTableLanguageUrl()'
+			},
+		});
+		$('#jq-datatables2_wrapper .table-caption').text('');
+		$('#jq-datatables2_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+	}
+
+	init.push(function () {
+		$('a[data-toggle=tooltip]').tooltip();
+
+		InitTable2();
+		ajaxInitPanelFunctions['init-jqtable2'] = InitTable2;
+	});
+</script>
+
+<div class="tab-pane panel no-padding no-border fade in active">
+	<div data-rel="ajax-update-panel"
+		 id="TemplateVat"
+		 data-update-init="init-jqtable2"
+		 data-update-url="@Url.Action("DocumentTypeFieldsUpdateAction", "eDigital", new { location = "i", docTypePkid = docTypePkid })"
+		 data-create-url="@Url.Action("CreateField", "eDigital", new { location = "i", docTypePkid = docTypePkid })"
+		 data-modal-size="modal-lg">
+		<div class="panel-heading">
+			<span class="panel-title">&nbsp;</span>
+			<div class="panel-heading-controls">
+				<button type="button"
+						data-rel="ajax-create-trigger"
+						data-method="post"
+						title="@this.Get(DictionaryEntryKeys.Adicionar)"
+						class="btn btn-xs btn-primary">
+					<i class="fa fa-plus"></i>
+				</button>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="table-primary">
+				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="jq-datatables2">
+					<thead>
+						<tr>
+							<th>@this.Get(DictionaryEntryKeys.CampoNome)</th>
+							<th>@this.Get(DictionaryEntryKeys.CampoObrigatorio)</th>
+							<th class="visible-lg">@this.Get(DictionaryEntryKeys.CampoCasasDecimais)</th>
+							<th class="visible-lg">@this.Get(DictionaryEntryKeys.CampoTipo)</th>
+							<th class="visible-lg">@this.Get(DictionaryEntryKeys.CampoFormula)</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (TipoFacturaDadosXML data in Model)
+						{
+							<tr>
+								<td>@data.NomeCampo</td>
+								@if (data.Obrigatorio == true)
+								{
+									<td><span class="label label-success label-tag">@this.Get(DictionaryEntryKeys.Sim)</span></td>
+								}
+								else
+								{
+									<td><span class="label label-primary label-tag">@this.Get(DictionaryEntryKeys.Nao)</span></td>
+								}
+								<td class="visible-lg">@data.Formato</td>
+								@if (@data.TipoExtraccao == DigitalExtractionTypes.EXTRACTED)
+								{
+									<td class="visible-lg">@DigitalExtractionTypes.EXTRACTED_EXT</td>
+								}
+								else if (@data.TipoExtraccao == DigitalExtractionTypes.EXTRACTED_FORMULA)
+								{
+									<td class="visible-lg">@DigitalExtractionTypes.EXTRACTED_FORMULA_EXT</td>
+								}
+								else
+								{
+									<td class="visible-lg">@DigitalExtractionTypes.FORMULA_EXT</td>
+								}
+								<td class="visible-lg">@data.Formula</td>
+								<td style="text-align:right; white-space:nowrap">
+									<button type="button" class="btn btn-primary btn-sm" data-rel="ajax-edit-trigger" data-url="@Url.Action("EditField", "eDigital", new { pkid = data.pkid })"><i class="fa fa-pencil"></i></button>
+									<button type="button" class="btn btn-danger btn-sm" data-rel="ajax-delete-trigger" data-url="@Url.Action("DeleteField", "eDigital", new { pkid = data.pkid, docTypePkid = docTypePkid })"><i class="fa fa-times"></i></button>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

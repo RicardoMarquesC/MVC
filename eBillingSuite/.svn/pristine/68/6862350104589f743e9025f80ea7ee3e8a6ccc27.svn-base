@@ -1,0 +1,320 @@
+﻿@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_LayoutStats.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- Top 5 Clientes -->
+<script>
+    init.push(function () {
+        // Doughnut Chart Data
+        var data = @Html.Raw(Json.Encode(Model.TopCostumers));
+
+        function legendFormatter(label, series) {
+            return '<div ' +
+                   'style="font-size:8pt;padding:2px;color:black;">' +
+                   label +'</div>';
+        };
+
+        // Init Chart
+        $('#jq-flot-pie').pixelPlot(data, {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 1,
+                        formatter: function (label, series) {
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
+                        },
+                        background: {
+                            opacity: 0.5,
+                            color: '#000'}
+                    },
+
+                }
+            },
+            legend:
+                {
+                    show: false,
+                    labelFormatter: legendFormatter
+                }
+        },{
+            height: 205    
+        });
+    });
+</script>
+
+<!-- Top 5 Fornecedores -->
+<script>
+                   var data = @Html.Raw(Json.Encode(Model.TopFornecedores));
+                    function legendFormatter(label, series) {
+                        return '<div ' +
+                               'style="font-size:8pt;padding:2px;color:black;">' +
+                               label +'</div>';
+                    };
+						                // Doughnut Chart Data
+				   init.push(function () {
+
+						// Init Chart
+						$('#jq-flot-pie1').pixelPlot(data, {
+							series: {
+								pie: {
+								    show: true,
+                                    radius: 1,
+									label: {
+										show: true,
+										radius: 1,
+										formatter: function (label, series) {
+										    return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
+										},
+										background: {
+										    opacity: 0.5,
+										    color: '#000'}
+									}
+								}
+							},
+							legend:
+                            {
+                                show: false,
+                                labelFormatter: legendFormatter
+                            }
+						},
+                        {
+						    height: 205
+						});
+					});
+</script>
+
+<!--  Documentos Outbound e Inbound (Último ano) -->
+<script>
+    init.push(function () {
+        var dadosOUT = @Html.Raw(Json.Encode(Model.DocsLastYearOUT));
+        var dadosIN = @Html.Raw(Json.Encode(Model.DocsLastYearIN));
+        var Outdata = [];
+        var j=0;
+        var Indata=[];
+
+        //DADOS OUTBOUND
+        if(dadosOUT.length > 0 ){
+            for (var i = 0; i < 12; i++) {
+                if(dadosOUT[j].mes != i+1){
+                    Outdata.push(0);
+                }else{
+                    Outdata.push(dadosOUT[j].data);
+                    if (j < dadosOUT.length-1)
+                        j++;
+                }
+            } 
+        }else{
+            for(var i= 0 ; i< 12; i++)
+            {
+                Outdata.push(0);
+            }
+        }
+
+        //   DADOS INBOUND 
+        j=0;
+        if(dadosIN.length > 0){
+            for (var i = 0; i < 12; i++) {
+                if(dadosIN[j].mes != i+1){
+                    Indata.push(0);
+                }else{
+                    Indata.push(dadosIN[j].data);
+                    if (j < dadosIN.length-1)
+                        j++;
+                }
+            }    
+        }else{
+            for(var i = 0 ; i< 12; i++)
+            {
+                Indata.push(0);
+            }
+        }
+        Morris.Area({
+            element: 'area-chart',
+            data: [
+                { Mes: 'Janeiro', Outbound: Outdata[0], Inbound: Indata[0]},
+                { Mes: 'Fevereiro', Outbound: Outdata[1], Inbound: Indata[1]},
+                { Mes: 'Março', Outbound: Outdata[2], Inbound: Indata[2]},
+                { Mes: 'Abril', Outbound: Outdata[3], Inbound: Indata[3]},
+                { Mes: 'Maio', Outbound: Outdata[4], Inbound: Indata[4]},
+                { Mes: 'Junho', Outbound: Outdata[5], Inbound: Indata[5]},
+                { Mes: 'Julho', Outbound: Outdata[6], Inbound: Indata[6]},
+                { Mes: 'Agosto', Outbound: Outdata[7], Inbound: Indata[7]},
+                { Mes: 'Setembro', Outbound: Outdata[8], Inbound: Indata[8]},
+                { Mes: 'Outubro', Outbound: Outdata[9], Inbound: Indata[9]},
+                { Mes: 'Novembro', Outbound: Outdata[10], Inbound: Indata[10]},
+                { Mes: 'Dezembro', Outbound: Outdata[11], Inbound: Indata[11]},
+            ],            
+            xkey: 'Mes',
+            parseTime: false,
+            xLabelAngle: 50,
+            ykeys: ['Outbound', 'Inbound'],
+            labels: ['Outbound', 'Inbound'],            
+            fillOpacity: 0.6,
+            hideHover: 'auto',
+            behaveLikeLine: true,
+            resize: true,
+            pointFillColors:['#ffffff'],
+            pointStrokeColors: ['black'],
+            lineColors: PixelAdmin.settings.consts.COLORS, 
+        });
+    });
+</script>
+
+<!-- Quantidade por tipo de documento -->
+<script>   
+    init.push(function () {
+        // Visits Chart Data
+
+        var myvalues =  @Html.Raw(Json.Encode(Model.DocsByType));
+        var visitsChartData = [{
+            label: 'Outbound',
+            data: [
+                [0,parseInt(myvalues[0])], [1,parseInt(myvalues[1])], [2,parseInt(myvalues[2])], [3,parseInt(myvalues[3])], [4,parseInt(myvalues[4])], [5,parseInt(myvalues[5])], [6,parseInt(myvalues[6])], [7,parseInt(myvalues[7])], [8,parseInt(myvalues[8])]
+            ]
+        }, {
+            label: 'Inbound',
+            data: [
+                [0,parseInt(myvalues[9])], [1,parseInt(myvalues[10])], [2,parseInt(myvalues[11])], [3,parseInt(myvalues[12])], [4,parseInt(myvalues[13])], [5,parseInt(myvalues[14])], [6,parseInt(myvalues[15])], [7,parseInt(myvalues[16])], [8,parseInt(myvalues[17])]
+            ]
+        }];
+        var ticks = [ 
+                  [0, 'FT'], [1, 'NC'], [2, 'ND'], [3, 'RC'],
+                  [4, 'GT'], [5, 'GR'], [6, 'GD'], [7, 'GA'], [8, 'Só PDF']
+        ];
+        var p = 'oi'; 
+        // Init Chart
+        $('#jq-flot-bars').pixelPlot(visitsChartData, {
+                series: {
+                    stack: true,
+                    bars: {
+                             show: true, barWidth: 0.5, align: 'center'
+                          }
+                },
+                xaxis: {                    
+                    ticks: ticks
+                },
+                grid: {
+                    borderWidth: 2,
+                    //backgroundColor: { colors: ["#FFFFFF", "#ccfff2"], },
+                }
+        },{
+            tooltipText: " y "
+        });
+    });
+</script>
+
+<!-- ClienteArrow -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow").click(function(){
+            $("#toggle").toggle(1000);
+            $("#ClienteArrow").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow1 -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow1").click(function(){
+            $("#toggle1").toggle(1000);
+            $("#ClienteArrow1").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow2 -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow2").click(function(){
+            $("#toggle2").toggle(1000);
+            $("#ClienteArrow2").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow3 -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow3").click(function(){
+            $("#toggle3").toggle(1000);
+            $("#ClienteArrow3").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+
+<div class="panel-heading">
+    <span class="panel-title"> @this.Get(DictionaryEntryKeys.Quantidades) </span>
+    <br />
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-external-link-square"></span>&nbsp;
+                @this.Get(DictionaryEntryKeys.Top5Clientes)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow"></i>
+            </div>
+            <div class="panel-body" id="toggle">
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="jq-flot-pie" class="pa-flot-graph">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-external-link-square"></span>&nbsp;
+                @this.Get(DictionaryEntryKeys.Top5Fornecedores)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow1"></i>
+            </div>
+            <div class="panel-body" id="toggle1">
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="jq-flot-pie1" class="pa-flot-graph" style="width: 641px; height: 205px; padding: 0px; position: relative;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-bar-chart-o"></span> &nbsp;
+                @this.Get(DictionaryEntryKeys.DocOutInUltimoAno)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow2"></i>
+            </div>
+            <div class="panel-body" id="toggle2">
+                <div class="graph-container">
+                    <div class="pa-flot-info"><span><i style="background: #71c73e"></i>Outbound</span><span><i style="background: #77b7c5"></i>Inbound</span></div>
+                        <div id="area-chart">
+
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-bar-chart-o"></span> &nbsp;
+                @this.Get(DictionaryEntryKeys.QuantTipoDoc)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow3"></i>
+            </div>
+            <div class="panel-body" id="toggle3">
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="jq-flot-bars" class="pa-flot-graph">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

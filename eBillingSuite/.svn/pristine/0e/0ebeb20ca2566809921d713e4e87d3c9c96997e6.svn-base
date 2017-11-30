@@ -1,0 +1,19 @@
+﻿using eBillingSuite.Globalization;
+using eBillingSuite.Security;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace eBillingSuite
+{
+	public interface IeBillingSuiteRequestContext
+	{
+		IeBillingSuiteIdentity UserIdentity { get; }
+		string GetDictionaryValue<T>(string partialKey);
+		string GetDictionaryValue(string key);
+		string GetDictionaryValue(DictionaryEntryKeys key);
+		ITimeAgoFormatter TimeAgoFormatter { get; }
+	}
+}

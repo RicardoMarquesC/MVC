@@ -1,0 +1,116 @@
+﻿using eBillingSuite.Globalization.Generators;
+using eBillingSuite.Model;
+using eBillingSuite.Model.EBC_DB;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
+
+namespace eBillingSuite.ViewModels
+{
+	public class EBCPacketConfigsVM
+	{
+		private EBC_EmailContent model;
+		private IECCListRepositories _eCConfigRepositories;
+		private IeBillingSuiteRequestContext _context;
+		public Guid FKInstanceID {get;set;}
+
+		public EBCPacketConfigsVM(EBC_EmailContent model, IECCListRepositories _eCConfigRepositories, IeBillingSuiteRequestContext _context, Guid instancia)
+		{			
+			this.model = model;
+			this._eCConfigRepositories = _eCConfigRepositories;
+			this._context = _context;
+			this.FKInstanceID = instancia;
+			this.PKID = model.PKID;
+
+			this.Subject = TransformXSLtoHTML(model.Subject);
+
+			this.Body = TransformXSLtoHTML(model.Body);
+			
+			var values = _eCConfigRepositories.instancesRepository.GetEBC_Instances();
+			AvailableInstances = values
+				.Select(v => new SelectListItem
+				{
+					Text = v.Name,
+					Value = v.PKID.ToString(),
+					Selected = v.PKID == FKInstanceID
+				})
+				.ToList();
+
+			var valuesXML = _eCConfigRepositories.eConnectorXmlTemplateRepository.GetExistingXmlTypes();
+			AvailableXMLTypes = valuesXML
+				.Select(v => new SelectListItem
+				{
+					Text = v.FirstOrDefault().TipoXML,
+					Value = v.FirstOrDefault().TipoXML,
+				})
+				.ToList();
+
+
+			var valuesXMLFields = _eCConfigRepositories.eConnectorXmlTemplateRepository.GetExistingXmlFields(valuesXML[0]);
+			AvailableXMLFields = valuesXMLFields
+				.Select(v => new SelectListItem
+				{
+					Text = v,
+					Value = v,
+				})
+				.ToList();
+
+		}
+
+		private string TransformXSLtoHTML(string Value)
+		{
+			string result = "";
+			XmlDocument temp = new XmlDocument();
+			using(System.IO.StringReader sr1 = new System.IO.StringReader(Value))
+			{
+				temp.Load(System.Xml.XmlReader.Create(sr1));
+				XslCompiledTransform xslTrans = new XslCompiledTransform();			
+				using(System.IO.StringReader sr = new StringReader(Value))
+				{
+					xslTrans.Load(System.Xml.XmlReader.Create(sr));			
+					using(System.IO.StringReader sr2 = new StringReader(temp.OuterXml))
+					{
+						XPathDocument xPathDoc = new XPathDocument(System.Xml.XmlReader.Create(sr2));
+						using (System.IO.StringWriter strWriter = new StringWriter())
+						{
+							xslTrans.Transform(xPathDoc, null, strWriter);
+							result = strWriter.GetStringBuilder().ToString();
+							strWriter.Close();
+						}
+					}					
+				}
+			}
+						
+			return result;
+		}
+
+		[DoNotGenerateDictionaryEntry]
+		public System.Guid PKID { get; set; }
+		public string Subject { get; set; }
+		public string Body { get; set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableInstances { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableXMLTypes { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableXMLFields { get; private set; }
+		public string XML { get; set; }
+		public string XMLField { get; set; }
+		[DoNotGenerateDictionaryEntry]
+		public class ConfigInformation
+		{
+			public string Text { get; set; }
+			public object Value { get; set; }
+			public Guid PKID { get; set; }
+			public bool isSwitcher { get; set; }
+		}
+
+	}
+}

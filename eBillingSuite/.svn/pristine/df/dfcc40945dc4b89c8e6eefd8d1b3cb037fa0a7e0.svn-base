@@ -1,0 +1,274 @@
+﻿using eBillingSuite.Globalization;
+using eBillingSuite.Model.CIC_DB;
+using eBillingSuite.Model.eBillingConfigurations;
+using eBillingSuite.Model.HelpingClasses;
+using eBillingSuite.Models;
+using eBillingSuite.Repositories;
+using eBillingSuite.Repositories.Interfaces;
+using eBillingSuite.ViewModels;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
+using Shortcut.PixelAdmin;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using System.IO;
+using MimeKit;
+
+namespace eBillingSuite.Controllers
+{
+    public class readEmailController : Controller
+    {
+        private IPixelAdminPageContext _pixelAdminPageContext;
+        private IUnknownListRepository _unknownListRepository;
+        private IECCListRepositories _eCCListRepositories;
+        private IEConnectorSendersRepository _connectorSendersRepository;
+        private IeBillingSuiteRequestContext _context;
+
+
+        public readEmailController(IPixelAdminPageContext pixelAdminPageContext,
+                                   IUnknownListRepository unknownListRepository,
+                                   IECCListRepositories eCCListRepositories,
+                                   IEConnectorSendersRepository connectorSendersRepository,
+                                   IeBillingSuiteRequestContext context)
+        {
+            _pixelAdminPageContext = pixelAdminPageContext;
+            _unknownListRepository = unknownListRepository;
+            _eCCListRepositories = eCCListRepositories;
+            _connectorSendersRepository = connectorSendersRepository;
+            _context = context;
+        }
+
+        // GET: readEmail
+        public ActionResult Index(JQueryDataTableParamModel param)
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+            if (!Request.IsAjaxRequest())
+            {
+                return View("Index");
+            }
+            var model = _unknownListRepository.getAll();
+
+            //if (Request.IsAjaxRequest())
+            //    return Json(this.PanelContentReply(model), JsonRequestBehavior.AllowGet);
+            //else
+            //    return View(model);
+
+            var result = model.Select(o => new
+            {
+                id = o.id,
+                sender = o.sender,
+                data = o.data.ToString("yyyy-MM-dd HH:mm"),
+                caminho = o.subject,
+                existSender = _connectorSendersRepository.Exists(p => p.EmailAddress == o.sender)
+            });
+
+            if (param.iDisplayLength != 0)
+            {
+                var recordCount = result.Count();
+                var records = result
+                    .Skip(param.iDisplayStart)
+                    .Take(param.iDisplayLength)
+                    .ToList();
+
+                var reply = new JsonNetResult();
+                reply.Data = new
+                {
+                    sEcho = param.sEcho,
+                    iTotalRecords = recordCount,
+                    iTotalDisplayRecords = param.iDisplayLength,
+                    aaData = records
+                };
+
+                return reply;
+            }
+            else
+            {
+                var records = result.Take(10).ToList();
+                var reply = new JsonNetResult();
+                reply.Data = new
+                {
+                    sEcho = param.sEcho,
+                    iTotalRecords = result.Count(),
+                    iTotalDisplayRecords = records.Count,
+                    aaData = result
+                };
+
+                return reply;
+            }
+        }
+
+        public ActionResult CreateSender(string sender)
+        {
+            bool existSender = _connectorSendersRepository.Exists(p => p.EmailAddress == sender);
+
+            if (existSender)
+            {
+                Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.WhiteListExist));
+                return RedirectToAction("Index");
+            }
+            var tempSender = new Whitelist
+            {
+                ConcatAnexos = false,
+                EmailAddress = sender,
+                EmailName = "",
+                Enabled = true,
+                FKIntegrationFilterID = _eCCListRepositories.eConnectorIntegrationFiltersRepository.Set
+                    .FirstOrDefault(x => x.FriendlyName.Equals(Enumerations.IntegrationFiltersName.DEFAULT, StringComparison.OrdinalIgnoreCase))
+                    .PKIntegrationFilterID,
+                HaveXML = false,
+                Mercado = "Portugal",
+                NIF = "",
+                PDFAss = true,
+                PdfLink = false,
+                PdfLinkBaseURL = "",
+                PDFNAss = false,
+                XMLAss = false,
+                XMLNAss = false,
+            };
+
+            var counterValue = _eCCListRepositories.suiteConfigurationsRepository.ConfigValue("ContadorNomenclaturaPDF");
+
+            var modelVM = new EBCSendersVM(tempSender, String.Empty, _eCCListRepositories, Guid.Empty, false, counterValue, true);
+
+            if (Request.IsAjaxRequest())
+                return Json(this.ModalContentReply(modelVM));
+            else
+                return PartialView(modelVM);
+        }
+
+        public ActionResult Details(int? id)
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+            if (!id.HasValue)
+                RedirectToAction("Index");
+
+            var tempSender = new Whitelist
+            {
+                ConcatAnexos = false,
+                EmailAddress = "",
+                EmailName = "",
+                Enabled = true,
+                FKIntegrationFilterID = _eCCListRepositories.eConnectorIntegrationFiltersRepository.Set
+                    .FirstOrDefault(x => x.FriendlyName.Equals(Enumerations.IntegrationFiltersName.DEFAULT, StringComparison.OrdinalIgnoreCase))
+                    .PKIntegrationFilterID,
+                HaveXML = false,
+                Mercado = "Portugal",
+                NIF = "",
+                PDFAss = true,
+                PdfLink = false,
+                PdfLinkBaseURL = "",
+                PDFNAss = false,
+                XMLAss = false,
+                XMLNAss = false,
+            };
+
+            var counterValue = _eCCListRepositories.suiteConfigurationsRepository.ConfigValue("ContadorNomenclaturaPDF");
+
+
+            var model = new unknownListVM(_unknownListRepository, id.Value, tempSender, String.Empty, _eCCListRepositories, Guid.Empty, false, counterValue);
+
+            //if (Request.IsAjaxRequest())
+            //    return View(model);
+            //else
+            //    return View(model);
+
+            return View(model);
+        }
+
+        public ActionResult Reprocessed(int id)
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+            var aux = _unknownListRepository.Where(o => o.id == id).Select(o => o.sender).FirstOrDefault();
+            bool existSender = _connectorSendersRepository.Exists(p => p.EmailAddress == aux);
+
+            string path = System.IO.Path.Combine(
+                                                 getPath("Unknown"),
+                                                 _unknownListRepository.Where(o => o.id == id).Select(o => o.emlPath).FirstOrDefault()
+                                                );
+            using (var dbContextTransaction = _unknownListRepository.Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (existSender)
+                    {
+                        var mail = _unknownListRepository.Where(o => o.id == id).Select(o => o).FirstOrDefault();
+                        _unknownListRepository.Delete(mail).Save();
+                        dbContextTransaction.Commit();
+
+                        var fileEml = new FileInfo(path);
+                        System.IO.File.Move(path, Path.Combine(getPath("Received"), fileEml.Name));
+                        Flash.Instance.Success("Awesome");
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        Flash.Instance.Error("NaoExisteSender");
+                        return RedirectToAction("Index");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                    dbContextTransaction.Rollback();
+                    Flash.Instance.Error("NOK");
+                    return RedirectToAction("Index");
+                }
+            }
+
+            //return View("Index");
+        }
+
+        public ActionResult DownloadFile(string pathfile)
+        {
+            int id = int.Parse(pathfile.Split(';')[0]);
+            string filenameToDownload = pathfile.Split(';')[1];
+            string pathFile = System.IO.Path.Combine(getPath("Unknown"), _unknownListRepository.Where(o => o.id == id).Select(o => o.emlPath).FirstOrDefault());
+
+            var mimeMessage = MimeMessage.Load(pathFile);
+            var file = mimeMessage.Attachments.Where(o => ((MimePart)o).FileName == filenameToDownload).FirstOrDefault();
+            MemoryStream memory = new MemoryStream();
+
+            if (file is MimePart)
+                ((MimePart)file).ContentObject.DecodeTo(memory);
+            else
+                ((MessagePart)file).Message.WriteTo(memory);
+
+
+            byte[] byteInfo = memory.ToArray();
+            memory.Write(byteInfo, 0, byteInfo.Length);
+            memory.Position = 0;
+
+            FileStreamResult fsr = new FileStreamResult(memory, "application/octet-stream");
+
+            
+            fsr.FileDownloadName = filenameToDownload;
+
+            return fsr;
+        }
+
+
+
+
+        #region Helper
+        private string getPath(string t)
+        {
+            string installDir = String.Empty;
+            using (eBillingConfigurations ebillingConfigurations = new eBillingConfigurations())
+            {
+                installDir = ebillingConfigurations
+                                .EBC_Configurations
+                                .Where(config => config.Name == "InstallDir")
+                                .Select(config => config.Data).FirstOrDefault();
+            }
+
+            return System.IO.Path.Combine(installDir, t);
+        }
+        #endregion
+    }
+}

@@ -1,0 +1,38 @@
+﻿@model eBillingSuite.ViewModels.eUserVM
+@{
+	var isAjax = Request.IsAjaxRequest();
+}
+<form id="user-edit-form" action="@Url.Action("PermissionsList", "eUser", new { user = ViewBag.user, domain = ViewBag.domain })" method="post" class="form-horizontal" data-get-on-close="true">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel">
+				<div class="panel-heading">
+					<span class="panel-title">@this.Get(DictionaryEntryKeys.PermissionsUserList)</span>
+				</div>
+				<div class="panel-body">
+					@foreach (var item in Model.AvailablePermissions)
+					{
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="Permissions" class="px"
+									   checked="@(Model.PermissionsUser.Contains(item) ? "checked":null)"
+									   value="@item.ToString()">
+								<span class="lbl">
+									@(this.Get<Permissions>(item.ToString()))
+								</span>
+							</label>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class='col-lg-12'>
+			<div class='form-group no-margin-hr' style="text-align: right">
+				<button class="btn btn-primary" data-rel="submit" data-form="user-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+				<a href="@Url.Action("Index", "eUser")" class="btn btn-default">@this.Get(DictionaryEntryKeys.Cancel)</a>
+			</div>
+		</div>
+	</div>
+</form>

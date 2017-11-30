@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewBag.Title = "teste";
+}
+<script>
+    function InitTable() {
+		$('#jq-datatables').dataTable({
+			"ajax": {
+				"url": '@Url.Action("teste","Home")',
+			},
+			"order": [[0, "asc"]],
+			"columnDefs": [
+							{
+								"targets": 0,
+								"data": "ID",
+							},
+							{
+								"targets": 1,
+								"data": "NomeEmiss",
+							},
+							{
+							    "targets": 2,
+							    "data": "NifEmiss",
+							},
+                            {
+                                "targets": 3,
+                                "data": "InOrOut"
+                            },
+			],
+			"olanguage": {
+				"sUrl": '@this.GetjQDataTableLanguageUrl()'
+			},
+		});
+
+		$('#jq-datatables_wrapper .table-caption').text('');
+		$('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+
+		$('#jq-datatables').on('draw.dt', function () {
+
+			$('#jq-datatables form').submit(function (e) {
+				e.preventDefault();
+				$.post($(this).prop('action'), $(this).serialize())
+					.success(function (data) {
+						if (data == "ok") {
+							var table = $('#jq-datatables').DataTable();
+							table.ajax.reload();
+						}
+					});
+			});
+		});
+	}
+
+	init.push(function () {
+		$('a[data-toggle=tooltip]').tooltip();
+
+		InitTable();
+
+		ajaxInitPanelFunctions['init-jqtable'] = InitTable;
+	});
+</script>
+
+
+<h2>teste</h2>
+<div class="tab-pane panel no-padding no-border fade in active">
+    <div data-rel="ajax-update-panel"
+         id="IndexEDICostumers"
+         data-update-init="init-jqtable"
+         data-modal-size="modal-lg">
+        <div class="panel-heading">
+            @*<span class="panel-title">@this.Get(DictionaryEntryKeys.ProcDocs)</span>*@
+        </div>
+        <div class="panel-body">
+            <div class="table-primary">
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="jq-datatables" data-rel="ajax-update-panel" data-modal-size="modal-lg" width="100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NomeEmiss</th>
+                            <th>NifEmiss</th>
+                            <th>InOrOut</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

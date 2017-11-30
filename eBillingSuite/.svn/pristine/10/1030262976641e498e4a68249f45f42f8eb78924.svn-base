@@ -1,0 +1,18 @@
+﻿using eBillingSuite.Model;
+using eBillingSuite.Model.EBC_DB;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace eBillingSuite.Globalization.Generators
+{
+	public class DictionaryEntriesForUK : BaseDictionaryEntriesGenerator
+	{
+		public DictionaryEntriesForUK(Languages l)
+			: base(l)
+		{
+		}
+	}
+}

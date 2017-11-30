@@ -1,0 +1,119 @@
+﻿@model eBillingSuite.ViewModels.EBCDigitalCertificateVM
+@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eConnectorConfigsLayout.cshtml";
+    var useWS = Model.MarketInfo.usePDFWS;
+}
+<script>
+    var toggleCallback = null;
+	init.push(function () {
+		$('#FKInstanceID').change(function () {
+			window.location = '@Url.Action("DigitalCertificate", "eConnectorConfigs", new { id = "Guid" })'.replace('Guid', $('#FKInstanceID').find(":selected").val());
+		});
+
+		$('#NovoFicheiro').pixelFileInput({ placeholder: '@(Model.NovoCaminho == null || Model.NovoCaminho == String.Empty ? Model.NovoCaminho : "No file selected...")' });
+
+    });
+
+    $(document).ready(function () {
+        var usaWS = '@useWS';
+
+        if (usaWS == 'True') {
+            $('#div_useWS').show();
+            $('#notUseWs').hide();
+        }
+        else {
+            $('#div_useWS').hide();
+            $('#notUseWs').show();
+        }
+
+        $('#MarketInfo_usePDFWS').click( function() {
+
+            if ($(this).is(':checked')) {
+                $('#div_useWS').show();
+                $('#notUseWs').hide();            }
+            else {
+                $('#div_useWS').hide();
+                $('#notUseWs').show();
+            }
+        });
+    });
+</script>
+
+<form method="post" action="@Url.Action("DigitalCertificate", "eConnectorConfigs", new { ID = Model.FKInstanceID })" enctype="multipart/form-data">
+    <div class="panel-heading">
+        <span class="panel-title"><i class="panel-title-icon fa fa-calendar"></i>@Texts.eConnectorDigitalCertificateTitle</span>
+    </div> <!-- / .panel-heading -->
+    <div class="panel-body">
+        <div class="row">
+            @Html.PixelAdminSelectWithColFor(e => e.FKInstanceID, Model.AvailableInstances, 6, null, InputOptions.Default, Texts.InstancesList)
+        </div>
+        <div class="row">
+            @Html.PixelAdminSwitcherWithColFor(e => e.MarketInfo.usePDFWS, 12, null, InputOptions.Default, Texts.UseWS)
+        </div>
+        <div id="div_useWS">
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.MarketInfo.WS_Url, 12, null, InputOptions.Default, Texts.WSUrl)
+            </div>
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.MarketInfo.WS_Domain, 12, null, InputOptions.Default, Texts.WSDomain)
+            </div>
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.MarketInfo.WS_Username, 12, null, InputOptions.Default, Texts.WSUser)
+            </div>
+            <div class="row">
+                @Html.PixelAdminPasswordWithColFor(e => e.MarketInfo.WS_Password, 4, null, InputOptions.Default, Texts.WSPassword)
+            </div>
+        </div>
+        <div id="notUseWs" style="display:none;">
+            <div class="row">
+                @Html.PixelAdminSelectWithColFor(e => e.MarketInfo.serialnumber, Model.AvailableCertificates, 12, null, InputOptions.Default, Texts.CertificatesList)
+            </div>
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.MarketInfo.certEmailNotification, 12, null, InputOptions.Default, Texts.certEmailNotification)
+            </div>
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.MarketInfo.Caminho, 12, null, InputOptions.ReadOnly, Texts.Caminho)
+            </div>
+
+            <!-- AKI VAI FICAR A INDICACAO DO NV FICHEIRO-->
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="form-group no-margin-hr">
+                        <label for="NovoFicheiro" class="control-label">@Texts.NovoCaminho</label>
+                        <input type="file" name="NovoFicheiro" id="NovoFicheiro" value="@Model.NovoCaminho">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @Html.PixelAdminPasswordWithColFor(e => e.MarketInfo.PasswordCert, 6, null, InputOptions.Default, Texts.PasswordCert)
+            </div>
+
+            <div class="row">
+                @Html.PixelAdminSelectWithColFor(e => e.MarketInfo.fkMercado, Model.AvailableMarkets, 6, null, InputOptions.Default, Texts.AvailableMarkets)
+            </div>
+
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.Author, 3, null, InputOptions.Default, Texts.Author)
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.Title, 3, null, InputOptions.Default, Texts.Title)
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.Subject, 3, null, InputOptions.Default, Texts.Subject)
+            </div>
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.Keywords, 3, null, InputOptions.Default, Texts.Keywords)
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.Creator, 3, null, InputOptions.Default, Texts.Creator)
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.Producer, 3, null, InputOptions.Default, Texts.Producer)
+            </div>
+            <div class="row">
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.SigReason, 3, null, InputOptions.Default, Texts.SigReason)
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.SigContact, 3, null, InputOptions.Default, Texts.SigContact)
+                @Html.PixelAdminTextBoxWithColFor(e => e.CertDetails.SigLocation, 3, null, InputOptions.Default, Texts.SigLocation)
+                @Html.PixelAdminSwitcherWithColFor(e => e.CertDetails.SigVisible, 3, null, InputOptions.Default, Texts.SigVisible)
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-right">
+        <button class="btn btn-primary">@Texts.Submit</button>
+    </div>
+</form>

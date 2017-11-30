@@ -1,0 +1,48 @@
+﻿using eBillingSuite.Globalization;
+using eBillingSuite.Security;
+using Ninject;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace eBillingSuite
+{
+	public class EBillingSuiteRequestContext : IeBillingSuiteRequestContext, IDisposable
+	{
+		private IDictionaryDataSource _dictionaryDataSource;
+		public IeBillingSuiteIdentity UserIdentity { get; private set; }
+		public ITimeAgoFormatter TimeAgoFormatter { get; private set; }
+
+		[Inject]
+		public EBillingSuiteRequestContext(
+			IDictionaryDataSource dictionaryDataSource,
+			IeBillingSuiteIdentity userIdentity)
+		{
+			TimeAgoFormatter = new TimeAgoFormatter(this);
+			UserIdentity = userIdentity;            
+			_dictionaryDataSource = dictionaryDataSource;            
+		}
+
+		public string GetDictionaryValue<T>(string partialKey)
+		{
+			return GetDictionaryValue(string.Format("{0}_{1}", typeof(T).Name, partialKey));
+		}
+
+		public string GetDictionaryValue(string key)
+		{
+			return _dictionaryDataSource[1, key];
+		}
+
+		public string GetDictionaryValue(DictionaryEntryKeys key)
+		{
+			return GetDictionaryValue(key.ToString());
+		}
+
+		public void Dispose()
+		{
+			//UserIdentity = null;
+			_dictionaryDataSource = null;
+		}
+	}
+}

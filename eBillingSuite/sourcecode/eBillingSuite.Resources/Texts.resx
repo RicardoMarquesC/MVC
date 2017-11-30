@@ -1,0 +1,1186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Author" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="AvailableMarkets" xml:space="preserve">
+    <value>Mercado</value>
+  </data>
+  <data name="Caminho" xml:space="preserve">
+    <value>Caminho certificado</value>
+  </data>
+  <data name="certEmailNotification" xml:space="preserve">
+    <value>Alertas sobre o certificado</value>
+  </data>
+  <data name="CertificatesList" xml:space="preserve">
+    <value>Certificados Disponiveis</value>
+  </data>
+  <data name="ClientsList" xml:space="preserve">
+    <value>Lista de Clientes</value>
+  </data>
+  <data name="Configuracoes" xml:space="preserve">
+    <value>Configurações</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Criador</value>
+  </data>
+  <data name="eConnectorConfigurationsTitle" xml:space="preserve">
+    <value>Configurações da conta de email</value>
+  </data>
+  <data name="eConnectorDigitalCertificateTitle" xml:space="preserve">
+    <value>Certificado Digital</value>
+  </data>
+  <data name="eConnectorEmailConfigsTitle" xml:space="preserve">
+    <value>Configurações de Email</value>
+  </data>
+  <data name="FaltaDadosDigitalCertificate" xml:space="preserve">
+    <value>Falta Dados no ebc_Config  - Certificado Digital</value>
+  </data>
+  <data name="FaltaDadosEBCCONFIGURATIONS" xml:space="preserve">
+    <value>Falta Dados na base de dados  - Conta de Email</value>
+  </data>
+  <data name="InstancesList" xml:space="preserve">
+    <value>Lista de Instâncias</value>
+  </data>
+  <data name="InstancesNULL" xml:space="preserve">
+    <value>Este utilizador não têm acesso a nenhuma instância por favor contacte o responsável</value>
+  </data>
+  <data name="Keywords" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="NotificationEmailFunctional" xml:space="preserve">
+    <value>Endereço de notificações funcionais</value>
+  </data>
+  <data name="NotificationEmailTecnical" xml:space="preserve">
+    <value>Endereço de notificações técnicas</value>
+  </data>
+  <data name="NovoCaminho" xml:space="preserve">
+    <value>Novo Caminho</value>
+  </data>
+  <data name="PasswordCert" xml:space="preserve">
+    <value>Palavra-chave Certificado</value>
+  </data>
+  <data name="Producer" xml:space="preserve">
+    <value>Empresa</value>
+  </data>
+  <data name="RemetentesClientes" xml:space="preserve">
+    <value>Remetentes e Clientes</value>
+  </data>
+  <data name="resendAfterCount" xml:space="preserve">
+    <value>Tentativas de reenvio de e-mails</value>
+  </data>
+  <data name="resendAfterPeriodUnit" xml:space="preserve">
+    <value>no intervalo de - Periodo</value>
+  </data>
+  <data name="resendAfterPeriodUnitType" xml:space="preserve">
+    <value>Tipo de Periodo de espera</value>
+  </data>
+  <data name="SaphetyCredentials_password" xml:space="preserve">
+    <value>Palavra-chave Saphety</value>
+  </data>
+  <data name="SaphetyCredentials_username" xml:space="preserve">
+    <value>Username Saphety</value>
+  </data>
+  <data name="SigContact" xml:space="preserve">
+    <value>Contato</value>
+  </data>
+  <data name="SigLocation" xml:space="preserve">
+    <value>Localização</value>
+  </data>
+  <data name="SignInToYourAccount" xml:space="preserve">
+    <value>Aqui jaz um teste bem sucedido</value>
+  </data>
+  <data name="SigReason" xml:space="preserve">
+    <value>Razão</value>
+  </data>
+  <data name="SigVisible" xml:space="preserve">
+    <value>Assinatura visível?</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Assunto</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Título</value>
+  </data>
+  <data name="UnknownList" xml:space="preserve">
+    <value>Emails Desconhecidos</value>
+  </data>
+  <data name="UseWS" xml:space="preserve">
+    <value>Usa WebService?</value>
+  </data>
+  <data name="WaitForEfectiveResponseUnit" xml:space="preserve">
+    <value>Tempo de espera por resposta</value>
+  </data>
+  <data name="WaitForEffectiveResponseUnitType" xml:space="preserve">
+    <value>Tipo de tempo de espera</value>
+  </data>
+  <data name="WSDomain" xml:space="preserve">
+    <value>Domínio</value>
+  </data>
+  <data name="WSPassword" xml:space="preserve">
+    <value>Palavra-chave</value>
+  </data>
+  <data name="WSUrl" xml:space="preserve">
+    <value>Endereço</value>
+  </data>
+  <data name="WSUser" xml:space="preserve">
+    <value>Utilizador</value>
+  </data>
+  <data name="Adicionar" xml:space="preserve">
+    <value>Adicionar</value>
+  </data>
+  <data name="AvailableXMLFields" xml:space="preserve">
+    <value>Campos do XML</value>
+  </data>
+  <data name="AvailableXMLTypes" xml:space="preserve">
+    <value>Tipos de XML</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="ConfiguracaoTXTTable" xml:space="preserve">
+    <value>Dados TXT</value>
+  </data>
+  <data name="ConnectorConfiTXTAdd" xml:space="preserve">
+    <value>Adicionar Campo</value>
+  </data>
+  <data name="CorpoEmail" xml:space="preserve">
+    <value>Corpo do Email</value>
+  </data>
+  <data name="eConnectorPacketConfigsTitle" xml:space="preserve">
+    <value>Configuração do Envelope</value>
+  </data>
+  <data name="eConnectorRealTimeAlertsTitle" xml:space="preserve">
+    <value>Alertas em tempo real</value>
+  </data>
+  <data name="eConnectorTXTConfigTitle" xml:space="preserve">
+    <value>Configurações de TXT</value>
+  </data>
+  <data name="ExpressaoRegular" xml:space="preserve">
+    <value>Expressão Regular</value>
+  </data>
+  <data name="InsertImage" xml:space="preserve">
+    <value>Inserir Imagem</value>
+  </data>
+  <data name="InsertLink" xml:space="preserve">
+    <value>Inserir Hiperligação</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Aceder</value>
+  </data>
+  <data name="LoginData_Remember" xml:space="preserve">
+    <value>Lembrar-me</value>
+  </data>
+  <data name="NomeCampo" xml:space="preserve">
+    <value>Nome </value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Palavra-chave</value>
+  </data>
+  <data name="Posicao" xml:space="preserve">
+    <value>Posição</value>
+  </data>
+  <data name="Tipo" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Utilizador</value>
+  </data>
+  <data name="AvailableDecimalPlaces" xml:space="preserve">
+    <value>Casas decimais</value>
+  </data>
+  <data name="AvailableExtractionTypes" xml:space="preserve">
+    <value>Tipo de Extração</value>
+  </data>
+  <data name="AvailableFormulaOperations" xml:space="preserve">
+    <value>Operação</value>
+  </data>
+  <data name="AvailableNomenclaturaPDFTypes" xml:space="preserve">
+    <value>Lista de nomenculatura tipos de PDF</value>
+  </data>
+  <data name="CampoCasasDecimais" xml:space="preserve">
+    <value>Casas Decimais</value>
+  </data>
+  <data name="CampoDeOrigem" xml:space="preserve">
+    <value>De Origem</value>
+  </data>
+  <data name="CampoExpressao" xml:space="preserve">
+    <value>Expressão</value>
+  </data>
+  <data name="CampoFormula" xml:space="preserve">
+    <value>Formula</value>
+  </data>
+  <data name="CampoNome" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="CampoObrigatorio" xml:space="preserve">
+    <value>Obrigatório</value>
+  </data>
+  <data name="CampoTipo" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="ComboBox" xml:space="preserve">
+    <value>ComboBox</value>
+  </data>
+  <data name="ConcatAnexos" xml:space="preserve">
+    <value>Concatenar Anexos</value>
+  </data>
+  <data name="ConfiguracaoInboundTXTTable" xml:space="preserve">
+    <value>Dados TXT Inbound</value>
+  </data>
+  <data name="ConnectorConfiInboundTXTAdd" xml:space="preserve">
+    <value>Adicionar Campo</value>
+  </data>
+  <data name="counterValue" xml:space="preserve">
+    <value>Contador</value>
+  </data>
+  <data name="CustomerAdd" xml:space="preserve">
+    <value>Novo cliente</value>
+  </data>
+  <data name="CustomersList" xml:space="preserve">
+    <value>Lista de Clientes</value>
+  </data>
+  <data name="DefaultValue" xml:space="preserve">
+    <value>Valor por Defeito</value>
+  </data>
+  <data name="DigitalDocTypeTagsHelpLine" xml:space="preserve">
+    <value>No campo 'Palavras-chave' insira as palavras para reconhecimento do tipo de documento, seperadas por ponto e vírgula (';').</value>
+  </data>
+  <data name="DigitalDocumentTypeAdd" xml:space="preserve">
+    <value>Novo Tipo de Documento</value>
+  </data>
+  <data name="DigitalFieldAdd" xml:space="preserve">
+    <value>Adicionar Campo</value>
+  </data>
+  <data name="DoYouWantForward" xml:space="preserve">
+    <value>Reencaminhamento?</value>
+  </data>
+  <data name="DoYouWantForwardEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="DoYouWantForwardFTP" xml:space="preserve">
+    <value>FTP</value>
+  </data>
+  <data name="EConnectorCustomerAdd" xml:space="preserve">
+    <value>Adicionar Cliente</value>
+  </data>
+  <data name="eConnectorCustomerTitle" xml:space="preserve">
+    <value>Clientes</value>
+  </data>
+  <data name="eConnectorInstanceEdit" xml:space="preserve">
+    <value>Editar Instância</value>
+  </data>
+  <data name="eConnectorInstancesTitle" xml:space="preserve">
+    <value>Gestão de instâncias</value>
+  </data>
+  <data name="EConnectorSupplierCreate" xml:space="preserve">
+    <value>Criar Remetente</value>
+  </data>
+  <data name="EConnectorSupplierEdit" xml:space="preserve">
+    <value>Editar Remetente</value>
+  </data>
+  <data name="eConnectorTXTInboundConfigTitle" xml:space="preserve">
+    <value>Configurações Inbound de TXT</value>
+  </data>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>Endereço de email</value>
+  </data>
+  <data name="EmailCliente" xml:space="preserve">
+    <value>Email do Cliente</value>
+  </data>
+  <data name="EmailName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Enabled" xml:space="preserve">
+    <value>Ativo?</value>
+  </data>
+  <data name="Formula" xml:space="preserve">
+    <value>Fórmula</value>
+  </data>
+  <data name="ftpServer" xml:space="preserve">
+    <value>Servidor de FTP URL</value>
+  </data>
+  <data name="InstanceHasInternalProcess" xml:space="preserve">
+    <value>Processo Interno?</value>
+  </data>
+  <data name="InstanceName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="InstanceNIF" xml:space="preserve">
+    <value>Contribuinte</value>
+  </data>
+  <data name="Instances" xml:space="preserve">
+    <value>Instâncias</value>
+  </data>
+  <data name="isGenericDocument" xml:space="preserve">
+    <value>Documento Genérico?</value>
+  </data>
+  <data name="isNomenclaturaPDF" xml:space="preserve">
+    <value>Nomenculatura PDF?</value>
+  </data>
+  <data name="IsReadOnly" xml:space="preserve">
+    <value>Só leitura?</value>
+  </data>
+  <data name="IsRequired" xml:space="preserve">
+    <value>Obrigatório</value>
+  </data>
+  <data name="LabelUI" xml:space="preserve">
+    <value>Texto no eDigital</value>
+  </data>
+  <data name="ListAvailableInvoiceRegionTypes" xml:space="preserve">
+    <value>ListAvailableInvoiceRegionTypes</value>
+    <comment>aguardo tradução</comment>
+  </data>
+  <data name="ListEmails" xml:space="preserve">
+    <value>Lista de emails</value>
+  </data>
+  <data name="Nao" xml:space="preserve">
+    <value>Não</value>
+  </data>
+  <data name="NIF" xml:space="preserve">
+    <value>Contribuinte</value>
+  </data>
+  <data name="NomeTemplate" xml:space="preserve">
+    <value>Nome do Template</value>
+  </data>
+  <data name="PDFAss" xml:space="preserve">
+    <value>PDF Assinado?</value>
+  </data>
+  <data name="PdfLink" xml:space="preserve">
+    <value>PDF em URL?</value>
+  </data>
+  <data name="PDFNAss" xml:space="preserve">
+    <value>PDF Não Assinado?</value>
+  </data>
+  <data name="port" xml:space="preserve">
+    <value>Porto</value>
+  </data>
+  <data name="RecognitionTags" xml:space="preserve">
+    <value>Palavras de reconhecimento do Tipo</value>
+  </data>
+  <data name="SendersList" xml:space="preserve">
+    <value>Lista de Remetentes</value>
+  </data>
+  <data name="Sim" xml:space="preserve">
+    <value>Sim</value>
+  </data>
+  <data name="SupplierAdd" xml:space="preserve">
+    <value>Adicionar Remetente</value>
+  </data>
+  <data name="TipoFatura" xml:space="preserve">
+    <value>Tipo de Documento</value>
+  </data>
+  <data name="UsesPluginSystem" xml:space="preserve">
+    <value>Usa sistema de plugins?</value>
+  </data>
+  <data name="XMLAss" xml:space="preserve">
+    <value>XML Assinado?</value>
+  </data>
+  <data name="XMLNAss" xml:space="preserve">
+    <value>XML Não Assinado?</value>
+  </data>
+  <data name="AvailableExpressionItems" xml:space="preserve">
+    <value>Items disponíveis</value>
+  </data>
+  <data name="DigitalAlertFillVat" xml:space="preserve">
+    <value>Preencha o NIF</value>
+  </data>
+  <data name="DigitalInstanceAdd" xml:space="preserve">
+    <value>Nova Companhia</value>
+  </data>
+  <data name="DigitalMailCreate" xml:space="preserve">
+    <value>Nova configuração de Email</value>
+  </data>
+  <data name="DigitalSenderAdd" xml:space="preserve">
+    <value>Novo Fornecedor</value>
+  </data>
+  <data name="Expression" xml:space="preserve">
+    <value>Expressão</value>
+  </data>
+  <data name="Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="InternalCode" xml:space="preserve">
+    <value>Cód. Interno</value>
+  </data>
+  <data name="isSSL" xml:space="preserve">
+    <value>Usa SSL?</value>
+  </data>
+  <data name="Morada" xml:space="preserve">
+    <value>Morada</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="NumCarateres" xml:space="preserve">
+    <value>Núm. Caracteres</value>
+  </data>
+  <data name="Obs" xml:space="preserve">
+    <value>Observações</value>
+  </data>
+  <data name="Procurar" xml:space="preserve">
+    <value>Procurar</value>
+  </data>
+  <data name="protocolReceptionList" xml:space="preserve">
+    <value>Protocolo de Recepção</value>
+  </data>
+  <data name="ServerURL" xml:space="preserve">
+    <value>Servidor de Email</value>
+  </data>
+  <data name="Telefone" xml:space="preserve">
+    <value>Telefone</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="AvailableDocTypes" xml:space="preserve">
+    <value>Tipos de Documento</value>
+  </data>
+  <data name="CSVFile" xml:space="preserve">
+    <value>Ficheiro CSV</value>
+  </data>
+  <data name="Dados" xml:space="preserve">
+    <value>Dados</value>
+  </data>
+  <data name="DigitalAlertGenericError" xml:space="preserve">
+    <value>Erro genérico</value>
+  </data>
+  <data name="DigitalDocHistoryTitle" xml:space="preserve">
+    <value>Histórico de Documentos</value>
+  </data>
+  <data name="DigitalDocNumber" xml:space="preserve">
+    <value>Núm. Documento</value>
+  </data>
+  <data name="DigitalDocPdf" xml:space="preserve">
+    <value>Ficheiro PDF</value>
+  </data>
+  <data name="DigitalDocSupplier" xml:space="preserve">
+    <value>Fornecedor</value>
+  </data>
+  <data name="DigitalDocumentExpiration" xml:space="preserve">
+    <value>Expiração Documento</value>
+  </data>
+  <data name="DigitalDocValidationDate" xml:space="preserve">
+    <value>Data de Validação</value>
+  </data>
+  <data name="DigitalDocValidationUser" xml:space="preserve">
+    <value>Utilizador</value>
+  </data>
+  <data name="DigitalDocXml" xml:space="preserve">
+    <value>Ficheiro XML</value>
+  </data>
+  <data name="DigitalFieldEdit" xml:space="preserve">
+    <value>Editar campo</value>
+  </data>
+  <data name="DigitalIntegrationConfigurations" xml:space="preserve">
+    <value>Configurações de integração</value>
+  </data>
+  <data name="DigitalIntegrationConfigurationUrlHelperText" xml:space="preserve">
+    <value>URL para integração de documentos no final do processo de validação de dados.</value>
+  </data>
+  <data name="DigitalSenderEdit" xml:space="preserve">
+    <value>Editar Fornecedor</value>
+  </data>
+  <data name="DigitalSupplierAdd" xml:space="preserve">
+    <value>Novo Fornecedor</value>
+  </data>
+  <data name="DigitalSupplierSync" xml:space="preserve">
+    <value>Configuração da sincronização de fornecedores</value>
+  </data>
+  <data name="DigitalUploadAccountingData" xml:space="preserve">
+    <value>Carregar dados contabilísticos</value>
+  </data>
+  <data name="DtaCriacao" xml:space="preserve">
+    <value>Data de Criação</value>
+  </data>
+  <data name="DtaModi" xml:space="preserve">
+    <value>Data de Modificação</value>
+  </data>
+  <data name="InsertDocType" xml:space="preserve">
+    <value>Inserir tipo documento</value>
+  </data>
+  <data name="instancesMailAdd" xml:space="preserve">
+    <value>Novo Email Companhia</value>
+  </data>
+  <data name="instancesMailList" xml:space="preserve">
+    <value>Lista de Emails por Companhia</value>
+  </data>
+  <data name="NomeFicheiro" xml:space="preserve">
+    <value>Nome Ficheiro</value>
+  </data>
+  <data name="Prioridade" xml:space="preserve">
+    <value>Prioridade</value>
+  </data>
+  <data name="ProcDocs" xml:space="preserve">
+    <value>Processamento</value>
+  </data>
+  <data name="Processamento" xml:space="preserve">
+    <value>Processamento</value>
+  </data>
+  <data name="protocolServer" xml:space="preserve">
+    <value>Protocolo</value>
+  </data>
+  <data name="Seccoes" xml:space="preserve">
+    <value>Secções</value>
+  </data>
+  <data name="Separacao" xml:space="preserve">
+    <value>Separação</value>
+  </data>
+  <data name="SuppliersList" xml:space="preserve">
+    <value>Fornecedores</value>
+  </data>
+  <data name="SyncPassConfig" xml:space="preserve">
+    <value>Palavra-chave</value>
+  </data>
+  <data name="SyncUrlConfig" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="SyncUserConfig" xml:space="preserve">
+    <value>Nome de Utilizador</value>
+  </data>
+  <data name="TemplateHeader" xml:space="preserve">
+    <value>Cabeçalho</value>
+  </data>
+  <data name="TemplateLines" xml:space="preserve">
+    <value>Linhas</value>
+  </data>
+  <data name="TemplateManagment" xml:space="preserve">
+    <value>Gestão de Templates</value>
+  </data>
+  <data name="TemplateVat" xml:space="preserve">
+    <value>IVA</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="Validacoes" xml:space="preserve">
+    <value>Validações</value>
+  </data>
+  <data name="WaitList" xml:space="preserve">
+    <value>Lista de Espera</value>
+  </data>
+  <data name="WantMainValidations" xml:space="preserve">
+    <value>Validações Base?</value>
+  </data>
+  <data name="WantSync" xml:space="preserve">
+    <value>Sicronização ativa</value>
+  </data>
+  <data name="allPermissions" xml:space="preserve">
+    <value>Todas as permissões</value>
+  </data>
+  <data name="AvailableSuppliers" xml:space="preserve">
+    <value>Fornecedores Disponiveis</value>
+  </data>
+  <data name="Domain" xml:space="preserve">
+    <value>Dominio</value>
+  </data>
+  <data name="TemplateManagmentSupplier" xml:space="preserve">
+    <value>Gestão de Templates de Fornecedores</value>
+  </data>
+  <data name="UserAdd" xml:space="preserve">
+    <value>Novo Utilizador</value>
+  </data>
+  <data name="UserEdit" xml:space="preserve">
+    <value>Editar Utilizador</value>
+  </data>
+  <data name="UsersLists" xml:space="preserve">
+    <value>Listas de Utilizadores</value>
+  </data>
+  <data name="verInstances" xml:space="preserve">
+    <value>Ver instâncias</value>
+  </data>
+  <data name="verProdutos" xml:space="preserve">
+    <value>Ver produtos</value>
+  </data>
+  <data name="CertificadoDigital" xml:space="preserve">
+    <value>Certificado Digital</value>
+  </data>
+  <data name="Clientes" xml:space="preserve">
+    <value>Clientes</value>
+  </data>
+  <data name="ConfiguracaoInstancia" xml:space="preserve">
+    <value>Instâncias</value>
+  </data>
+  <data name="ConfiguracaoTXT" xml:space="preserve">
+    <value>Configuração TXT</value>
+  </data>
+  <data name="ContaEmail" xml:space="preserve">
+    <value>Conta de Email</value>
+  </data>
+  <data name="Data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="DefinicaoAlertas" xml:space="preserve">
+    <value>Definição de Alertas</value>
+  </data>
+  <data name="DefinicaoEmail" xml:space="preserve">
+    <value>Definição do Email</value>
+  </data>
+  <data name="DefinicaoEnvelope" xml:space="preserve">
+    <value>Definição Envelope</value>
+  </data>
+  <data name="Desmaterializacao" xml:space="preserve">
+    <value>Desmaterialização</value>
+  </data>
+  <data name="DigitalInstances" xml:space="preserve">
+    <value>Companhias</value>
+  </data>
+  <data name="DocumentosErros" xml:space="preserve">
+    <value>Documentos Erro</value>
+  </data>
+  <data name="DocumentoTransporte" xml:space="preserve">
+    <value>Guias transporte</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Data Final</value>
+  </data>
+  <data name="Estado" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Estatisticas" xml:space="preserve">
+    <value>Estatisticas</value>
+  </data>
+  <data name="Facturacao" xml:space="preserve">
+    <value>Faturação</value>
+  </data>
+  <data name="FaturasAT" xml:space="preserve">
+    <value>Faturas AT</value>
+  </data>
+  <data name="GestaoXml" xml:space="preserve">
+    <value>Gestão XML</value>
+  </data>
+  <data name="instancesMail" xml:space="preserve">
+    <value>Contas de Email p/ Companhia</value>
+  </data>
+  <data name="Integracao" xml:space="preserve">
+    <value>Integração</value>
+  </data>
+  <data name="IntegratedPackets" xml:space="preserve">
+    <value>Ficheiros Integrados</value>
+  </data>
+  <data name="LoadAccountingData" xml:space="preserve">
+    <value>Dados contabilísticos</value>
+  </data>
+  <data name="LogoutLabel" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="MaparTXTInbound" xml:space="preserve">
+    <value>Mapear TXT Inbound</value>
+  </data>
+  <data name="NifEmissor" xml:space="preserve">
+    <value>NIF Emissor</value>
+  </data>
+  <data name="NifRecetor" xml:space="preserve">
+    <value>NIF Recetor</value>
+  </data>
+  <data name="NumDocumento" xml:space="preserve">
+    <value>Número Documento</value>
+  </data>
+  <data name="OutboundInbound" xml:space="preserve">
+    <value>Outbound e Inbound</value>
+  </data>
+  <data name="OutInEstados1" xml:space="preserve">
+    <value>1 - Sucesso</value>
+  </data>
+  <data name="OutInEstados2" xml:space="preserve">
+    <value>2 - Espera</value>
+  </data>
+  <data name="OutInEstados3" xml:space="preserve">
+    <value>3 - Falha Out</value>
+  </data>
+  <data name="OutInEstados4" xml:space="preserve">
+    <value>4 - Integrado</value>
+  </data>
+  <data name="OutInEstados5" xml:space="preserve">
+    <value>5 - Falha IN</value>
+  </data>
+  <data name="OutInEstados6" xml:space="preserve">
+    <value>6 - Lido ERP</value>
+  </data>
+  <data name="OutInEstados7" xml:space="preserve">
+    <value>7 - Reprocessado Out</value>
+  </data>
+  <data name="OutInEstados8" xml:space="preserve">
+    <value>8 - Reprocessado IN</value>
+  </data>
+  <data name="Performance" xml:space="preserve">
+    <value>Desempenho</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>+351 221 452 478</value>
+  </data>
+  <data name="Quantias" xml:space="preserve">
+    <value>Quantias</value>
+  </data>
+  <data name="Quantidades" xml:space="preserve">
+    <value>Quantidades</value>
+  </data>
+  <data name="Remetentes" xml:space="preserve">
+    <value>Remetentes</value>
+  </data>
+  <data name="RemoteAccess" xml:space="preserve">
+    <value>Pedido de acesso remoto</value>
+  </data>
+  <data name="Sincronizacao" xml:space="preserve">
+    <value>Sincronização</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Data Inicial</value>
+  </data>
+  <data name="Templates" xml:space="preserve">
+    <value>Templates</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="DataCriacao" xml:space="preserve">
+    <value>Data Criação</value>
+  </data>
+  <data name="DataFatura" xml:space="preserve">
+    <value>Data Fatura</value>
+  </data>
+  <data name="NomeEmissor" xml:space="preserve">
+    <value>Emissor</value>
+  </data>
+  <data name="NomeRecetor" xml:space="preserve">
+    <value>Recetor</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Quantia" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Sentido" xml:space="preserve">
+    <value>Sentido</value>
+  </data>
+  <data name="DocOutInUltimoAno" xml:space="preserve">
+    <value>Documentos no Ultimo Ano</value>
+  </data>
+  <data name="QuantTipoDoc" xml:space="preserve">
+    <value>Quantidade Tipo Documento</value>
+  </data>
+  <data name="Top5Clientes" xml:space="preserve">
+    <value>Top 5 Clientes</value>
+  </data>
+  <data name="Top5Fornecedores" xml:space="preserve">
+    <value>Top 5 Fornecedores</value>
+  </data>
+  <data name="BaseadoCliente" xml:space="preserve">
+    <value>Baseado no Cliente</value>
+  </data>
+  <data name="BaseadoData" xml:space="preserve">
+    <value>Baseado na Data</value>
+  </data>
+  <data name="ComunicacoesAT" xml:space="preserve">
+    <value>Comunicações AT</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="ElecFacturacao" xml:space="preserve">
+    <value>Faturação Eletrónica</value>
+  </data>
+  <data name="Eventos" xml:space="preserve">
+    <value>Eventos</value>
+  </data>
+  <data name="EventosCom" xml:space="preserve">
+    <value>Eventos Com</value>
+  </data>
+  <data name="InboundPackets" xml:space="preserve">
+    <value>Inbound</value>
+  </data>
+  <data name="NewPackets" xml:space="preserve">
+    <value>Novos Pacotes</value>
+  </data>
+  <data name="NIntegratedPackets" xml:space="preserve">
+    <value>Não integrados</value>
+  </data>
+  <data name="Outbound" xml:space="preserve">
+    <value>Outbound</value>
+  </data>
+  <data name="OutboundPackets" xml:space="preserve">
+    <value>Outbound</value>
+  </data>
+  <data name="OutboundSend" xml:space="preserve">
+    <value>Enviados</value>
+  </data>
+  <data name="OutboundWait" xml:space="preserve">
+    <value>Em espera</value>
+  </data>
+  <data name="Packets" xml:space="preserve">
+    <value>Pacotes</value>
+  </data>
+  <data name="TempoMedioResposta" xml:space="preserve">
+    <value>Reposta em Média</value>
+  </data>
+  <data name="TemposMediosEnvio" xml:space="preserve">
+    <value>Tempos Médio de Envio</value>
+  </data>
+  <data name="Top5Lentos" xml:space="preserve">
+    <value>Top 5 Lentos</value>
+  </data>
+  <data name="Top5Rapidos" xml:space="preserve">
+    <value>Top 5 Rapidos</value>
+  </data>
+  <data name="AccountingCsvErrors" xml:space="preserve">
+    <value>Foram detetados erros no ficheiro CSV (enumerados abaixo). Por favor, corriga-os e volte a submeter o documento.</value>
+  </data>
+  <data name="CampoJaExistente" xml:space="preserve">
+    <value>Campo já existe</value>
+  </data>
+  <data name="CampoPorPreencher" xml:space="preserve">
+    <value>Campo por preencher</value>
+  </data>
+  <data name="CampoPosicaoDeveEstarPreenchido" xml:space="preserve">
+    <value>CampoPosicaoDeveEstarPreenchido</value>
+  </data>
+  <data name="ConfirmAndPassMustBeEqual" xml:space="preserve">
+    <value>A palavra-chave não são iguais</value>
+  </data>
+  <data name="CreateOperationSuccess" xml:space="preserve">
+    <value>Foi criado com sucesso</value>
+  </data>
+  <data name="DBErrors" xml:space="preserve">
+    <value>Erro na base de dados</value>
+  </data>
+  <data name="DeleteOperationSuccess" xml:space="preserve">
+    <value>Foi eliminado com sucesso</value>
+  </data>
+  <data name="DigitalCannotDeleteDocumentNumber" xml:space="preserve">
+    <value>Não é possivel eliminar o Número de Documento</value>
+  </data>
+  <data name="DigitalXmlFieldExists" xml:space="preserve">
+    <value>Este campo já existe</value>
+  </data>
+  <data name="EditOperationSuccess" xml:space="preserve">
+    <value>Foi alterado com sucesso</value>
+  </data>
+  <data name="EmailIncorrectFormat" xml:space="preserve">
+    <value>Email não se encontra no formato correto</value>
+  </data>
+  <data name="FicheiroFormatoInvalido" xml:space="preserve">
+    <value>Ficheiro no formato incorreto</value>
+  </data>
+  <data name="FileIsEmpty" xml:space="preserve">
+    <value>O ficheiro está vazio</value>
+  </data>
+  <data name="FixModelErrors" xml:space="preserve">
+    <value>FixModelErrors</value>
+  </data>
+  <data name="InvalidCredentials" xml:space="preserve">
+    <value>Credênciais inválidas</value>
+  </data>
+  <data name="NIFFailedRequirement" xml:space="preserve">
+    <value>Falta o NIF</value>
+  </data>
+  <data name="NifJaExiste" xml:space="preserve">
+    <value>Contribuinte já existe</value>
+  </data>
+  <data name="NomeCampoFailedRequirement" xml:space="preserve">
+    <value>NomeCampoFailedRequirement</value>
+  </data>
+  <data name="NoTemplateForGivenDocAndSupplier" xml:space="preserve">
+    <value>Não foi possível localizar o template para o tipo de documento e fornecedor escolhido.</value>
+  </data>
+  <data name="PasswordIncorrectFormat" xml:space="preserve">
+    <value>A palavra-chave não se encontra no formato correto</value>
+  </data>
+  <data name="PosicaoFailedRequirement" xml:space="preserve">
+    <value>PosicaoFailedRequirement</value>
+  </data>
+  <data name="TimeAgoAnHour" xml:space="preserve">
+    <value>TimeAgoAnHour</value>
+  </data>
+  <data name="TimeAgoDays" xml:space="preserve">
+    <value>TimeAgoDays</value>
+  </data>
+  <data name="TimeAgoHours" xml:space="preserve">
+    <value>TimeAgoHours</value>
+  </data>
+  <data name="TimeAgoLessThanAnHour" xml:space="preserve">
+    <value>TimeAgoLessThanAnHour</value>
+  </data>
+  <data name="TimeAgoMonths" xml:space="preserve">
+    <value>TimeAgoMonths</value>
+  </data>
+  <data name="TimeAgoNotYet" xml:space="preserve">
+    <value>TimeAgoNotYet</value>
+  </data>
+  <data name="TimeAgoOneMonth" xml:space="preserve">
+    <value>TimeAgoOneMonth</value>
+  </data>
+  <data name="TimeAgoOneYear" xml:space="preserve">
+    <value>TimeAgoOneYear</value>
+  </data>
+  <data name="TimeAgoYears" xml:space="preserve">
+    <value>TimeAgoYears</value>
+  </data>
+  <data name="TimeAgoYesterday" xml:space="preserve">
+    <value>TimeAgoYesterday</value>
+  </data>
+  <data name="Untitled" xml:space="preserve">
+    <value>N. A.</value>
+  </data>
+  <data name="URLIncorrectFormat" xml:space="preserve">
+    <value>URL indicado encontra-se num formato incorreto.</value>
+  </data>
+  <data name="UsernameIncorrectFormat" xml:space="preserve">
+    <value>O utilizador não se encontra no formato correto</value>
+  </data>
+  <data name="WhiteListExist" xml:space="preserve">
+    <value>Remetente já se encontra inserido com este email</value>
+  </data>
+  <data name="XmlNotUploaded" xml:space="preserve">
+    <value>Ocorreu um erro ao receber o ficheiro. Tente de novo.</value>
+  </data>
+  <data name="EBCWhiteListEmailHelpLine" xml:space="preserve">
+    <value>Na campo 'Email' pode inserir vários endereços seperados por vírgula (p.e. ex1@ex1.com, ex2@ex2.com).</value>
+  </data>
+  <data name="PdfLinkBaseURL" xml:space="preserve">
+    <value>URL base do PDF</value>
+  </data>
+  <data name="ReplyToAddress" xml:space="preserve">
+    <value>Email(s) para envio de resposta</value>
+  </data>
+  <data name="Estados0" xml:space="preserve">
+    <value>Estados0</value>
+  </data>
+  <data name="Estados1" xml:space="preserve">
+    <value>Estados1</value>
+  </data>
+  <data name="Estados2" xml:space="preserve">
+    <value>Estados2</value>
+  </data>
+  <data name="PermissionsUserList" xml:space="preserve">
+    <value>Lista de Permissões de Utilizador</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CLIENTES_CLIENTES" xml:space="preserve">
+    <value>Tab Clientes - eBilling Connector (Clientes)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CLIENTES_CONFIGURACOESXML" xml:space="preserve">
+    <value>Tab Config. XML - eBilling Connector (Clientes)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_CERTIFICADODIGITAL" xml:space="preserve">
+    <value>Tab Certificado Digital - eBilling Connector (Clientes)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_CONFIGURACAOINSTANCIA" xml:space="preserve">
+    <value>Tab Config. Instância - eBilling Connector (Clientes)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_CONFIGURACAOTXT" xml:space="preserve">
+    <value>Tab Config. TXT - eBilling Connector (Clientes)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_CONTAEMAIL" xml:space="preserve">
+    <value>Tab ContaEmail - eBilling Connector (Configurações)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_DEFINICOESALERTA" xml:space="preserve">
+    <value>Tab Definições Alerta - eBilling Connector (Configurações)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_DEFINICOESEMAIL" xml:space="preserve">
+    <value>Tab Definições Email - eBilling Connector (Configurações)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_DEFINICOESENVELOPE" xml:space="preserve">
+    <value>Tab Definições Envelope - eBilling Connector (Configurações)</value>
+  </data>
+  <data name="Permissions_ECONNECTOR_CONFIG_MAPEARTXTINBOUND" xml:space="preserve">
+    <value>Tab Mapear TXT Inbound - eBilling Connector (Configurações)"</value>
+  </data>
+  <data name="Permissions_EDIGITAL_ACCOUNTING_DATA" xml:space="preserve">
+    <value>Tab Dados contabilisticos - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_EXPIRACAODOCUMENTOS" xml:space="preserve">
+    <value>Tab Expiração Documentos - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_FORNECEDORES" xml:space="preserve">
+    <value>Tab Fornecedores - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_GESTAOXML" xml:space="preserve">
+    <value>Tab Gestão XML - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_HISTORICODOCUMENTOS" xml:space="preserve">
+    <value>Tab Histórico Documentos - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_INSTANCES" xml:space="preserve">
+    <value>Tab Instâncias - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_INTEGRACAO" xml:space="preserve">
+    <value>Tab Integração - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_MAIL" xml:space="preserve">
+    <value>Tab Dados das contas de email - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_PROCESSAMENTO" xml:space="preserve">
+    <value>Tab Documentos a Processar - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_SINCRONIZACAO" xml:space="preserve">
+    <value>Tab Sincronização - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_STATS" xml:space="preserve">
+    <value>Tab Estatisticas - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EDIGITAL_TEMPLATES" xml:space="preserve">
+    <value>Tab Templates - eBilling Digital</value>
+  </data>
+  <data name="Permissions_EECONNECTOR_REMETENTES_CONFIGURACOESXML" xml:space="preserve">
+    <value>Tab Config. XML - eBilling Connector (Remetentes)</value>
+  </data>
+  <data name="Permissions_EECONNECTOR_REMETENTES_MAPEAMENTO" xml:space="preserve">
+    <value>Tab Mapeamento - eBilling Connector (Remetentes)</value>
+  </data>
+  <data name="Permissions_EECONNECTOR_REMETENTES_REMETENTES" xml:space="preserve">
+    <value>Tab Remetentes - eBilling Connector (Remetentes)</value>
+  </data>
+  <data name="Permissions_EECONNECTOR_REMETENTES_XMLMAPEAMENTO" xml:space="preserve">
+    <value>Tab Mapeamento XML - eBilling Connector (Remetentes)</value>
+  </data>
+  <data name="Permissions_EEDI_CLIENTES" xml:space="preserve">
+    <value>Tab Clientes - eBilling EDI</value>
+  </data>
+  <data name="Permissions_EEDI_DOCUMENTOSENVIADOS" xml:space="preserve">
+    <value>Tab Doc. Enviados - eBilling EDI</value>
+  </data>
+  <data name="Permissions_EEDI_DOCUMENTOSRECEBIDOS" xml:space="preserve">
+    <value>Tab Doc. Recebidos - eBilling EDI</value>
+  </data>
+  <data name="Permissions_EEDI_REMETENTES" xml:space="preserve">
+    <value>Tab Remetentes - eBilling EDI</value>
+  </data>
+  <data name="Permissions_EMCAT_CONFIGURACOESENVIO" xml:space="preserve">
+    <value>Tab Config. Envio - eBilling MCAT</value>
+  </data>
+  <data name="Permissions_EMCAT_DEFINICOESCREDENCIAIS" xml:space="preserve">
+    <value>Tab Def. Credenciais - eBilling MCAT</value>
+  </data>
+  <data name="Permissions_EMCAT_FATURAS" xml:space="preserve">
+    <value>Tab Faturas - eBilling MCAT</value>
+  </data>
+  <data name="Permissions_EMCAT_GUIASTRANSPORTES" xml:space="preserve">
+    <value>Tab GuiasTransporte  - eBilling MCAT</value>
+  </data>
+  <data name="Permissions_EUSERS" xml:space="preserve">
+    <value>Tab User - eBilling Users</value>
+  </data>
+  <data name="Permissions_ParseFailed" xml:space="preserve">
+    <value>Erros</value>
+  </data>
+</root>

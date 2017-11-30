@@ -1,0 +1,136 @@
+﻿@model eBillingSuite.Model.Desmaterializacao.Fornecedores
+@{
+    var uniqueID = "edigitalsupplier-modal";
+
+    var wantSupplierSync = ViewBag.SupplierSync as string;
+    //var wantSupplierSync = "true";
+
+    var option = wantSupplierSync.ToLower() == "true" ? InputOptions.ReadOnly : InputOptions.Default;
+
+    var bttDisabled = wantSupplierSync.ToLower() == "true" ? "disabled" : "";
+}
+
+<script>
+	$(document).ready(function () {
+		$('#searchSupplierBtt').click(function () {
+			var nif = $("#Contribuinte").val();
+			if (nif == "") {
+				$('#alert-2').slideDown();
+			} else {
+				$.ajax({
+					type: 'POST',
+					url: '@Url.Action("GetSupplierData", "eDigital")',
+					data: {
+						'nif': nif
+					},
+					success: function (data) {
+						if (data != null) {
+							var mydata = data;
+							success(mydata);
+						}
+					}
+				});
+			}
+		});
+
+		//Close alert
+		$('.page-alert .close').click(function (e) {
+			e.preventDefault();
+			$(this).closest('.page-alert').slideUp();
+		});
+	});
+
+	function success(mydata) {
+		if (mydata.Nome != null && mydata.Nome != "") {
+			$("#Nome").prop("readonly", true).val(mydata.Nome);
+		} else {
+			$("#Nome").prop("readonly", false);
+		}
+
+		if (mydata.Telefone != null && mydata.Telefone != "") {
+			$("#Telefone").prop("readonly", true).val(mydata.Telefone);
+		} else {
+			$("#Telefone").prop("readonly", false);
+		}
+
+		if (mydata.Fax != null && mydata.Fax != "") {
+			$("#Fax").prop("readonly", true).val(mydata.Fax);
+		} else {
+			$("#Fax").prop("readonly", false);
+		}
+
+		if (mydata.Morada != null && mydata.Morada != "") {
+			$("#Morada").prop("readonly", true).val(mydata.Morada);
+		} else {
+			$("#Morada").prop("readonly", false);
+		}
+
+		if (mydata.Email != null && mydata.Email != "") {
+			$("#Email").prop("readonly", true).val(mydata.Email);
+		} else {
+			$("#Email").prop("readonly", false);
+		}
+
+		if (mydata.WebSite != null && mydata.WebSite != "") {
+			$("#WebSite").prop("readonly", true).val(mydata.WebSite);
+		} else {
+			$("#WebSite").prop("readonly", false);
+		}
+
+		$("#submitBtt").prop("disabled", false);
+	}
+</script>
+
+<div class="page-alerts">
+	<div class="alert alert-danger page-alert" id="alert-2" style="display: none;">
+		<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		<strong>@this.Get(DictionaryEntryKeys.DigitalAlertFillVat)</strong>
+	</div>
+</div>
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.DigitalSenderAdd)</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("CreateDigitalSupplier", "eDigital")"
+		  method="post"
+		  class="form-horizontal"
+		  data-get-on-close="true">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.pkid)
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Contribuinte, 6, null, InputOptions.Default)
+					@if (wantSupplierSync.ToLower() == "true")
+					{
+						<div class="col-lg-6" style="padding-top:25px;">
+							<div class="form-group no-margin-hr">
+								<a id="searchSupplierBtt" class="btn btn-primary">@this.Get(DictionaryEntryKeys.Procurar)</a>
+							</div>
+						</div>
+					}
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Nome, 12, null, option)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Morada, 12, null, option)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Telefone, 6, null, option)
+					@Html.PixelAdminTextBoxWithColFor(e => e.Fax, 6, null, option)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Email, 6, null, option)
+					@Html.PixelAdminTextBoxWithColFor(e => e.WebSite, 6, null, option)
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button id="submitBtt" type="button" @bttDisabled class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>

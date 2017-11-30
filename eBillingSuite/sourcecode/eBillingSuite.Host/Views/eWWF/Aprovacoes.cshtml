@@ -1,0 +1,50 @@
+﻿@{
+	var uniqueID = "longtermabsence-modal";
+}
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">Dados Fluxo - Compra Dpt. RH</h4>
+</div>
+<div class="modal-body">
+	<form id="wt-edit-form"
+		  action="@Url.Action("Edit", "LongTermAbsence")"
+		  method="post" class="form-horizontal"
+		  data-get-on-close="true">
+
+
+
+		<div id="@uniqueID-details" class="tab-pane fade in active">
+				<div class="row">					
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="FKEstadoID" class="control-label">Aprovador</label><select class="form-control" id="FKEstadoID" name="FKEstadoID">
+								<option selected="selected" value="1">Joaquim Alegre</option>
+								<option value="2">Tiago Esteves</option>
+								<option value="3">Ricardo Alcântara</option>
+								<option value="4">Joana Barbosa</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="form-group no-margin-hr">
+							<label for="DataDocumento" class="control-label">Data Limite de Aprovação</label>
+							<input type="text" id="DataDocumento" name="DataDocumento" class="form-control" value="10/30/2014 6:30:00 PM" readonly="">
+						</div>
+					</div>
+				</div>					
+				<div class="row">
+					@Html.PixelAdminTextAreaWithCol("Comentários", "Comentários", 12, null, 5, InputOptions.Default)
+				</div>
+				
+		</div>
+
+
+	</form>
+</div>
+<div class="modal-footer">	
+	<button type="button" class="btn btn-primary" data-rel="submit" data-form="wt-edit-form">Guardar</button>			
+	<button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+</div>
+
+
+

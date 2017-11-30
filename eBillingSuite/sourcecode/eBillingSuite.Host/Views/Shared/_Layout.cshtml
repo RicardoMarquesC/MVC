@@ -1,0 +1,193 @@
+﻿@{
+    var pc = ViewBag.PixelAdminPageContext as IPixelAdminPageContext;
+    var bodyExtraClass = ViewBag.PixelAdminBodyExtraClass as string;
+}
+
+<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/blackboard.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/monokai.min.css">
+<link rel="stylesheet" href="~/assets/PI/morris/morris.css">
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/2.36.0/formatting.min.js"></script>
+
+<html class="gt-ie8 gt-ie9 not-ie">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>@pc.ApplicationName</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="~/assets/SH/Images/logo-blue.png" />
+    <!-- Open Sans font from Google CDN -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
+    <!-- Para os icons font-awesome -->
+    <!-- TODO: O ficheiro admin.css já usa fontawesome!!! Fazer upgrade a essa versão e não incluir este ficheiro! -->
+    @*<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">*@
+
+    <link rel="stylesheet" href="~/assets/PI/jsplumb.css">
+    <link rel="stylesheet" href="~/assets/PI/demo.css">
+
+    <!-- Pixel Admin's stylesheets -->
+    @Styles.Render("~/Assets/PixelAdmin/css/")
+    <!--[if lt IE 9]>
+        <script src="~/assets/pixeladmin/javascripts/ie.min.js"></script>
+    <![endif]-->
+    @RenderSection("header", required: false)
+
+    <style>
+        .bootstrap-timepicker-widget,
+        .datepicker {
+            z-index: 1151 !important;
+        }
+
+        .no-user-select {
+            -webkit-user-select: none; /* Webkit */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE 10  */
+            /* Currently not supported in Opera but will be soon */
+            -o-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body class="theme-clean main-menu-animated @bodyExtraClass">
+    <script>
+        var init = [];
+        var ajaxInitPanelFunctions = [];
+        var ajaxInitFormFunctions = [];
+        var toggleCallback = null;
+    </script>
+
+    @*<script src="~/assets/PixelAdmin/demo/demo.js"></script>*@
+    <script type="text/javascript">
+        window.jQuery || document.write('<script src="@System.Configuration.ConfigurationManager.AppSettings.Get("eSuiteAppLink")/assets/PixelAdmin/javascripts/jquery.min.js">' + "<" + "/script>");
+    </script>
+    <div id="main-wrapper">
+
+        @Html.Partial("_LayoutMainNavigation")
+
+        @Html.Partial("_LayoutMainMenu")
+
+        <div id="content-wrapper">
+            <!-- 5. $CONTENT ===================================================================================
+
+                    Content
+            -->
+            @if (pc.Breadcrumbs.Count > 0)
+            {
+                <ul id="page-breadcrumb-demo" class="breadcrumb breadcrumb-page" style="display: block;">
+                    @foreach (var bc in pc.Breadcrumbs)
+                    {
+                        <li class="@(bc == pc.Breadcrumbs.Last()?"active":null)">
+                            @if (string.IsNullOrWhiteSpace(bc.Url))
+                            {
+                                @bc.Label   }
+                            else
+                            {
+                                <a href="@bc.Url">@bc.Label</a>
+                            }
+                        </li>
+                    }
+                </ul>}
+            <!-- Content here -->
+            @Html.Flash()
+            @if (!ViewContext.ViewData.ModelState.IsValid)
+            {
+                var errors = ViewContext.ViewData.ModelState.Values
+                    .SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+                    .ToList();
+                <div id="pa-page-alerts-box">
+                    <div class="alert alert-dark alert-danger alert-page">
+                        @*Por favor corrija os seguitnes erros!*@
+                        <br />
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        @foreach (var error in errors)
+                        {
+                            @error<br />
+                        }
+                    </div>
+                </div>}
+            @RenderBody()
+
+            <!-- modal form -->
+            <div id="modal-form" class="modal fade" tabindex="-1" role="dialog" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div id="modal-form-content" class="panel no-margin"></div>
+                    </div> <!-- / .modal-content -->
+                </div> <!-- / .modal-dialog -->
+            </div> <!-- / .modal -->
+            <!-- / modal form -->
+
+        </div> <!-- / #content-wrapper -->
+        <div id="main-menu-bg"></div>
+    </div> <!-- / #main-wrapper -->
+    <!-- Get jQuery from Google CDN -->
+    <!--[if !IE]> -->
+    @*<script type="text/javascript"> window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">' + "<" + "/script>"); </script>*@
+    
+    <!-- <![endif]-->
+    <!--[if lte IE 9]>
+        <script type="text/javascript"> window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">'+"<"+"/script>"); </script>
+    <![endif]-->
+    <!-- Pixel Admin's javascripts -->
+    @Scripts.Render("~/assets/PixelAdmin/js/")
+
+    @RenderSection("bodyScripts", required: false)
+
+    <script type="text/javascript">
+        init.push(function () {
+            @RenderSection("jsInit", required: false)
+
+            ajaxInitFormFunctions.push(function () {
+                $('div[data-rel=date-picker]').datepicker({
+                    format: '@(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower())'
+                });
+                $('a[data-toggle=tooltip]').tooltip();
+                $('input[data-rel=switcher]').switcher({
+                    on_state_content: 'Sim',
+                    off_state_content: 'Não',
+                    onToggle: function (a, b) {
+                        if (toggleCallback)
+                            toggleCallback(a, b);
+                    }
+                });
+            });
+
+            new AjaxForms("modal-form", "modal-form-content");
+
+            $('button[data-rel=confirm]').on('click', function () {
+                var $self = $(this);
+                bootbox.confirm({
+                    message: $self.data("confirm-message"),
+                    callback: function (result) {
+                        if (result) {
+                            var $form = $self.closest("form");
+                            var name = $self.prop('name');
+                            var value = $self.prop('value');
+                            if (name && value)
+                                $form.append(
+                                    $('<input type="hidden" />')
+                                        .prop("name", name)
+                                        .prop("value", value))
+
+                            $form.submit();
+                        }
+                    },
+                    className: "bootbox-sm"
+                });
+            });
+        })
+
+        window.PixelAdmin.start(init);
+    </script>
+
+    <script src="~/assets/PI/raphael-min.js"></script>
+    <script src="~/assets/PI/morris/morris.min.js"></script>
+    <script src="~/assets/PI/morris/morris.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+﻿@model eBillingSuite.Model.eBillingConfigurations.DigitalConfigurations
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+
+	var integrationActive = ViewBag.WantIntegration;
+}
+
+<form method="post">
+	@Html.HiddenFor(e => e.Pkid)
+	<div class="panel-heading">
+		<span class="panel-title">@Texts.DigitalIntegrationConfigurations</span>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			@Html.PixelAdminTextBoxWithColFor(e => e.Dados, 6, null, InputOptions.Default, Texts.Dados)
+			<div class="col-lg-6">
+				<div class="form-group no-margin-hr">
+					<label class="control-label"></label>
+					<p class="help-block">@Texts.DigitalIntegrationConfigurationUrlHelperText</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel-footer text-right">
+		<button class="btn btn-primary" @(integrationActive == false ? "disabled" : null)>@Texts.Submit</button>
+	</div>
+</form>
+

@@ -1,0 +1,112 @@
+﻿@using eBillingSuite.Model.Desmaterializacao
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+}
+<script>
+	function InitTable() {
+		$('#jq-datatables').dataTable({
+			"ajax": {
+				"url": '@Url.Action("","eDigital")',
+			},
+			"order": [[0, "asc"]],
+			"columnDefs": [
+							{
+								"targets": 0,
+								"data": "Nome",
+							},
+							{
+								"targets": 1,
+								"data": "Contribuinte",
+							},
+							{
+								"targets": 2,
+								"data": "WantMainValidations",
+								"render": function (data, type, full, meta) {
+									if (data == true) {
+										var detail = '<td><span class="label label-success label-tag">@this.Get(DictionaryEntryKeys.Sim)</span></td>';
+										return detail;
+									}
+									else {
+										var detail = '<td><span class="label label-primary label-tag">@this.Get(DictionaryEntryKeys.Nao)</span></td>';
+										return detail;
+									}
+								}
+							},
+							{
+								"targets": 3,
+								"data": "pkid",
+								"class": "cell-right",
+								"render": function (data, type, full, meta) {
+									var detail = '<button type="button" data-rel="ajax-edit-trigger" class="btn btn-sm btn-primary" data-url="@Url.Action("EditSupplier", "eDigital", new { pkid = "fornGuid" })">'.replace('fornGuid', data) + '<i class="fa fa-pencil"></i></button>';
+
+									return detail;
+								}
+							}
+			],
+			"olanguage": {
+				"sUrl": '@this.GetjQDataTableLanguageUrl()'
+			},
+		});
+
+		$('#jq-datatables_wrapper .table-caption').text('');
+		$('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+
+		$('#jq-datatables').on('draw.dt', function () {
+
+			$('#jq-datatables form').submit(function (e) {
+				e.preventDefault();
+				$.post($(this).prop('action'), $(this).serialize())
+					.success(function (data) {
+						if (data == "ok") {
+							var table = $('#jq-datatables').DataTable();
+							table.ajax.reload();
+						}
+					});
+			});
+		});
+	}
+
+	init.push(function () {
+		$('a[data-toggle=tooltip]').tooltip();
+
+		InitTable();
+
+		ajaxInitPanelFunctions['init-jqtable'] = InitTable;
+	});
+</script>
+
+<div class="tab-pane panel no-padding no-border fade in active">
+	<div data-rel="ajax-update-panel"
+		 id="IndexEDICostumers"
+		 data-update-init="init-jqtable"
+		 data-update-url="@Url.Action("")"
+		 data-create-url="@Url.Action("CreateSupplier","eDigital")"
+		 data-modal-size="modal-lg">
+		<div class="panel-heading">
+			<span class="panel-title">@this.Get(DictionaryEntryKeys.SuppliersList)</span>
+			<div class="panel-heading-controls">
+				<button type="button"
+						data-rel="ajax-create-trigger"
+						data-method="post"
+						title="@this.Get(DictionaryEntryKeys.DigitalSupplierAdd)"
+						class="btn btn-xs btn-primary">
+					<i class="fa fa-plus"></i>
+				</button>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="table-primary">
+				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="jq-datatables" data-rel="ajax-update-panel" data-modal-size="modal-lg" width="100%">
+					<thead>
+						<tr>
+							<th>@this.Get(DictionaryEntryKeys.NomeFornecedor)</th>
+							<th>@this.Get(DictionaryEntryKeys.NIF)</th>
+							<th>@this.Get(DictionaryEntryKeys.Validacoes)</th>
+							<th></th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

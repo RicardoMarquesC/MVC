@@ -1,0 +1,64 @@
+﻿@model eBillingSuite.Models.LoginData
+
+@{
+    Layout = "~/Views/Shared/_LayoutSignIn.cshtml";
+    //Layout = null;
+    <style>
+        #signin-form_id > div.row.col-lg-12 > div.col-lg-12.col-sm-12 > div > div {
+            display: inline-table;
+        }
+
+        #signin-form_id > div.row.col-lg-12 > div > div.form-group.no-margin-hr > label {
+            vertical-align: super;
+            margin: 0;
+        }
+
+        .theme-dust .btn-primary, .theme-dust .btn-primary:focus {
+            /* border-color: #6d6363; */
+            /* border-bottom-color: #5d5454; */
+            background: #7a6f6f;
+            background-image: -webkit-linear-gradient(top,#7d7171 0,#6d6363 100%);
+            background-image: linear-gradient(to bottom,cadetblue 0,cadetblue 100%);
+            background-repeat: repeat-x;
+        }
+
+            .theme-dust .btn-primary, .theme-dust .btn-primary:focus {
+                /* border-color: #6d6363; */
+                /* border-bottom-color: #5d5454; */
+            }
+    </style>
+}
+<!-- Right side -->
+<div class="signin-form">
+    <!-- Form -->
+    <form method="post" id="signin-form_id">
+        @Html.AntiForgeryToken()
+        <div class="signin-text">
+            @*<span>Sign In to your account</span>*@
+            <span>@Texts.SignInToYourAccount</span>
+        </div> <!-- / .signin-text -->
+
+        <div class="form-group w-icon">
+            @Html.PixelAdminSignInTextBoxFor(m => m.Username, false)
+            <span class="fa fa-user signin-form-icon"></span>
+        </div> <!-- / Username -->
+
+        <div class="form-group w-icon">
+            @Html.PixelAdminSignInTextBoxFor(m => m.Password, true)
+            <span class="fa fa-lock signin-form-icon"></span>
+        </div> <!-- / Password -->
+        <div class="row col-lg-12">
+            @*@Html.PixelAdminSwitcherWithColFor(e => e.Remember, 12, 12, InputOptions.Default)*@
+            <label class="checkbox-inline">
+                <input type="checkbox" class="px">
+                <span class="lbl">@Texts.LoginData_Remember</span>
+            </label>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="form-actions col-lg-12">
+            <input type="submit" value="@Texts.Login" class="btn btn-primary col-lg-3" style="position: absolute;right: 1px;top: -6px;">
+        </div> <!-- / .form-actions -->
+    </form>
+</div>
+<!-- Right side -->

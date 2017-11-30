@@ -1,0 +1,27 @@
+﻿using Ninject;
+using Shortcut.Repositories;
+using eBillingSuite.Model.Desmaterializacao;
+using System.Linq;
+using System;
+
+namespace eBillingSuite.Repositories
+{
+	public class EDigitalMasterizationVatRepository : GenericRepository<IeBillingSuiteDesmaterializacaoContext, MasterizacaoIva>, IEDigitalMasterizationVatRepository
+	{
+		[Inject]
+		public EDigitalMasterizationVatRepository(IeBillingSuiteDesmaterializacaoContext context)
+			: base(context)
+		{
+		}
+        public void DeleteMasterization(Guid fkNomeTemplate, string fieldName)
+        {
+            var entry = this.Set.FirstOrDefault(x => x.FKNomeTemplate == fkNomeTemplate && x.NomeCampo == fieldName);
+
+            if (entry != null)
+            {
+                this.Set.Remove(entry);
+                this.Save();
+            }
+        }
+    }
+}

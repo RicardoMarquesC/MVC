@@ -1,0 +1,46 @@
+﻿@{
+	var values = new eBillingSuite.ViewModels.FilePointerVM();
+}
+<div class="row">
+	<div class="col-lg-12">
+		<div class="form-group no-margin-hr">
+			<label class="control-label">Anexos</label>
+			<ul class="list-group">
+				<li id="fileinput-template" class="list-group-item hidden" data-rel="file-item">
+					<span class="badge badge-info" style="float: none;"></span>&nbsp;					
+					<button type="button" class="btn btn-danger btn-xs pull-right">Delete</button>					
+					<a href="@Url.Action("Temp", "File", new { id = "0" })" target="_blank"></a>
+					<input type="hidden" name="TempIDs" disabled="disabled" />
+				</li>
+				@foreach (var fp in values.attachments)
+				{
+					<li class="list-group-item" data-rel="file-item">
+						<span class="badge badge-info" style="float: none;">@fp.Extension</span>&nbsp;
+						@if (!fp.LockFilePointers)
+						{
+							<button type="button" class="btn btn-danger btn-xs pull-right">Delete</button>
+						}
+						
+						<a href="@Url.Action("Download", "File", new { id = fp.ID })" target="_blank">@fp.Name</a>
+						<input name="FileIDs" type="hidden" value="@fp.ID" />
+						
+					</li>
+				}
+				
+					@*<li id="fileupload-progress" class="list-group-item" style="display:none;">
+						<div class="progress progress-striped no-margin active">
+							<div class="progress-bar progress-bar-success"></div>
+						</div>
+					</li>*@
+					<li class="list-group-item">
+						<div id="fileinput-trigger" class="btn btn-sm btn-success fileinput-button">
+							<i class="fa fa-plus"></i>
+							<span>Select file</span>
+							<input type="file" id="fileupload" name="files" multiple>
+						</div>
+					</li>
+			
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,68 @@
+﻿@model List<ComATPackets>
+@{
+	Layout = "~/Views/Shared/_eMCATLayout.cshtml";
+}
+
+<script>
+	init.push(function () {
+		$('a[data-toggle=tooltip]').tooltip();
+		$('#jq-datatables').dataTable({
+			"bProcessing": true,
+			"bServerSide": true,
+			"sPaginationType": "full_numbers",
+			"olanguage": {
+				"url": '@this.GetjQDataTableLanguageUrl()'
+			},
+			"sAjaxSource": "Index"
+
+		});
+		$('#jq-datatables_wrapper .table-caption').text('');
+		$('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+	});
+</script>
+
+<div class="tab-pane no-padding no-border in active">
+	<div class="panel-heading">
+		<span class="panel-title">Comunicações AT - Faturas e outros documentos comerciais</span>
+	</div>
+	<div class="panel-body">
+		<div class="table-primary">
+			<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="jq-datatables">
+				<thead>
+					<tr>
+						<th>@this.Get(DictionaryEntryKeys.NifRecetor)</th>
+						<th>@this.Get(DictionaryEntryKeys.NumDocumento)</th>
+						<th>@this.Get(DictionaryEntryKeys.DataDocumento)</th>
+						<th>@this.Get(DictionaryEntryKeys.TotalCIVA)</th>
+						<th>@this.Get(DictionaryEntryKeys.Estado)</th>
+						<th class="visible-lg">@this.Get(DictionaryEntryKeys.MensagemRetorno)</th>
+						<th class="visible-lg">@this.Get(DictionaryEntryKeys.LastSentDate)</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (ComATPackets cap in Model)
+					{
+						<tr>
+							<td>@cap.NIFReceptor</td>
+							<td>@cap.NumeroDocumento</td>
+							<td>@cap.DataDocumento</td>
+							<td>@(cap.TotalComIva)</td>
+							<td>@(cap.EstadoAT)</td>
+							<td class="visible-lg">@(cap.ObsRetornoAT)</td>
+							@if (cap.LastSentDate == null)
+							{
+								<td class="visible-lg"></td>
+							}
+							else
+							{
+							<td class="visible-lg">@(cap.LastSentDate)</td>
+							}							
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+

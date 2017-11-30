@@ -1,0 +1,455 @@
+@model eBillingSuite.ViewModels.EBCStats
+@{
+    var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_LayoutStats.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.1/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
+<script type="text/javascript" src="http://gyrocode.github.io/jquery-datatables-checkboxes/1.1.0/js/dataTables.checkboxes.min.js"></script>
+
+
+<style>
+    table.dataTable thead .sorting:after {
+        content: "" !important;
+        display: block;
+    }
+
+    .modal-body {
+        max-width: 100%;
+    }
+
+    .theme-clean .table-primary .table-header {
+        background: #67cea6;
+    }
+
+    .theme-clean .table-primary .table-header, .theme-clean .table-primary thead, .theme-clean .table-primary thead th, .theme-clean .table-primary thead tr {
+        border-color: #4fa986 !important;
+        color: #fff;
+    }
+
+    #jq-datatables_length {
+        float: right;
+        margin-right: 10px;
+    }
+
+    #jq-datatables_info {
+        margin-top: 15px;
+        margin-left: 10px;
+    }
+
+    #jq-datatables_paginate {
+        float: right;
+        margin-top: -20px;
+    }
+
+    a.dt-button {
+        border-color: #54c89b;
+        border-bottom-color: #3ebf8d;
+        background: #67cea6;
+        background-image: -webkit-linear-gradient(top,#6bcfa8 0,#54c89b 100%);
+        background-image: linear-gradient(to bottom,#6bcfa8 0,#54c89b 100%);
+        background-repeat: repeat-x;
+        color: white;
+        text-shadow: none;
+        line-height: 15px;
+        font-weight: 400;
+        padding: 7px 12px !important;
+        outline: 0 !important;
+        min-width: 20ch;
+        TEXT-ALIGN: CENTER;
+    }
+
+    #jq-datatables_wrapper > div.dt-buttons > a {
+        margin-left: 10px;
+    }
+
+    a.dt-button:hover {
+        color: #fff;
+        border: none;
+        border-color: #48c494;
+        border-bottom-color: #35a479;
+        background: #54c89b !important;
+        background-image: -webkit-linear-gradient(top,#5fcca1 0,#48c494 100%) !important;
+        background-image: linear-gradient(to bottom,#5fcca1 0,#48c494 100%) !important;
+        background-repeat: repeat-x;
+    }
+</style>
+
+
+<script>
+    var id = 0;
+    var direction = "text";
+
+    function InitTable() {
+
+        $('#jq-datatables').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": '@Url.Action("GetData", "Stats")',
+                "type": "POST",
+                "dataType": "JSON"
+            },
+           
+            "order": [[1, "asc"]],
+            "columnDefs": [
+                            {
+                                'targets': 0,
+                                'checkboxes': {
+                                    'selectRow': true
+                                },
+                                "data": "Id"
+
+                            },
+							{
+							    "targets": 1,
+							    "data": "Sentido",
+							},
+							{
+							    "targets": 2,
+                                "data": "NomeEmissor",
+							},
+							{
+							    "targets": 3,
+							    "data": "NifEmissor",
+							},
+                            {
+                                "targets": 4,
+                                "data": "NomeReceptor",
+                            },
+                            {
+                                "targets": 5,
+                                "data": "NifReceptor",
+                            },
+                            {
+                                "targets": 6,
+                                "data": "NumDoc",
+                            },
+                            {
+                                "targets": 7,
+                                "data": "Quantia",
+                            },
+                            {
+                                "targets": 8,
+                                "data": "DataFatura",
+                            },
+                            {
+                                "targets": 9,
+                                "data": "DataCriacao",
+                            },
+                            {
+                                "targets": 10,
+                                "data": "TipoDoc",
+                            },
+                            {
+                                "targets": 11,
+                                "data": "Estado",
+                                "render": function (data) {
+                                    if (data == 1)
+                                        return '<span class="label label-success label-tag">1 Sucesso</span>';
+                                    else if (data == 2)
+                                        return '<span class="label label-warning label-tag">2 Espera</span>';
+                                    else if (data == 3)
+                                        return '<span class="label label-danger label-tag">3 Falha</span>';
+                                    else if (data == 4)
+                                        return '<span class="label label-warning arrow">4 Integrado</span>';
+                                    else if (data == 5)
+                                        return '<span class="label label-danger arrow">5 Falha</span>';
+                                    else if (data == 6)
+                                        return '<span class="label label-success arrowed-in">6 Lido Erp</span>';
+                                    else if (data == 7)
+                                        return '<span class="label label-info arrowed">7 Reproc.</span>';
+                                    else if (data == 8)
+                                        return '<span class="label label-info arrowed-in">8 Reproc.</span>';
+                                    return data;
+                                }
+                            },
+                            {
+                                "targets": 12,
+                                "data": "Id",
+                                "render": function (data, type, full, meta) {
+                                    var detail = '<button type="button" data-rel="ajax-edit-trigger" class="btn btn-primary btn-rounded" data-url="@Url.Action("Details", "Stats", new { id = "fornGuid" , direction = "Sent" })">'.replace('fornGuid', data).replace('Sent', full.Sentido) + '<i class="fa fa-search-plus"></i></button>';
+
+                                    return detail;
+                                }
+                            },
+                            {
+                                "targets": 13,
+                                "data": "Id",
+                                "render": function (data, type, full, meta) {
+                                    var detail = '<button type="button" data-rel="ajax-edit-trigger" style="float:right;" class="btn btn-danger btn-rounded" onclick="openModal(ID,\'Sent\')">'.replace('ID', data).replace('Sent', full.Sentido) + '<i class="fa fa-refresh"></i></button>';
+
+                                    return detail;
+                                }
+                            }
+            ],
+            "language": {
+                "sUrl": '@this.GetjQDataTableLanguageUrl()'
+            },
+            'select': {
+                'style': 'multi'
+            },
+            dom: 'Blrtip',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        'copy',
+                        'excel',
+                        'csv',
+                        {
+                            extend: 'pdf',
+                            title: Date.now().toString(),
+                            orientation: 'landscape',
+                            pageSize: 'LEGAL'
+                        },
+                        'print'
+                    ]
+                },
+                {
+                    text: 'Reprocessar',
+                    action: function () {
+                        var count = table.rows({ selected: true }).count()
+                        console.log(count + ' selecionados');
+                    }
+                }
+            ]
+        });
+
+
+        $('#jq-datatables_wrapper .table-caption').text('');
+        $('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+
+        $('#jq-datatables').on('draw.dt', function () {
+            $('#jq-datatables form').submit(function (e) {
+                e.preventDefault();
+                $.post($(this).prop('action'), $(this).serialize())
+                    .success(function (data) {
+                        if (data == "ok") {
+                            var table = $('#jq-datatables').DataTable();
+                            table.ajax.reload();
+                        }
+                    });
+            });
+        });
+
+
+
+        var table = $('#jq-datatables').DataTable();
+
+        //$.fn.dataTableExt.afnFiltering.push(
+        //    function filtragem(oSettings, aData, iDataIndex) {
+        //        var iFini = $('#start').val();
+        //        var iFfin = $('#end').val();
+        //        if (iFini === "" && iFfin === "") {
+        //            return true;
+        //        }
+        //        var column = 8;
+
+        //        var valoriFini = trocarValor(iFini.split('-')[1]);
+        //        var valoriFfin = trocarValor(iFfin.split('-')[1]);
+
+        //        iFini = iFini.split('-')[2] + valoriFini + iFini.split('-')[0];
+        //        iFfin = iFfin.split('-')[2] + valoriFfin + iFfin.split('-')[0];
+
+        //        //var val = trocarValor(aData[column].split('-')[2]);
+        //        var val = aData[column].split('-')[1];
+
+        //        //var datofini = aData[column].substring(7, 9) + val + aData[column].substring(0, 2);
+        //        var day = aData[column].split('-')[2]
+
+        //        var datofini = aData[column].split('-')[0].replace('20','') + val + aData[column].split('-')[2];
+
+        //        if (iFini <= datofini && iFfin === "") {
+        //            return true;
+        //        }
+        //        else if (iFfin >= datofini && iFini === "") {
+        //            return true;
+        //        }
+        //        else if (iFini <= datofini && iFfin >= datofini) {
+        //            return true;
+        //        }
+        //        return false;
+        //    }
+        //);
+
+        //function trocarValor(val) {
+        //    if (val == "Jan")
+        //        return "1";
+        //    else if (val == "Feb")
+        //        return "2";
+        //    else if (val == "Mar")
+        //        return "3";
+        //    else if (val == "Apr")
+        //        return "4";
+        //    else if (val == "May")
+        //        return "5";
+        //    else if (val == "Jun")
+        //        return "6";
+        //    else if (val == "Jul")
+        //        return "7";
+        //    else if (val == "Aug")
+        //        return "8";
+        //    else if (val == "Sep")
+        //        return "9";
+        //    else if (val == "Oct")
+        //        return "10";
+        //    else if (val == "Nov")
+        //        return "11";
+        //    else if (val == "Dec")
+        //        return "12";
+        //}
+        //function parseDateValue(rawDate) {
+        //    var dateArray = rawDate.split("-");
+        //    var parsedDate = dateArray[2] + dateArray[0] + dateArray[1];
+        //    return parsedDate;
+        //}
+
+
+        $('#ok').on('click', function () {
+            function filtragem() { table.draw(); };
+            table.column(11).search($("#Estados").val()).draw();
+            table.column(6).search($("#NumDoc").val()).draw();
+            table.column(5).search($("#nifRecetor").val()).draw();
+            table.column(3).search($("#nifEmissor").val()).draw();
+            table.column(1).search($("#start").val()).draw();
+            table.column(2).search($("#end").val()).draw();
+        });
+    }
+
+     @*$(document).ready(function () {
+         $('#okClick').click(function () {
+             var test = $('#TES').text;
+            window.location.href = '@Url.Action("UpdateOutboundReprocessed", "Stats", new { id = "fornGuid" , direction = "Sent", obs = "Obs" })'.replace('fornGuid', id).replace('Sent', sentido).replace('Obs', test);
+        });
+    });*@
+
+    //function filterColumn(i) {
+    //    table.column(i).search(
+    //        $("#Estados").val()
+    //    ).draw();
+    //}
+
+     function clickOBS() {
+         var test = document.getElementById("TES").value;
+         window.location.href = '@Html.Raw(Url.Action("UpdateOutboundReprocessed", "Stats", new {id = "fornGuid",direction = "Sent",obs = "Obs"}))'.replace('fornGuid', id).replace('Sent', sentido).replace('Obs', test);
+     }
+
+    function openModal(ID,Sent) {
+        $('#uidemo-modals-alerts-warning').modal('show');
+        id = ID;
+        sentido = Sent;
+    }
+
+    init.push(function () {
+        $('a[data-toggle=tooltip]').tooltip();
+
+        InitTable();
+
+        ajaxInitPanelFunctions['init-jqtable'] = InitTable;
+
+        $('input.column_filter').on('keyup click', function () {
+            filterColumn($(this).parents('tr').attr('data-column'));
+        });
+
+
+        var options = {
+            orientation: $('body').hasClass('right-to-left') ? "auto right" : 'auto auto',
+            format: 'dd-M-yy'
+        }
+        $('#bs-datepicker-range').datepicker(options);
+    });
+
+</script>
+
+<div class="panel panel-transparent">
+    <div data-rel="ajax-update-panel" data-update-init="init-jqtable" data-modal-size="modal-lg">
+        <div class="panel-heading">
+            <i class="fa fa-envelope" style="margin-right: 8px;"></i><span class="panel-title">@Texts.OutboundInbound</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-3">
+                    <label for="Data"><small class="text-success">@Texts.Data</small></label>
+                    <div class="input-daterange input-group" id="bs-datepicker-range">
+                        <input class="input-sm form-control" id="start" name="start" placeholder=@Texts.StartDate type="text">
+                        <span class="input-group-addon">to</span>
+                        <input class="input-sm form-control" id="end" name="end" placeholder=@Texts.EndDate type="text">
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <label for="Estado"><small class="text-success">@Texts.Estado</small></label>
+                    <select class="form-control" id="Estados">
+                        <option value="">&nbsp;</option>
+                        <option value="1">@Texts.OutInEstados1</option>
+                        <option value="2">@Texts.OutInEstados2</option>
+                        <option value="3">@Texts.OutInEstados3</option>
+                        <option value="4">@Texts.OutInEstados4</option>
+                        <option value="5">@Texts.OutInEstados5</option>
+                        <option value="6">@Texts.OutInEstados6</option>
+                        <option value="7">@Texts.OutInEstados7</option>
+                        <option value="8">@Texts.OutInEstados8</option>
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                    <label><small class="text-success">@Texts.NumDocumento</small></label>
+                    <input class="form-control" id="NumDoc" placeholder="@Texts.NumDocumento" type="text">
+                </div>
+                <div class="col-lg-2">
+                    <label for="nifRecetor"><small class="text-success">@Texts.NifRecetor</small></label>
+                    <input class="form-control" id="nifRecetor" placeholder="@Texts.NifRecetor" type="text">
+                </div>
+                <div class="col-lg-2">
+                    <label for="nifRecetor"><small class="text-success">@Texts.NifEmissor</small></label>
+                    <input class="form-control" id="nifEmissor" placeholder="@Texts.NifEmissor" type="text">
+                </div>
+                <label><small>&nbsp;</small></label><br />
+                <button class="btn btn-primary btn col-sm-1" id="ok">OK</button>
+            </div>
+        </div>
+
+        <div class="table-primary">
+            <table cellpadding="0" width="100%" style="cursor:pointer" cellspacing="0" border="0" class="table table-striped table-hover table-bordered " id="jq-datatables" data-rel="ajax-update-panel" data-modal-size="modal-lg">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@Texts.Sentido</th>
+                        <th>@Texts.NomeEmissor</th>
+                        <th>@Texts.NifEmissor</th>
+                        <th>@Texts.NomeRecetor</th>
+                        <th>@Texts.NifRecetor</th>
+                        <th>@Texts.NumDocumento</th>
+                        <th>@Texts.Quantia</th>
+                        <th>@Texts.DataFatura</th>
+                        <th>@Texts.DataCriacao</th>
+                        <th>@Texts.Tipo</th>
+                        <th>@Texts.Estado</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="uidemo-modals-alerts-warning" class="modal modal-alert modal-warning fade" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Introduza o motivo por fazer reprocessamento</h4>
+            </div>
+            <div class="modal-body">
+                @Html.PixelAdminTextBoxWithCol("TES", "", 12, null, InputOptions.Default)
+            </div>
+            <div class="modal-footer">
+                <button id="okClick" onclick="clickOBS()" type="button" class="btn btn-warning" data-dismiss="modal">@Texts.OK</button>
+                <button type="button" class="btn close" data-dismiss="modal">@Texts.Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

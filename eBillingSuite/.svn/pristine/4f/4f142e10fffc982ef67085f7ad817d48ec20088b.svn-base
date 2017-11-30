@@ -1,0 +1,238 @@
+﻿@model eBillingSuite.ViewModels.EDigitalXmlFieldVM
+@{
+	var uniqueID = "edigitalheaderdoctypexml-modal";
+
+	var fieldVisibility = Model.IsFromOrigin ? InputOptions.ReadOnly : InputOptions.Default;
+}
+<script type="text/javascript">
+	function isValidSequence(previous, toAdd) {
+		if ((previous == "+" || previous == "-" || previous == "/" || previous == "*") && (toAdd == "+" || toAdd == "-" || toAdd == "/" || toAdd == "*")) {
+			return false;
+		}
+		else if ((previous == "+" || previous == "-" || previous == "/" || previous == "*") && (toAdd == ")")) {
+			return false;
+		}
+		else if (previous == "(" && (toAdd == ")" || toAdd == "+" || toAdd == "-" || toAdd == "/" || toAdd == "*")) {
+			return false;
+		}
+		else if (previous == "]" && toAdd == "(") {
+			return false;
+		}
+		else if (previous == "" && (toAdd == "+" || toAdd == "-" || toAdd == "/" || toAdd == "*")) {
+			return false;
+		}
+		else if (previous == ")" && toAdd == "]")
+			return false;
+		return true;
+	}
+
+	$(document).ready(function () {
+		var extrationType = $('#ExtractionType').val();
+		var valcharnumber = 0;
+		var originaltextCharNumber = $('#charnumber').text();
+		if (extrationType && extrationType == "E") {
+		    $('#formulaDivBuilder').hide();
+		    $('#formulaDiv').hide();
+		    $('#defaultValueDiv').hide();
+		} else if (extrationType && (extrationType == "F" || extrationType == "EF")) {
+		    $('#formulaDivBuilder').show();
+		    $('#formulaDiv').show();
+		    $('#defaultValueDiv').hide();
+		} else if (extrationType && extrationType == "D") {
+		    $('#formulaDivBuilder').hide();
+		    $('#formulaDiv').hide();
+		    $('#defaultValueDiv').show();
+		} else {
+		    $('#formulaDivBuilder').hide();
+		    $('#formulaDiv').hide();
+		    $('#defaultValueDiv').hide();
+		}
+
+		$('#ExtractionType').change(function () {
+		    var selectedVal = $(this).val();
+		    if (selectedVal && (selectedVal == "F" || selectedVal == "EF")) {
+		        $('#formulaDivBuilder').show();
+		        $('#formulaDiv').show();
+		        $('#defaultValueDiv').hide();
+		    } else if (selectedVal && selectedVal == "E") {
+		        $('#formulaDivBuilder').hide();
+		        $('#formulaDiv').hide();
+		        $('#defaultValueDiv').hide();
+		    } else if (selectedVal && selectedVal == "D") {
+		        $('#formulaDivBuilder').hide();
+		        $('#formulaDiv').hide();
+		        $('#defaultValueDiv').show();
+		    } else {
+		        $('#formulaDivBuilder').hide();
+		        $('#formulaDiv').hide();
+		        $('#defaultValueDiv').hide();
+		    }
+		});
+
+		//Add field to formula
+		$('#addField').on('click', function () {
+			var field = $('#AvailableXmlFields').val();
+			if (field) {
+				var lastVal = $('#Formula').val();
+				var fieldToAdd = '[' + field + ']';
+				if (isValidSequence(lastVal.substr(lastVal.length - 1), fieldToAdd.substr(fieldToAdd.length - 1))) {
+					$('#Formula').val($('#Formula').val() + fieldToAdd);
+				} else {
+					$('#alertMessage').text('Sequência de caracteres inválida.'); //TODO: Dicionario
+					$('#alert-3').slideDown();
+				}
+			}
+		});
+
+		//Add operator to formula
+		$('#addOperator').on('click', function () {
+			var operator = $('#AvailableFormulaOperations').val();
+			if (operator) {
+				var lastVal = $('#Formula').val();
+				if (isValidSequence(lastVal.substr(lastVal.length - 1), operator)) {
+					$('#Formula').val($('#Formula').val() + operator);
+				}
+				else {
+					$('#alertMessage').text('Sequência de caracteres inválida.'); //TODO: Dicionario
+					$('#alert-3').slideDown();
+				}
+			}
+		});
+
+		//Delete from formula
+		$('#deleteFormula').on('click', function () {
+			var formula = $('#Formula').val();
+			if(formula.substr(formula.length - 1) != "]")
+			{
+				$('#Formula').val($('#Formula').val().substr(0, formula.length - 1));
+			}
+			else {
+				var flag;
+				for (var i = formula.length - 1; i >= 0; i--) {
+					var c = formula.charAt(i);
+					if (c == "[") {
+						flag = i;
+						break;
+					}
+				}
+				$('#Formula').val(formula.substr(0, flag));
+			}
+		});
+
+		//Add item to expression
+		$('#addItem').on('click', function () {
+			var field = $('#AvailableExpressionItems').val();
+			if (field) {
+				$('#Expression').val($('#Expression').val() + field);
+				//tiago esteves. Incrementar o valor
+				valcharnumber = valcharnumber + 1;
+				$('#charnumber').text(originaltextCharNumber + valcharnumber.toString());
+			}
+		});
+
+		//Delete from expression
+		$('#deleteExpression').on('click', function () {
+			var expression = $('#Expression').val();
+			$('#Expression').val($('#Expression').val().substr(0, expression.length - 1));
+			if (valcharnumber > 0) {
+				valcharnumber = valcharnumber - 1;
+				if (valcharnumber == 0) {
+					$('#charnumber').text(originaltextCharNumber);
+				}
+				else {
+					$('#charnumber').text(originaltextCharNumber + valcharnumber.toString());
+				}
+			}
+		});
+
+		//Close alert
+		$('.page-alert .close').click(function (e) {
+			e.preventDefault();
+			$(this).closest('.page-alert').slideUp();
+		});
+	});
+</script>
+
+<div class="page-alerts-3">
+	<div class="alert alert-danger page-alert" id="alert-3" style="display: none;">
+		<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		<strong id="alertMessage"></strong>
+	</div>
+</div>
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.DigitalFieldEdit)</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("EditFieldSupplier", "eDigital", new { fkNomeTemplate = Model.FkNomeTemplate })"
+		  method="post"
+		  class="form-horizontal">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.Pkid)
+				@Html.HiddenFor(e => e.TipoDocPkid)
+				@Html.HiddenFor(e => e.Localizacao)
+				<div class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.NomeCampo, Model.AvailableXmlFields, 6, null, InputOptions.Disabled)
+					@Html.PixelAdminSwitcherWithColFor(e => e.IsRequired, 1, null, fieldVisibility)
+					@Html.PixelAdminSelectWithColFor(e => e.DecimalPlaces, Model.AvailableDecimalPlaces, 2, null, InputOptions.Default)
+				</div>
+				<div class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.AvailableExpressionItems, Model.AvailableExpressionItems, 6, null, InputOptions.Default)
+					<div class="col-lg-1" style="padding-top:25px;">
+						<div class="form-group no-margin-hr">
+							<a id="addItem" class="btn btn-info btn-rounded">+</a>
+						</div>
+					</div>
+					@Html.PixelAdminTextBoxWithColFor(e => e.Expression, 4, null, InputOptions.ReadOnly)
+					<div class="col-lg-1" style="padding-top:25px;">
+						<div class="form-group no-margin-hr">
+							<a id="deleteExpression" class="btn btn-danger btn-rounded"><<</a>
+						</div>
+					</div>
+					<div class="col-lg-offset-7 col-lg-5" style="padding-top:-25px;">
+						<div class="form-group no-margin-hr">
+							<p class="help-block" id="charnumber">@this.Get(DictionaryEntryKeys.NumCarateres)</p>
+						</div>
+					</div>		
+				</div>
+				<div class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.ExtractionType, Model.AvailableExtractionTypes, 6, null, InputOptions.Default)
+					@Html.PixelAdminSwitcherWithColFor(e => e.IsComboBox, 6, null, Model.IsFromOrigin ? InputOptions.Disabled : InputOptions.Default, this.Get(DictionaryEntryKeys.ComboBox))
+				</div>
+				<div id="formulaDivBuilder" class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.AvailableXmlFields, Model.AvailableXmlFields, 3, null, InputOptions.Default)
+					<div class="col-lg-1" style="padding-top:25px;">
+						<div class="form-group no-margin-hr">
+							<a id="addField" class="btn btn-info btn-rounded">+</a>
+						</div>
+					</div>
+					@Html.PixelAdminSelectWithColFor(e => e.AvailableFormulaOperations, Model.AvailableFormulaOperations, 2, null, InputOptions.Default)
+					<div class="col-lg-1" style="padding-top:25px;">
+						<div class="form-group no-margin-hr">
+							<a id="addOperator" class="btn btn-info btn-rounded">+</a>
+						</div>
+					</div>
+				</div>
+				<div id="formulaDiv" class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Formula, 11, null, InputOptions.ReadOnly)
+					<div class="col-lg-1" style="padding-top:25px;">
+						<div class="form-group no-margin-hr">
+							<a id="deleteFormula" class="btn btn-danger btn-rounded"><<</a>
+						</div>
+					</div>
+				</div>
+                <div id="defaultValueDiv" class="row">
+                    @Html.PixelAdminTextBoxWithColFor(e => e.DefaultValue, 6, null, InputOptions.Default, this.Get(DictionaryEntryKeys.DefaultValue))
+                </div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>
+

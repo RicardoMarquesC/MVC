@@ -1,0 +1,96 @@
+﻿@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+
+    var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+    var routeDataValues = Request.RequestContext.RouteData.Values;
+    var action = routeDataValues["action"].ToString().ToLower();
+}
+
+<script>
+    function InitTable() {
+		$('#jq-datatables').dataTable({
+			"ajax": {
+				"url": '@Url.Action("DigitalProc","eDigital")',
+			},
+			"order": [[0, "asc"]],
+			"columnDefs": [
+							{
+								"targets": 0,
+								"data": "Prioridade",
+							},
+							{
+								"targets": 1,
+								"data": "nomeficheiro",
+							},
+							{
+							    "targets": 2,
+							    "data": "dtaCriacao",
+							    "type": "html"
+							},
+                            {
+                                "targets": 3,
+                                "data": "DtaModificacao",
+                            },
+                            {
+                                "targets": 4,
+                                "data": "Utilizador",
+                            }
+			],
+			"olanguage": {
+				"sUrl": '@this.GetjQDataTableLanguageUrl()'
+			},
+		});
+
+		$('#jq-datatables_wrapper .table-caption').text('');
+		$('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+
+		$('#jq-datatables').on('draw.dt', function () {
+
+			$('#jq-datatables form').submit(function (e) {
+				e.preventDefault();
+				$.post($(this).prop('action'), $(this).serialize())
+					.success(function (data) {
+						if (data == "ok") {
+							var table = $('#jq-datatables').DataTable();
+							table.ajax.reload();
+						}
+					});
+			});
+		});
+	}
+
+	init.push(function () {
+		$('a[data-toggle=tooltip]').tooltip();
+
+		InitTable();
+
+		ajaxInitPanelFunctions['init-jqtable'] = InitTable;
+	});
+</script>
+
+<div class="tab-pane panel no-padding no-border fade in active">
+    <div data-rel="ajax-update-panel"
+         id="IndexEDICostumers"
+         data-update-init="init-jqtable"
+         data-modal-size="modal-lg">
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.ProcDocs)</span>
+        </div>
+        <div class="panel-body">
+            <div class="table-primary">
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="jq-datatables" data-rel="ajax-update-panel" data-modal-size="modal-lg" width="100%">
+                    <thead>
+                        <tr>
+                            <th>@this.Get(DictionaryEntryKeys.Prioridade)</th>
+                            <th>@this.Get(DictionaryEntryKeys.NomeFicheiro)</th>
+                            <th>@this.Get(DictionaryEntryKeys.DtaCriacao)</th>
+                            <th>@this.Get(DictionaryEntryKeys.DtaModi)</th>   
+                            <th>@this.Get(DictionaryEntryKeys.Utilizador)</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,46 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+	var routeDataValues = Request.RequestContext.RouteData.Values;
+	var action = routeDataValues["action"].ToString().ToLower();
+}
+
+@section header{
+}
+<script>
+	init.push(function () {
+		$('#x-tabs').tabdrop();
+	});
+</script>
+<div>
+	<ul id="x-tabs" class="nav nav-tabs">
+		@if (user.Permissions.Contains(Permissions.EEDI_CLIENTES))
+		{
+			<li class="@(action == "index" ? "active" : null)">
+				<a href="@Url.Action("index", "eEDI")">@this.Get(DictionaryEntryKeys.Clientes)</a>
+			</li>
+		}
+		@if (user.Permissions.Contains(Permissions.EEDI_REMETENTES))
+		{
+			<li class="@(action == "senders" ? "active" : null)">
+				<a href="@Url.Action("Senders", "eEDI")">@this.Get(DictionaryEntryKeys.Remetentes)</a>
+			</li>
+		}
+		@if (user.Permissions.Contains(Permissions.EEDI_DOCUMENTOSRECEBIDOS))
+		{
+			<li class="@(action == "receiveddocs" ? "active" : null)">
+				<a href="@Url.Action("ReceivedDocs", "eEDI")">@this.Get(DictionaryEntryKeys.DocumentosRecebidos)</a>
+			</li>
+		}
+		@if (user.Permissions.Contains(Permissions.EEDI_DOCUMENTOSENVIADOS))
+		{
+			<li class="@(action == "sentdocs" ? "active" : null)">
+				<a href="@Url.Action("SentDocs", "eEDI")">@this.Get(DictionaryEntryKeys.DocumentosEnviados)</a>
+			</li>
+		}
+	</ul>
+	<div class="tab-content tab-content-bordered no-padding">
+		@RenderBody()
+	</div> <!-- / .tab-content -->
+</div>

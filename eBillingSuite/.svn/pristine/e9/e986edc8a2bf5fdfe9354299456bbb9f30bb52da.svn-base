@@ -1,0 +1,89 @@
+﻿.sh-inline
+{
+	display: inline-block;
+}
+
+.no-user-select {
+	-webkit-user-select: none; /* Webkit */
+	-moz-user-select: none;    /* Firefox */
+	-ms-user-select: none;     /* IE 10  */
+	/* Currently not supported in Opera but will be soon */
+	-o-user-select: none;
+	user-select: none;
+}
+
+.capital{
+	text-transform: uppercase;
+}
+
+.bootstrap-timepicker-widget,
+.datepicker {
+	z-index: 1151 !important;
+}
+
+.btn-white {
+	background-color: white !important;
+}
+
+.label-black{
+	background-color: black !important;
+}
+
+.table-month-calendar {
+	@day-margin: 4px;
+	th {
+		text-align: center;
+		width: 14.3%;
+	}
+
+	.day-today {
+		font-weight: 700;
+	}
+
+	.day-content {
+		min-height: 70px;
+		position: relative;
+	}
+
+	.day-toolbar {
+		position: absolute;
+		top: -@day-margin;
+		right: -@day-margin;
+	}
+
+	.day-off {
+		background-color: #f9f9f9;
+	}
+
+	.day-content .event {
+		margin-top: @day-margin;
+		margin-bottom: @day-margin;
+	}
+
+	.label {
+		white-space: normal !important;
+	}
+
+	.event-series-start,
+	.event-series-end,
+	.event-series,
+	.event-full-day {
+		.label {
+			display: block;			
+		}
+	}
+
+	.event-series-end,
+	.event-series {
+		.label {
+			margin-left: -8px;
+		}		
+	}
+
+	.event-series-start,
+	.event-series {
+		.label {
+			margin-right: -8px;
+		}		
+	}
+}

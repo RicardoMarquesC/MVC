@@ -1,0 +1,70 @@
+﻿@model eBillingSuite.ViewModels.EBCConfigurationsVM
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eConnectorConfigsLayout.cshtml";
+}
+<script>
+	init.push(function () {
+		$('#FKInstanceID').change(function () {
+			window.location = '@Url.Action("Index", "eConnectorConfigs", new { id = "Guid" })'.replace('Guid', $('#FKInstanceID').find(":selected").val());
+		});
+	});
+</script>
+
+<form method="post" action="@Url.Action("Index", "eConnectorConfigs", new { ID = Model.FKInstanceID })">
+	<div class="panel-heading">
+		<span class="panel-title"><i class="panel-title-icon fa fa-calendar"></i>@this.Get(DictionaryEntryKeys.eConnectorConfigurationsTitle)</span>
+	</div> <!-- / .panel-heading -->
+	<div class="panel-body">
+		<div class="row">
+			@Html.PixelAdminSelectWithColFor(e => e.FKInstanceID, Model.AvailableInstances, 8, null, InputOptions.Default)
+		</div>
+
+
+		@for (int pos = 0; pos < Model.Configs.Count; pos++)
+		{
+			var ci = Model.Configs[pos];
+			@Html.HiddenFor(e => e.Configs[pos].PKID)
+			@Html.HiddenFor(e => e.Configs[pos].Text)
+			if (ci.Text == "Protocolo de Recepção")
+			{
+				<div class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.Configs[pos].Value, Model.AvailableProtocols, 4, null, InputOptions.Default, ci.Text)
+				</div>
+			}
+			else if (ci.Text.ToLower().Contains("palavra-chave"))
+			{
+				<div class="row">
+					@Html.PixelAdminPasswordWithColFor(e => e.Configs[pos].Value, 4, null, InputOptions.Default, ci.Text)
+				</div>
+			}
+			else
+			{
+				if (ci.isSwitcher)
+				{
+					<div class="row">
+						@Html.PixelAdminSwitcherWithColFor(e => e.Configs[pos].Value, 4, null, InputOptions.Default, ci.Text)
+					</div>
+				}
+				else
+				{
+					<div class="row">
+						@Html.PixelAdminTextBoxWithColFor(e => e.Configs[pos].Value, 4, null, InputOptions.Default, ci.Text)
+					</div>
+				}
+			}
+		}
+
+		
+		@Html.HiddenFor(e => e._saphetyCred.pkid)
+		@Html.HiddenFor(e => e._saphetyCred.instance)
+		<div class="row" id="saphetyCredentials">
+			@Html.PixelAdminTextBoxWithColFor(e => e._saphetyCred.username,4,null, InputOptions.Default)
+			@Html.PixelAdminPasswordWithColFor(e => e._saphetyCred.password, 4, null, InputOptions.Default)				
+		</div>
+		
+
+	</div>
+	<div class="panel-footer text-right">
+		<button class="btn btn-primary">@this.Get(DictionaryEntryKeys.Submit)</button>
+	</div>
+</form>

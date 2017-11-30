@@ -1,0 +1,89 @@
+﻿@model eBillingSuite.Model.InboundPacket
+@{
+	char[] delimitador ={'\\'};
+	var tooltip= Model.FicheiroEstadoSAP;
+	var ficheirovalues = Model.FicheiroEstadoSAP.Split(delimitador);
+	var ficheiro = ficheirovalues[ficheirovalues.Length-1];
+}
+@helper RenderRow(string label, string value, string tooltip) {
+	<div class="row">
+		<div class="col-sm-4 text-right-sm">
+			<strong>@label</strong>
+		</div>
+		<div class="col-sm-8">
+			@if (label == "FileERP")
+			{
+				<p style="cursor:pointer" title=@tooltip>@value&nbsp;</p>
+			}
+			else
+			{ 
+				<p>@value&nbsp;</p>
+			}
+		</div>
+	</div>
+}
+
+@helper RenderRowSwitcher(string label, string value) {
+	<div class="row">
+		<div class="col-sm-4 text-right-sm">
+			<strong>@label</strong>
+		</div>
+		<div class="col-sm-8">
+			@if(value == this.Get(DictionaryEntryKeys.Sim))
+			{ 
+				<p class="label label-success label-tag">@value</p>
+			}
+			else
+			{
+				<p class="label label-danger label-tag">@value</p>
+			}
+		</div>
+	</div>
+}
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.InboundDocDetail)</h4>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<span class="panel-title">@this.Get(DictionaryEntryKeys.InboundDocDetail)</span>
+				</div>
+				<div class="panel-body">
+					@RenderRow("Nome Fornecedor", Model.NomeEmissor == null ? "" : Model.NomeEmissor,null)
+					@RenderRow("NIF Fornecedor", Model.NIFemissor == null ? "" : Model.NIFemissor, null)
+					@RenderRow("Nome Cliente", Model.NomeReceptor == null ? "" : Model.NomeReceptor, null)
+					@RenderRow("NIF Cliente", Model.NIFreceptor == null ? "" : Model.NIFreceptor, null)
+					@RenderRow("Documento Original", Model.DocOriginal == null ? "" : Model.DocOriginal, null)
+					@RenderRow("Número Documento", Model.NumFactura == null ? "" : Model.NumFactura, null)
+					@RenderRow("Data Documento", Model.DataFactura == null ? "" : Model.DataFactura, null)
+					@RenderRow("Quantia C/IVA", Model.QuantiaComIVA == null ? "" : Model.QuantiaComIVA, null)
+					@RenderRow("Quantia S/IVA", Model.QuantiaSemIVA == null ? "" : Model.QuantiaSemIVA, null)
+					
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-info panel-dark">
+				<div class="panel-heading">
+					<span class="panel-title">@this.Get(DictionaryEntryKeys.InboundDocIntegrationInfo)</span>
+				</div>
+				<div class="panel-body">
+					@RenderRow("ID Processo", Model.InternalProcessID == null ? "" : Model.InternalProcessID.ToString(), null)
+					@RenderRow("ID Processo Fornecedor", Model.PKProcessID == null ? "" : Model.PKProcessID, null)
+					@RenderRow("Data Receção", Model.DataRecepcao == null ? "" : Model.DataRecepcao.ToString(), null)
+					@RenderRowSwitcher("Validado", Model.Valida == true ? this.Get(DictionaryEntryKeys.Sim) : this.Get(DictionaryEntryKeys.Nao))
+					@RenderRow("Data Validação", Model.DataAprovacao == null ? "" : Model.DataAprovacao.ToString(), null)
+					@RenderRow("Data ERP", Model.DataSubmissaoSAP == null ? "" : Model.DataSubmissaoSAP.ToString(), null)
+					@RenderRow("Ficheiro ERP", Model.FicheiroEstadoSAP == null ? "" : ficheiro, tooltip) 
+					@RenderRowSwitcher("Devolvido", Model.Devolvido == null ? this.Get(DictionaryEntryKeys.Sim) : this.Get(DictionaryEntryKeys.Nao))
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">	
+	<button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>

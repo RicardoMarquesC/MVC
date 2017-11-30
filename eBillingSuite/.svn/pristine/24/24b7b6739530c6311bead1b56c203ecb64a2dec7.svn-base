@@ -1,0 +1,188 @@
+﻿using eBillingSuite.Globalization.Generators;
+using eBillingSuite.Model;
+using eBillingSuite.Model.EBC_DB;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+
+namespace eBillingSuite.ViewModels
+{
+	public class EBCEmailConfigVM
+	{
+		private EBC_SpecificDeliveryOptions model;
+		private IECCListRepositories _eCConfigRepositories;
+		private IeBillingSuiteRequestContext _context;
+		public Guid FKInstanceID { get; set; }
+		public Guid FKCustomerID { get; set; }
+
+		public EBCEmailConfigVM(EBC_SpecificDeliveryOptions model, IECCListRepositories _eCConfigRepositories, IeBillingSuiteRequestContext _context, Guid instancia)
+		{
+			this.model = model;
+			this._eCConfigRepositories = _eCConfigRepositories;
+			this._context = _context;
+			this.FKInstanceID = instancia;
+			this.PKID = model.PKID;
+
+			this.NotificationEmailFunctional = model.NotificationEmailFunctional;
+			this.NotificationEmailTecnical = model.NotificationEmailTecnical;
+			this.resendAfterCount = model.resendAfterCount;
+			this.resendAfterPeriodUnit = model.resendAfterPeriodUnit;
+			this.resendAfterPeriodUnitType = model.resendAfterPeriodUnitType;
+			this.WaitForEfectiveResponseUnit = model.WaitForEfectiveResponseUnit;
+			this.WaitForEffectiveResponseUnitType = model.WaitForEffectiveResponseUnitType;
+
+
+			var values = _eCConfigRepositories.instancesRepository.GetEBC_Instances();
+			AvailableInstances = values
+				.Select(v => new SelectListItem
+				{
+					Text = v.Name,
+					Value = v.PKID.ToString(),
+					Selected = v.PKID == FKInstanceID
+				})
+				.ToList();
+
+			var customersValues = _eCConfigRepositories.customersRepository.GetEBCCustomersByInstance(this.FKInstanceID);
+			AvailableCustomers = customersValues
+				.Select(v => new SelectListItem
+				{
+					Text = v.Name,
+					Value = v.PKID.ToString(),
+				})
+				.ToList();
+
+			List<TipoUnidadeTempoClass> TUTempo = new List<TipoUnidadeTempoClass>();
+			TipoUnidadeTempoClass t1 = new TipoUnidadeTempoClass { id = 1, valor = "Minuto(s)" };
+			TipoUnidadeTempoClass t2 = new TipoUnidadeTempoClass { id = 2, valor = "Hora(s)" };
+			TipoUnidadeTempoClass t3 = new TipoUnidadeTempoClass { id = 3, valor = "Dia(s)" };
+			TUTempo.Add(t1); TUTempo.Add(t2); TUTempo.Add(t3);
+
+			AvailableTypes = TUTempo
+				.Select(t => new SelectListItem
+				{
+					Text = t.valor,
+					Value = t.id.ToString(),
+					Selected = t.id == this.model.WaitForEffectiveResponseUnitType
+				})
+				.ToList();
+
+			// já não são usadas (manter aqui pois poderá ser necessário no futuro)
+			//var ebcconfigs = _eCConfigRepositories
+			//	.eBCConfigurationsRepository
+			//	.Where(ebbc => ebbc.NotificationInfo != null && ebbc.ConfigSuiteType == "ebcNotifs" && ebbc.Position != null)
+			//	.OrderBy(ebbc => ebbc.Position)
+			//	.ToList();
+
+			//Configs = new List<ConfigInformation>();
+			////e agora começa o caos
+			//foreach (EBC_Config config in ebcconfigs)
+			//{
+			//	ConfigInformation ci = new ConfigInformation();
+			//	ci.PKID = config.PKID;
+			//	ci.Text = GetConfigName(config.KeyName);
+			//	if (config.KeyValue.ToLower().Equals("true"))
+			//	{
+			//		ci.Value = true;
+			//		ci.isSwitcher = true;
+			//	}
+			//	else if (config.KeyValue.ToLower().Equals("false"))
+			//	{
+			//		ci.Value = false;
+			//		ci.isSwitcher = true;
+			//	}
+			//	else
+			//	{
+			//		ci.Value = config.KeyValue;
+			//		ci.isSwitcher = false;
+			//	}
+			//	Configs.Add(ci);
+			//}
+		}
+
+		[DoNotGenerateDictionaryEntry]
+		public System.Guid PKID { get; set; }
+		public int resendAfterCount { get; set; }
+		public int resendAfterPeriodUnitType { get; set; }
+		public int resendAfterPeriodUnit { get; set; }
+		public int WaitForEfectiveResponseUnit { get; set; }
+		public int WaitForEffectiveResponseUnitType { get; set; }
+		public string NotificationEmailTecnical { get; set; }
+		public string NotificationEmailFunctional { get; set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableInstances { get; private set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableCustomers { get; private set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableTypes { get; private set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public class TipoUnidadeTempoClass
+		{
+			public int id;
+			public string valor;
+		}
+
+		[DoNotGenerateDictionaryEntry]
+		public List<ConfigInformation> Configs { get; set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public class ConfigInformation
+		{
+			public string Text { get; set; }
+			public object Value { get; set; }
+			public Guid PKID { get; set; }
+			public bool isSwitcher { get; set; }
+		}
+
+		private string GetConfigName(string KeyName)
+		{
+			if (KeyName.Equals("REP_QMailFailedResponse"))
+				return "Respostas MTA Qmail em falha";
+			else if (KeyName.Equals("REP_AutomaticConnectorFailedResponse"))
+				return "Resposta de falha do eBilling Connector Client";
+			else if (KeyName.Equals("REP_PackageSentSuccesfully"))
+				return "Envelopes enviados com sucesso";
+			else if (KeyName.Equals("REP_FollowupStartReport"))
+				return "Inicio de Followup";
+			else if (KeyName.Equals("REP_UnknownMessageReceived"))
+				return "Recepção de mensagem desconhecida";
+			else if (KeyName.Equals("REP_LastWaitPeriodReport"))
+				return "Última tentativa de followup";
+			else if (KeyName.Equals("REP_PackageDeliverySuccesfull"))
+				return "Recepção de recibo de entrega";
+			else if (KeyName.Equals("REP_FollowupTimeoutReport"))
+				return "Fim de Followup";
+			else if (KeyName.Equals("REP_EngineMessageReceived"))
+				return "Recepção de mensagem do eBilling Connector";
+			else if (KeyName.Equals("REP_ResetReport"))
+				return "Reinicio de processo do Envelope";
+			else if (KeyName.Equals("REP_AutomaticConnectorResponse"))
+				return "Resposta de entrega do eBilling Connector Client";
+			else if (KeyName.Equals("REP_TransformReport"))
+				return "Transformação de resposta explicita em recibo de não entrega";
+			else if (KeyName.Equals("REP_RelayedPackageReport"))
+				return "Recepção de alerta de Relay";
+			else if (KeyName.Equals("REP_CancelledReport"))
+				return "Cancelamento do Envelope";
+			else if (KeyName.Equals("REP_UndeliveredPackageReport"))
+				return "Recepção de recibo de não entrega";
+			else if (KeyName.Equals("REP_ClientBadResponse"))
+				return "Recepção de Envelope e Falha de Validação";
+			else if (KeyName.Equals("REP_PackageFollowupSentSuccesfully"))
+				return "Envio de envelope após inicio de followup";
+			else if (KeyName.Equals("REP_ClientGoodResponse"))
+				return "Recepção de Envelope e Validação com Sucesso";
+			else if (KeyName.Equals("REP_DelayedPackageReport"))
+				return "Recepção de alerta de Delay";			
+			else
+				return null;
+			////////MUDAR PARA QUANDO FOR PARA PRODUCAO
+			//return _context.GetDictionaryValue(KeyName);
+		}
+	}
+}

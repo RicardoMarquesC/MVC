@@ -1,0 +1,362 @@
+﻿@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_LayoutStats.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- Top 5 Clientes -->
+<script>
+    init.push(function () {
+        // Doughnut Chart Data
+        var data = @Html.Raw(Json.Encode(Model.TopCostumers));
+
+        function legendFormatter(label, series) {
+            return '<div ' +
+                   'style="font-size:8pt;padding:2px;color:black;">' +
+                   label +'</div>';
+        };
+
+        // Init Chart
+        $('#jq-flot-pie').pixelPlot(data, {
+            series: {
+                    pie: {
+                        show: true,
+                        radius: 1,
+                        label: {
+                            show: true,
+                            radius: 1,
+                            formatter: function (label, series) {
+                                return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
+                            },
+                            background: {
+                                opacity: 0.5,
+                                color: '#000'}
+                        },
+                    }
+            },
+            legend:
+                {
+                    show: false,
+                    labelFormatter: legendFormatter
+                }
+            },{
+            tooltipText: " y ",
+            height: 205
+        });
+    });
+</script>
+
+<!-- Top 5 Fornecedores -->
+<script>
+                   var data = @Html.Raw(Json.Encode(Model.TopFornecedores));
+                    function legendFormatter(label, series) {
+                        return '<div ' +
+                               'style="font-size:8pt;padding:2px;color:black;">' +
+                               label +'</div>';
+                    };
+						                // Doughnut Chart Data
+				   init.push(function () {
+
+						// Init Chart
+						$('#jq-flot-pie1').pixelPlot(data, {
+							series: {
+								pie: {
+								    show: true,
+                                    radius: 1,
+									label: {
+										show: true,
+										radius: 1,
+										formatter: function (label, series) {
+										    return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
+										},
+										background: {
+										    opacity: 0.5,
+										    color: '#000'}
+									}
+								}
+							},
+							legend:
+                            {
+                                show: false,
+                                labelFormatter: legendFormatter
+                            }
+						},
+                        {
+						    height: 205
+						});
+					});
+</script>
+
+<!--  Documentos Outbound e Inbound (Último ano) -->
+<script>
+    init.push(function () {
+        var dadosOUT = @Html.Raw(Json.Encode(Model.DocsLastYearOUT));
+        var dadosIN = @Html.Raw(Json.Encode(Model.DocsLastYearIN));
+
+
+        if (dadosOUT == []) {
+            Morris.Area({
+                element: 'area-chart',
+                data: [
+                    { Mes: 'Janeiro', Outbound: 0, Inbound: dadosIN[0].data },
+                    { Mes: 'Fevereiro', Outbound: 0, Inbound: dadosIN[1].data },
+                    { Mes: 'Março', Outbound: 0, Inbound: dadosIN[2].data },
+                    { Mes: 'Abril', Outbound: 0, Inbound: dadosIN[3].data },
+                    { Mes: 'Maio', Outbound: 0, Inbound: dadosIN[4].data },
+                    { Mes: 'Junho', Outbound: 0, Inbound: dadosIN[5].data },
+                    { Mes: 'Julho', Outbound: 0, Inbound: dadosIN[6].data },
+                    { Mes: 'Agosto', Outbound: 0, Inbound: dadosIN[7].data },
+                    { Mes: 'Setembro', Outbound: 0, Inbound: dadosIN[8].data },
+                    { Mes: 'Outubro', Outbound: 0, Inbound: dadosIN[9].data },
+                    { Mes: 'Novembro', Outbound: 0, Inbound: dadosIN[10].data },
+                    { Mes: 'Dezembro', Outbound: 0, Inbound: dadosIN[11].data },
+                ],
+                xkey: 'Mes',
+                parseTime: false,
+                xLabelAngle: 50,
+                ykeys: ['Outbound', 'Inbound'],
+                labels: ['Outbound €', 'Inbound €'],
+                fillOpacity: 0.6,
+                hideHover: 'auto',
+                behaveLikeLine: true,
+                resize: true,
+                pointFillColors: ['#ffffff'],
+                pointStrokeColors: ['black'],
+                lineColors: PixelAdmin.settings.consts.COLORS,
+            });
+        }
+        else
+        {
+            if (@Model.DocsLastYearIN.Count <1) {
+                Morris.Area({
+                    element: 'area-chart',
+                    data: [
+                        { Mes: 'Janeiro', Outbound: dadosOUT[0].data, Inbound: 0 },
+                        { Mes: 'Fevereiro', Outbound: dadosOUT[1].data, Inbound: 0 },
+                        { Mes: 'Março', Outbound: dadosOUT[2].data, Inbound: 0 },
+                        { Mes: 'Abril', Outbound: dadosOUT[3].data, Inbound: 0 },
+                        { Mes: 'Maio', Outbound: dadosOUT[4].data, Inbound: 0 },
+                        { Mes: 'Junho', Outbound: dadosOUT[5].data, Inbound: 0 },
+                        { Mes: 'Julho', Outbound: dadosOUT[6].data, Inbound: 0 },
+                        { Mes: 'Agosto', Outbound: dadosOUT[7].data, Inbound: 0 },
+                        { Mes: 'Setembro', Outbound: dadosOUT[8].data, Inbound: 0 },
+                        { Mes: 'Outubro', Outbound: dadosOUT[9].data, Inbound: 0 },
+                        { Mes: 'Novembro', Outbound: dadosOUT[10].data, Inbound: 0 },
+                        { Mes: 'Dezembro', Outbound: dadosOUT[11].data, Inbound: 0 },
+                    ],
+                    xkey: 'Mes',
+                    parseTime: false,
+                    xLabelAngle: 50,
+                    ykeys: ['Outbound', 'Inbound'],
+                    labels: ['Outbound €', 'Inbound €'],
+                    fillOpacity: 0.6,
+                    hideHover: 'auto',
+                    behaveLikeLine: true,
+                    resize: true,
+                    pointFillColors: ['#ffffff'],
+                    pointStrokeColors: ['black'],
+                    lineColors: PixelAdmin.settings.consts.COLORS,
+                });
+            }
+            else
+            {
+                Morris.Area({
+                    element: 'area-chart',
+                    data: [
+                        { Mes: 'Janeiro', Outbound: dadosOUT[0].data, Inbound: dadosIN[0].data },
+                        { Mes: 'Fevereiro', Outbound: dadosOUT[1].data, Inbound: dadosIN[1].data },
+                        { Mes: 'Março', Outbound: dadosOUT[2].data, Inbound: dadosIN[2].data },
+                        { Mes: 'Abril', Outbound: dadosOUT[3].data, Inbound: dadosIN[3].data },
+                        { Mes: 'Maio', Outbound: dadosOUT[4].data, Inbound: dadosIN[4].data },
+                        { Mes: 'Junho', Outbound: dadosOUT[5].data, Inbound: dadosIN[5].data },
+                        { Mes: 'Julho', Outbound: dadosOUT[6].data, Inbound: dadosIN[6].data },
+                        { Mes: 'Agosto', Outbound: dadosOUT[7].data, Inbound: dadosIN[7].data },
+                        { Mes: 'Setembro', Outbound: dadosOUT[8].data, Inbound: dadosIN[8].data },
+                        { Mes: 'Outubro', Outbound: dadosOUT[9].data, Inbound: dadosIN[9].data },
+                        { Mes: 'Novembro', Outbound: dadosOUT[10].data, Inbound: dadosIN[10].data },
+                        { Mes: 'Dezembro', Outbound: dadosOUT[11].data, Inbound: dadosIN[11].data },
+                    ],
+                    xkey: 'Mes',
+                    parseTime: false,
+                    xLabelAngle: 50,
+                    ykeys: ['Outbound', 'Inbound'],
+                    labels: ['Outbound €', 'Inbound €'],
+                    fillOpacity: 0.6,
+                    hideHover: 'auto',
+                    behaveLikeLine: true,
+                    resize: true,
+                    pointFillColors: ['#ffffff'],
+                    pointStrokeColors: ['black'],
+                    lineColors: PixelAdmin.settings.consts.COLORS,
+                });
+            }
+        }
+    });
+</script>
+
+<!-- Quantidade por tipo de documento -->
+<script>
+    init.push(function () {
+        // Visits Chart Data
+
+        var myvalues =  @Html.Raw(Json.Encode(Model.DocsByType));
+        var visitsChartData = [{
+            label: 'Outbound',
+            data: [
+                [0,parseInt(myvalues[0])], [1,parseInt(myvalues[1])], [2,parseInt(myvalues[2])], [3,parseInt(myvalues[3])], [4,parseInt(myvalues[4])], [5,parseInt(myvalues[5])], [6,parseInt(myvalues[6])], [7,parseInt(myvalues[7])], [8,parseInt(myvalues[8])]
+            ]
+        }, {
+            label: 'Inbound',
+            data: [
+                [0,parseInt(myvalues[9])], [1,parseInt(myvalues[10])], [2,parseInt(myvalues[11])], [3,parseInt(myvalues[12])], [4,parseInt(myvalues[13])], [5,parseInt(myvalues[14])], [6,parseInt(myvalues[15])], [7,parseInt(myvalues[16])], [8,parseInt(myvalues[17])]
+            ]
+        }];
+        var ticks = [
+                  [0, "FT"], [1, "NC"], [2, "ND"], [3, "RC"],
+                  [4, "GT"], [5, "GR"], [6, "GD"], [7, "GA"], [8, "Só PDF"]
+        ];
+        var previousPoint = null;
+
+        // Init Chart
+        $('#jq-flot-bars').pixelPlot(visitsChartData, {
+                series: {
+                    stack: true,
+                    bars: {show: true, barWidth: 0.5, align: 'center',},
+                },
+                xaxis: {
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial',
+                    axisLabelPadding: 10,
+                    ticks: ticks
+                },
+                yaxis: {
+                    axisLabelUseCanvas: true,
+                    axisLabelFontSizePixels: 12,
+                    axisLabelFontFamily: 'Verdana, Arial',
+                    axisLabelPadding: 3,
+                    tickFormatter: function (v, axis) {
+                        return v ;
+                    }
+                },
+                grid: {
+                    borderWidth: 2,
+                    //backgroundColor: { colors: ["#FFFFFF", "#ccfff2"], },
+                },
+        },{
+            tooltipText: " y "
+        });
+});
+</script>
+
+<!-- ClienteArrow -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow").click(function(){
+            $("#toggle").toggle(1000);
+            $("#ClienteArrow").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow1 -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow1").click(function(){
+            $("#toggle1").toggle(1000);
+            $("#ClienteArrow1").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow2 -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow2").click(function(){
+            $("#toggle2").toggle(1000);
+            $("#ClienteArrow2").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow3 -->
+<script>
+
+    $(document).ready(function () {
+        $("#ClienteArrow3").click(function(){
+            $("#toggle3").toggle(1000);
+            $("#ClienteArrow3").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+
+<div class="panel-heading">
+    <span class="panel-title"> @Texts.Quantias</span>
+    <br />
+</div>
+<div class="panel-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-external-link-square"></span>&nbsp;
+                @Texts.Top5Clientes
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow"></i>
+            </div>
+            <div class="panel-body" id="toggle">
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="jq-flot-pie" class="pa-flot-graph">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-external-link-square"></span>&nbsp;
+                @Texts.Top5Fornecedores
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow1"></i>
+            </div>
+            <div class="panel-body" id="toggle1">
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="jq-flot-pie1" class="pa-flot-graph" style="width: 641px; height: 205px; padding: 0px; position: relative;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-bar-chart-o"></span> &nbsp;
+                @Texts.DocOutInUltimoAno
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow2"></i>
+            </div>
+            <div class="panel-body" id="toggle2">
+                <div class="graph-container">
+                    <div class="pa-flot-info"><span><i style="background: #71c73e"></i>Outbound</span><span><i style="background: #77b7c5"></i>Inbound</span></div>
+                    <div id="area-chart">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-bar-chart-o"></span> &nbsp;
+                @Texts.QuantTipoDoc
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow3"></i>
+            </div>
+            <div class="panel-body" id="toggle3">
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="jq-flot-bars" class="pa-flot-graph">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

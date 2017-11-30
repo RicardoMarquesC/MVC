@@ -1,0 +1,52 @@
+﻿@{	
+	var values = new eBillingSuite.ViewModels.DiaryVM();
+	var entries = values.entries
+		.OrderByDescending(d => d.Date).ToList();
+}
+
+<div class="timeline">
+	<!-- Timeline header -->
+	<div class="tl-header now bg-primary">Agora</div>
+	@foreach (var entry in entries)
+	{
+		var bg = "info";
+		var icon = "info";
+
+		var firstUser = entry.User;
+		if (entry.Tipo.Equals("Entrada em cokpit"))
+		{
+			icon = "check";
+			bg = "success";
+		}
+		else if (entry.Tipo.Equals("Pré-Validação"))
+		{
+			icon = "pencil";
+		}
+		else if (entry.Tipo.Equals("Pendente de aprovação"))
+		{
+			icon = "archive";
+			bg = "warning";
+		}
+		else if (entry.Tipo.Equals("Novo pedido de aprovação"))
+		{
+			icon = "info";
+		}
+	 
+		<div class="tl-entry">
+			<div class="tl-time">
+				@entry.Date.ToDataTableShortFormat()
+			</div>
+			<div class="tl-icon bg-@bg"><i class="fa fa-@icon"></i></div>
+			<div class="panel tl-body">
+				@if (firstUser != null)
+				{
+					<span class="text-info">@firstUser</span>
+				}			
+				@if (!string.IsNullOrWhiteSpace(entry.Comentarios))
+				{
+					<div class="well well-sm" style="margin: 10px 0 0 0;">@entry.Comentarios</div>
+				}
+		</div> <!-- / .tl-body -->
+	</div> <!-- / .tl-entry -->
+	}
+</div>

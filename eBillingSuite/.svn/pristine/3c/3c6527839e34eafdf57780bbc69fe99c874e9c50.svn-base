@@ -1,0 +1,68 @@
+﻿.sh-inline {
+  display: inline-block;
+}
+.no-user-select {
+  -webkit-user-select: none;
+  /* Webkit */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE 10  */
+  /* Currently not supported in Opera but will be soon */
+  -o-user-select: none;
+  user-select: none;
+}
+.capital {
+  text-transform: uppercase;
+}
+.bootstrap-timepicker-widget,
+.datepicker {
+  z-index: 1151 !important;
+}
+.btn-white {
+  background-color: white !important;
+}
+.label-black {
+  background-color: black !important;
+}
+.table-month-calendar th {
+  text-align: center;
+  width: 14.3%;
+}
+.table-month-calendar .day-today {
+  font-weight: 700;
+}
+.table-month-calendar .day-content {
+  min-height: 70px;
+  position: relative;
+}
+.table-month-calendar .day-toolbar {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+}
+.table-month-calendar .day-off {
+  background-color: #f9f9f9;
+}
+.table-month-calendar .day-content .event {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.table-month-calendar .label {
+  white-space: normal !important;
+}
+.table-month-calendar .event-series-start .label,
+.table-month-calendar .event-series-end .label,
+.table-month-calendar .event-series .label,
+.table-month-calendar .event-full-day .label {
+  display: block;
+}
+.table-month-calendar .event-series-end .label,
+.table-month-calendar .event-series .label {
+  margin-left: -8px;
+}
+.table-month-calendar .event-series-start .label,
+.table-month-calendar .event-series .label {
+  margin-right: -8px;
+}
+/*# sourceMappingURL=PeoplePortal.css.map */

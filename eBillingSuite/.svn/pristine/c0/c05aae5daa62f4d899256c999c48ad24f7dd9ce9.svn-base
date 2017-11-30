@@ -1,0 +1,138 @@
+﻿@model eBillingSuite.ViewModels.EDigitalXmlManagmentVM
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+}
+<script type="text/javascript">
+	init.push(function () {
+		function getXmlData(docType, supplier) {
+			$.ajax({
+				type: 'POST',
+				url: '@Url.Action("SupplierTemplateStructureExists", "eDigital")',
+				data: {
+					'docTypeId': docType,
+					'supplierId': supplier
+				},
+				success: function (data) {
+					if (data != null) {
+						if (data == "nok") {
+							$('#alert-2').slideDown();
+						} else {
+							if (data == true) {
+								var docTypeId = $('#FkDocumentType').val();
+								var supplierId = $('#FkSupplier').val();
+								window.location = '@Html.Raw(Url.Action("XmlManagment", "eDigital", new { supplierId = "SuppGuid", docTypeId = "DocGuid" }))'.replace('SuppGuid', supplierId).replace('DocGuid', docTypeId);
+							}
+						}
+					}
+				}
+			});
+		}
+
+		if ($('#FkDocumentType').val() == '00000000-0000-0000-0000-000000000000')
+			$('#docChooseDiv').hide();
+
+		$('#FkSupplier').change(function () {
+			var val = $(this).val();
+			if (val != "00000000-0000-0000-0000-000000000000") {
+				$('#docChooseDiv').show();
+
+				var docTypeVal = $('#FkDocumentType').val();
+				if (docTypeVal != "00000000-0000-0000-0000-000000000000") {
+					getXmlData(docTypeVal, val);
+				}
+
+			} else {
+				$('#docChooseDiv').hide();
+				$('#xmlDiv').hide();
+			}
+		});
+
+		$('#FkDocumentType').change(function () {
+			var val = $(this).val();
+			var supplierVal = $('#FkSupplier').val();
+			if (val != "00000000-0000-0000-0000-000000000000") {
+				getXmlData(val, supplierVal);
+			}
+			else {
+				@*var docId = $('#FkDocumentType').val();
+				var supplierId = $('#FkSupplier').val();
+				window.location = '@Html.Raw(@Url.Action("XmlManagment", "eDigital", new { supplierId = "SuppGuid", docTypeId = "DocGuid" }))'.replace('SuppGuid', supplierId).replace('DocGuid', docId);*@
+				$('#xmlDiv').hide();
+			}
+		});
+
+		//Close alert
+		$('.page-alert .close').click(function (e) {
+			e.preventDefault();
+			$(this).closest('.page-alert').slideUp();
+		});
+	});
+</script>
+
+<div class="page-alerts">
+	<div class="alert alert-danger page-alert" id="alert-2" style="display: none;">
+		<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		<strong>@Texts.DigitalAlertGenericError</strong>
+	</div>
+</div>
+
+<form method="post">
+	@*@Html.HiddenFor(e => e.Action)*@
+	<div class="tab-pane panel no-padding no-border fade in active">
+		<div class="panel-heading">
+			<span class="panel-title">@Texts.TemplateManagmentSupplier</span>
+		</div>
+
+		<!-- FORNECEDORES e TIPOS DOCUMENTO -->
+		<div class="panel-body">
+			<div class="row">
+				@Html.PixelAdminSelectWithColFor(e => e.FkSupplier, Model.AvailableSuppliers, 8, null, InputOptions.Default, Texts.AvailableSuppliers)
+			</div>
+			<div id="docChooseDiv" class="row">
+				@Html.PixelAdminSelectWithColFor(e => e.FkDocumentType, Model.AvailableDocTypes, 4, null, InputOptions.Default, Texts.AvailableDocTypes)
+			</div>
+
+			<div class="row">
+				&nbsp;
+			</div>
+
+			@if (Model.FkDocumentType != null && Model.FkDocumentType != Guid.Empty && Model.FkSupplier != null && Model.FkSupplier != Guid.Empty)
+			{
+				<div class="row">
+					&nbsp;
+				</div>
+
+				<!-- ÁREAS DO XML -->
+				<div id="xmlDiv" class="panel colourable">
+					<div class="panel-heading">
+						<span class="panel-title">@Texts.Seccoes</span>
+						<ul class="nav nav-tabs nav-tabs-xs">
+							<li class="active">
+								<a href="#tab-cab" data-toggle="tab">@Texts.TemplateHeader</a>
+							</li>
+							<li class="">
+								<a href="#tab-lines" data-toggle="tab">T@exts.TemplateLines</a>
+							</li>
+							<li class="">
+								<a href="#tab-iva" data-toggle="tab">@Texts.TemplateVat</a>
+							</li>
+						</ul> <!-- / .nav -->
+					</div> <!-- / .panel-heading -->
+					<div class="panel-body">
+						<div class="tab-content tab-content">
+							<div class="tab-pane fade active in" id="tab-cab">
+								@Html.Partial("~/Views/eDigital/_templateCabSupplier.cshtml", Model.DadosXmlCabecalho, new ViewDataDictionary { { "docTypePkid", Model.FkDocumentType }, { "supplierPkid", Model.FkSupplier } })
+							</div>
+							<div class="tab-pane fade" id="tab-lines">
+								@Html.Partial("~/Views/eDigital/_templateLinesSupplier.cshtml", Model.DadosXmlLinhas, new ViewDataDictionary { { "docTypePkid", Model.FkDocumentType }, { "supplierPkid", Model.FkSupplier } })
+							</div>
+							<div class="tab-pane fade" id="tab-iva">
+								@Html.Partial("~/Views/eDigital/_templateVatSupplier.cshtml", Model.DadosXmlIva, new ViewDataDictionary { { "docTypePkid", Model.FkDocumentType }, { "supplierPkid", Model.FkSupplier } })
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</form>

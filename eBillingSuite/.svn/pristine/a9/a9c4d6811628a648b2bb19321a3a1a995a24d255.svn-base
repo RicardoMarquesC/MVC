@@ -1,0 +1,32 @@
+﻿@model eBillingSuite.ViewModels.EBCTXTConfigsVM
+@{
+	var uniqueID = "econnectorEditConfigTXT-modal";
+}
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.ConnectorConfiTXTAdd)</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("EditTXTConfigs", "eConnectorConfigs")"
+		  method="post"
+		  class="form-horizontal">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.pkid)
+				@Html.HiddenFor(e => e.FKInstanceID)
+				<div class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.NomeCampo, Model.AvailableFields, 3, null, InputOptions.Default)
+					@Html.PixelAdminTextBoxWithColFor(e => e.Posicao, 3, null, InputOptions.Default)
+					@Html.PixelAdminSelectWithColFor(e => e.Regex, Model.AvailableRegexs, 3, null, InputOptions.Default)
+					@Html.PixelAdminSelectWithColFor(e => e.Tipo, Model.AvailableInvoiceRegionTypes, 3, null, InputOptions.Default)
+				</div>				
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>

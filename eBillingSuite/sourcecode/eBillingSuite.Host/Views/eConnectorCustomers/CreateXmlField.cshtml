@@ -1,0 +1,82 @@
+﻿@model eBillingSuite.ViewModels.EBCXmlFieldSenderVM
+@{
+	var uniqueID = "edigitalheaderdoctypexml-modal";
+}
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('#Area').change(function () {
+			var selectedArea = $(this).val();
+			if (selectedArea) {
+				$('.page-alert').slideUp();
+				if (selectedArea.toLowerCase() == 'cabecalho') {
+					$('#headerFields, #requiredField').show();
+					$('#linesFields, #vatFields').hide();
+				} else if (selectedArea.toLowerCase() == 'lineitem') {
+					$('#linesFields, #requiredField').show();
+					$('#headerFields, #vatFields').hide();
+				} else if (selectedArea.toLowerCase() == 'resumoiva') {
+					$('#vatFields, #requiredField').show();
+					$('#headerFields, #linesFields').hide();
+				} else {
+					$('#headerFields, #linesFields, #vatFields, #requiredField').hide();
+					$('#alertMessage').text('Área desconhecida.');
+					$('.page-alert').slideDown();
+				}
+			} else {
+				$('#headerFields, #linesFields, #vatFields, #requiredField').hide();
+				$('#alertMessage').text('Tem de selecionar um área.');
+				$('.page-alert').slideDown();
+			}
+		});
+
+		//Close alert
+		$('.page-alert .close').click(function (e) {
+			e.preventDefault();
+			$(this).closest('.page-alert').slideUp();
+		});
+	});
+</script>
+
+<div class="page-alerts-3">
+	<div class="alert alert-danger page-alert" id="alert-3" style="display: none;">
+		<button type="button" class="close"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		<strong id="alertMessage"></strong>
+	</div>
+</div>
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.XMLConfigSenderAdd)</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("CreateXmlFieldSubmit", "eConnectorSenders")"
+		  method="post"
+		  class="form-horizontal">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.XmlNumber)
+				@Html.HiddenFor(e => e.XmlType)
+				<div class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.Area, Model.AvailableAreas, 6, null, InputOptions.Default)
+				</div>
+				<div id="headerFields" class="row" style="display:none;">
+					@Html.PixelAdminSelectWithColFor(e => e.NomeCampo, Model.AvailableHeaders, 6, null, InputOptions.Default)
+				</div>
+				<div id="linesFields" class="row" style="display:none;">
+					@Html.PixelAdminSelectWithColFor(e => e.NomeCampo, Model.AvailableLines, 6, null, InputOptions.Default)
+				</div>
+				<div id="vatFields" class="row" style="display:none;">
+					@Html.PixelAdminSelectWithColFor(e => e.NomeCampo, Model.AvailableIva, 6, null, InputOptions.Default)
+				</div>
+				<div id="requiredField" class="row" style="display:none;">
+					@Html.PixelAdminSwitcherWithColFor(e => e.IsRequired, 2, null, InputOptions.Default)
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>

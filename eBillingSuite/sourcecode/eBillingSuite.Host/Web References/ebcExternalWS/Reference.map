@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.DiscoveryDocumentReference" url="http://pi_dev/WSInbond/ebcExternalWS.asmx?disco" filename="ebcExternalWS.disco" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://pi_dev/WSInbond/ebcExternalWS.asmx?wsdl" filename="ebcExternalWS.wsdl" />
+  </Results>
+</DiscoveryClientResultsFile>

@@ -1,0 +1,218 @@
+﻿@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_LayoutStats.cshtml";
+}
+<style>
+    #bar-chart,
+    #bar-chart1{
+        height:350px;
+        width: 640px;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- TempoMedioResposta -->
+<script>
+    $(document).ready(function(){
+        var tempomedio =  @Html.Raw(Json.Encode(Model.TempoMedioResposta));
+        $('#tempo').text(tempomedio);
+
+        //Top 5 rápidos (média)
+        var TopCostumers = @Html.Raw(Json.Encode(Model.TopCostumers));
+        init.push(function () {
+            Morris.Bar({
+                element: 'bar-chart',
+                data: TopCostumers,
+                xkey: 'label',
+                ykeys: ['data'],
+                labels: ['Segundos'],
+                barSizeRatio: 0.3,
+                xLabelAngle: 35,
+                hideHover: 'auto',
+                barColors: ["#68C386"],
+                gridLineColor: '#cfcfcf',
+                resize: true
+                //axes: false
+            });
+        });
+
+        //Top 5 lentos (média)
+        var LastCostumers = @Html.Raw(Json.Encode(Model.LastCostumers));
+        init.push(function () {
+            Morris.Bar({
+                element: 'bar-chart1',
+                data: LastCostumers,
+                xkey: 'label',
+                ykeys: ['data'],
+                labels: ['Segundos'],
+                barSizeRatio: 0.3,
+                xLabelAngle: 35,
+                hideHover: 'auto',
+                barColors: ["#68C386"],
+                gridLineColor: '#cfcfcf',
+                resize: true
+            });
+        });
+    });
+</script>
+
+<!-- ClienteArrow -->
+<script>
+    $(document).ready(function () {
+        $("#ClienteArrow").click(function(){
+            $("#toggle").toggle(1000);
+            $("#ClienteArrow").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow1 -->
+<script>
+    $(document).ready(function () {
+        $("#ClienteArrow1").click(function(){
+            $("#toggle1").toggle(1000);
+            $("#ClienteArrow1").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow2 -->
+<script>
+    $(document).ready(function () {
+        $("#ClienteArrow2").click(function(){
+            $("#toggle2").toggle(1000);
+            $("#ClienteArrow2").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+<!-- ClienteArrow3 -->
+<script>
+    $(document).ready(function () {
+        $("#ClienteArrow3").click(function(){
+            $("#toggle3").toggle(1000);
+            $("#ClienteArrow3").toggleClass("fa-chevron-down fa-chevron-up");
+        });
+    });
+</script>
+
+<div class="panel-heading">
+    <span class="panel-title"> @this.Get(DictionaryEntryKeys.Performance) </span>
+    <br />
+</div>
+<div class="panel-body">
+    
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel-heading">
+                <span class="fa fa-bar-chart-o"></span>&nbsp;
+                @this.Get(DictionaryEntryKeys.TempoMedioResposta)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow2"></i>
+            </div>
+            <div class="panel-body" id="toggle2">
+                <div class="stat-panel">
+                    <div class="stat-row">
+                        <!-- Info background, without padding, horizontally centered text, super large text -->
+                        <div class="stat-cell bg-primary no-padding text-center text-slg">
+                            <i class="fa fa-clock-o"></i>
+                        </div>
+                    </div> <!-- /.stat-row -->
+                    <div class="stat-row">
+                        <!-- Bordered, without top border, horizontally centered text, large text -->
+                        <div class="stat-cell bordered no-border-t text-center text-lg">
+                            <div id="tempo"></div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-external-link-square"></span>&nbsp;
+                @this.Get(DictionaryEntryKeys.Top5Rapidos)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow"></i>
+            </div>
+            <div class="panel-body" id="toggle">                
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="bar-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel-heading">
+                <span class="fa fa-external-link-square"></span>&nbsp;
+                @this.Get(DictionaryEntryKeys.Top5Lentos)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow1"></i>
+            </div>
+            <div class="panel-body" id="toggle1">
+                <div class="graph-container">
+                    <div class="pa-flot-container">
+                        <div id="bar-chart1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+            <div class="panel-heading">
+                <span class="fa fa-bar-chart-o"></span> &nbsp;
+                @this.Get(DictionaryEntryKeys.TemposMediosEnvio)
+                <i class="fa fa-chevron-down pull-right" style="cursor:pointer" id="ClienteArrow3"></i>
+            </div>
+            <div class="panel-body" id="toggle3">
+                <div class="col-md-6">
+                    <div class="table-primary">
+                        <div class="table-header">
+                            <div class="table-caption">
+                                @this.Get(DictionaryEntryKeys.BaseadoCliente)
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Tempo Médio (seg.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var valor in Model.TemposMediosCliente)
+                                {
+                                    <tr>
+                                        <td>  @valor.label </td><td>@valor.data  </td>
+                                    </tr>
+                                }                               
+                            </tbody>
+                        </table>
+                    </div>                   
+                </div>
+                <div class="col-md-6">
+                    <div class="table-primary">
+                        <div class="table-header">
+                            <div class="table-caption">
+                                @this.Get(DictionaryEntryKeys.BaseadoData)
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ano</th>
+                                    <th>Mês</th>
+                                    <th>Tempo Médio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var valor in Model.TemposMediosClienteAno)
+                                {
+                                    <tr>
+                                        <td>  @valor.data </td>
+                                        <td>  @valor.label  </td>
+                                        <td>  @valor.TempoMedio</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>

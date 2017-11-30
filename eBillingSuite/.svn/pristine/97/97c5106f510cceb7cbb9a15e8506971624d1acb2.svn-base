@@ -1,0 +1,36 @@
+﻿@model eBillingSuite.ViewModels.MCATSendingConfigVM
+@{
+	Layout = "~/Views/Shared/_eMCATLayout.cshtml";
+}
+
+<script>
+	init.push(function () {
+		$('#fkInstancia').change(function () {
+			window.location = '@Url.Action("Configurations", "eMCAT", new { id = "Guid" })'.replace('Guid', $('#fkInstancia').find(":selected").val());
+		});
+	});
+</script>
+
+<form method="post">
+	<div class="panel-heading">
+		<span class="panel-title"><i class="panel-title-icon fa fa-calendar"></i>@this.Get(DictionaryEntryKeys.MCATConfigSendingInfo)</span>
+	</div> <!-- / .panel-heading -->
+	<div class="panel-body">
+		<div class="row">
+			@Html.PixelAdminSelectWithColFor(e => e.fkInstancia, Model.AvailableInstances, 6, null, InputOptions.Default)
+		</div>
+		<div class="row">
+			@Html.PixelAdminTextBoxWithColFor(e => e.EnderecoEmail, 6, null, InputOptions.Default)
+		</div>
+		<div class="row">
+			@Html.PixelAdminTextBoxWithColFor(e => e.UnidadeTempo, 3, null, InputOptions.Default)
+			@Html.PixelAdminSelectWithColFor(e => e.TipoUnidadeTempo, Model.AvailableTypes, 3, null, InputOptions.Default)
+		</div>
+		<div class="row">
+			@Html.PixelAdminTextBoxWithColFor(e => e.NumberOfAttempts, 6, null, InputOptions.Default)
+		</div>
+	</div>
+	<div class="panel-footer text-right">
+		<button class="btn btn-primary">@this.Get(DictionaryEntryKeys.Submit)</button>
+	</div>
+</form>

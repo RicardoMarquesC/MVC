@@ -1,0 +1,403 @@
+﻿@model eBillingSuite.ViewModels.unknownListVM
+@{
+    var pc = ViewBag.PixelAdminPageContext as IPixelAdminPageContext;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<style>
+    .mail-container-header {
+        display: none;
+        border-bottom: 1px solid #efefef;
+        line-height: 35px;
+        padding: 14px 16px;
+        font-size: 20px;
+        font-weight: 300;
+    }
+
+        .mail-container-header.show {
+            display: block;
+        }
+
+    .mail-container-header {
+        display: block;
+        margin-top: 5px;
+    }
+
+
+    .mail-controls {
+        border-bottom: 1px solid #efefef;
+        padding: 12px 16px;
+    }
+
+        .mail-controls .btn-group + .btn-group {
+            margin-left: 12px;
+        }
+
+        .mail-controls .btn {
+            font-size: 14px;
+            line-height: 14px;
+        }
+
+            .mail-controls .btn .fa-caret-down {
+                position: relative;
+                top: -1px;
+            }
+
+        .mail-controls .pages {
+            line-height: 30px;
+            margin-right: 13px;
+            color: #bbb;
+        }
+
+    .mail-info {
+        padding: 14px 16px;
+        border-bottom: 1px solid #efefef;
+    }
+
+        .mail-info:before,
+        .mail-info:after {
+            content: " ";
+            display: table;
+        }
+
+        .mail-info:after {
+            clear: both;
+        }
+
+        .mail-info .avatar {
+            display: block;
+            width: 40px;
+            height: 40px;
+            border-radius: 999999px;
+            float: left;
+        }
+
+        .mail-info .from {
+            display: block;
+            float: left;
+            margin-left: 10px;
+        }
+
+        .mail-info .name,
+        .mail-info .name a {
+            color: #555555;
+            font-size: 14px;
+        }
+
+        .mail-info .email,
+        .mail-info .email a {
+            color: #aaa;
+        }
+
+        .mail-info .date {
+            display: block;
+            float: right;
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 9px;
+        }
+
+    .mail-message-body {
+        font-size: 14px;
+        line-height: 24px;
+        padding: 20px 16px;
+    }
+
+    .mail-attachments {
+        padding: 20px 16px;
+        margin: 20px 0;
+        border-top: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
+    }
+
+        .mail-attachments li {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+        }
+
+            .mail-attachments li:nth-child(2n-1) {
+                background: #f6f6f6;
+            }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#avatar').bind('mouseenter mouseleave', function () {
+            $(this).attr({
+                src: $(this).attr('data-other-src')
+                , 'data-other-src': $(this).attr('src')
+            })
+        });
+
+        $("#createSender").click(function () {
+
+            load_page('@Url.Action("CreateSender", "readEmail", new { sender = Model.sender })');
+        });
+
+
+        $('#reprocessBtn').click(function () {
+            window.location.href = '@Url.Action("Reprocessed", "readEmail", new { Id = "id" }).Replace("id", Model._id.ToString())';
+        });
+
+
+        if (($('#PDFAss').prop('checked')) || ($('#PDFNAss').prop('checked'))) {
+            $('#NomenclaturaPDF').show();
+            if ($('#isNomenclaturaPDF').prop('checked')) {
+                $("#NomenclaturaPDFData").show();
+            }
+            else {
+                $("#NomenclaturaPDFData").hide();
+            }
+        }
+        else {
+            $("#NomenclaturaPDF").hide();
+            $("#NomenclaturaPDFData").hide();
+        }
+
+        $('#PDFAss').change(function () {
+            if ($(this).is(':checked')) {
+                $('#NomenclaturaPDF').show();
+            }
+            else {
+                $("#NomenclaturaPDF").hide();
+                $("#NomenclaturaPDFData").hide();
+            }
+        });
+
+        $('#PDFNAss').change(function () {
+            if ($(this).is(':checked')) {
+                $('#NomenclaturaPDF').show();
+            }
+            else {
+                $("#NomenclaturaPDF").hide();
+                $("#NomenclaturaPDFData").hide();
+            }
+        });
+
+        $('#isNomenclaturaPDF').change(function () {
+            if ($(this).is(':checked')) {
+                $('#NomenclaturaPDFData').show();
+            }
+            else {
+                $("#NomenclaturaPDFData").hide();
+            }
+        });
+        if ($('#DoYouWantForward').prop('checked')) {
+            $('#DoYouWantForwardChoose').show();
+        }
+        else {
+            $("#DoYouWantForwardChoose").hide();
+        }
+
+        if ($('#DoYouWantForwardFTP').prop('checked')) {
+            $("#DoYouWantForwardChooseFTP").show();
+        }
+        else {
+            $("#DoYouWantForwardChooseFTP").hide();
+        }
+
+        if ($('#DoYouWantForwardEmail').prop('checked')) {
+            $("#DoYouWantForwardChooseEmail").show();
+        }
+        else {
+            $("#DoYouWantForwardChooseEmail").hide();
+        }
+
+        $('#DoYouWantForward').change(function () {
+            if ($(this).is(':checked')) {
+                $('#DoYouWantForwardChoose').show();
+                if ($('#DoYouWantForwardFTP').prop('checked'))
+                    $("#DoYouWantForwardChooseFTP").show();
+                if ($('#DoYouWantForwardEmail').prop('checked'))
+                    $("#DoYouWantForwardChooseEmail").show();
+            }
+            else {
+                $("#DoYouWantForwardChoose").hide();
+                $("#DoYouWantForwardChooseFTP").hide();
+                $("#DoYouWantForwardChooseEmail").hide();
+            }
+        });
+
+        $('#DoYouWantForwardEmail').change(function () {
+            if ($(this).is(':checked')) {
+                $('#DoYouWantForwardChooseEmail').show();
+            }
+            else {
+                $("#DoYouWantForwardChooseEmail").hide();
+            }
+        });
+
+
+        $('#DoYouWantForwardFTP').change(function () {
+            if ($(this).is(':checked')) {
+                $('#DoYouWantForwardChooseFTP').show();
+            }
+            else {
+                $("#DoYouWantForwardChooseFTP").hide();
+            }
+        });
+
+
+    });
+
+    function load_page(url) {
+        $('#modal-form-content').load(url, function () {
+            $("#modal-form").modal();
+        });
+    }
+
+    function backIndex() {
+        window.location = 'http://localhost/' + '@Url.Action("index","readEmail")';
+    }
+
+    function test() {
+        $('#myModal').modal('show');
+    }
+
+
+</script>
+
+<div class="mail-container">
+    <div class="mail-container-header show">
+        @Model.subject
+        @if (Model.haveAttach)
+        {
+            <i class="fa fa-paperclip" style="font-size: 18px;margin-left:7px;"></i>
+        }
+
+    </div>
+
+    <div class="mail-controls clearfix">
+        <div class="btn-toolbar wide-btns pull-left" role="toolbar">
+            <div class="btn-group">
+                <button id="reprocessBtn" type="button" class="btn"><i class="fa fa fa-refresh"></i></button>
+                <button type="button" class="btn"><i class="fa fa-trash-o"></i></button>
+            </div>
+
+        </div>
+
+        <div class="btn-toolbar pull-right" role="toolbar">
+            <div class="btn-group">
+                <button type="button" class="btn" onclick="backIndex()"><i class="fa fa-arrow-left"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mail-info">
+        <button onclick="test()" style="float:left; padding:0px; border-width:0px;">
+            @*<button type="button" data-rel="ajax-delete-trigger" data-toggle="modal" data-target="#modal-form" href="@Url.Action("CreateSender", "readEmail", new { sender = Model.sender })" style="float:left; padding:0px; border-width:0px;">*@
+
+            <img id="avatar" class="avatar" data-other-src="@System.Configuration.ConfigurationManager.AppSettings.Get("eSuiteAppLink")/assets/PixelAdmin/demo/avatars/6over.jpg" src="@System.Configuration.ConfigurationManager.AppSettings.Get("eSuiteAppLink")/assets/PixelAdmin/demo/avatars/6.jpg" />
+        </button>
+        @*<img @*onclick="showDialog()"  data-rel="ajax-edit-trigger" href="@Url.Action("CreateSender", "readEmail", new { Sender = "sender"}).Replace("sender",@Model.sender)" data-toggle="modal" data-target="#modal-form" data-url="@Url.Action("CreateSender", "readEmail", new { Sender = "sender"}).Replace("sender",@Model.sender)" data-other-src="@System.Configuration.ConfigurationManager.AppSettings.Get("eSuiteAppLink")/assets/PixelAdmin/demo/avatars/6over.jpg" src="" alt="" id="avatar" class="avatar">*@
+        <div class="from">
+            <div class="name">@Model.senderName</div>
+            <div class="email">@Model.sender</div>
+        </div>
+
+        <div class="date">@Model.dateSend</div>
+    </div>
+    <ul class="mail-attachments" style="margin-top:-1px;">
+        @foreach (var l in Model.listFiles)
+            {
+            <li style="margin-top:-10px;">
+                <span class="label label-warning">@l.Split('.')[1]</span><a style="margin-left: 6px;" href="@Url.Action("DownloadFile","readEmail", new { pathfile = $"{Model._id};{l}" })" class="text-semibold">@l</a>&nbsp;<span class="text-muted"></span>
+                <div class="pull-right">
+                    <a href="#">View</a>
+                </div>
+            </li>
+        }
+    </ul>
+
+    <div class="mail-message-body">
+        @Html.Raw(Model.body)
+    </div>
+</div>
+
+<div id="myModal" class="modal" style="display:none;">
+    <div class="modal-dialog modal-lg" data-modal-size="moda-l">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">@this.Get(DictionaryEntryKeys.EConnectorSupplierCreate)</h4>
+            </div>
+            <div class="modal-body">
+                <form id="doc-edit-form"
+                      action="@Url.Action("CreateFinalSender", "eConnectorSenders")"
+                      method="post"
+                      class="form-horizontal">
+
+                    <div class="tab-content">
+                        <div id="econnectorsender-modal-details" class="tab-pane fade in active">
+                            @*@Html.HiddenFor(e => e.Pkid)*@
+                            @Html.HiddenFor(e => e.IsFromCreate)
+                            <div class="row">
+                                @Html.PixelAdminTextBoxWithColFor(e => e.EmailName, 8, null, InputOptions.Default)
+
+                                @if (String.IsNullOrWhiteSpace(Model.Nif))
+                                {
+                                    @Html.PixelAdminTextBoxWithColFor(e => e.Nif, 4, null, InputOptions.Default)
+                                }
+                                else
+                                {
+                                    @Html.PixelAdminTextBoxWithColFor(e => e.Nif, 4, null, InputOptions.ReadOnly)
+                                }
+                            </div>
+                            <div class="row">
+                                @Html.PixelAdminTextBoxWithColFor(e => e.EmailAddress, 6, null, InputOptions.Default)
+                                @Html.PixelAdminSwitcherWithColFor(e => e.PdfLink, 2, null, InputOptions.Default)
+                                @Html.PixelAdminSwitcherWithColFor(e => e.Enabled, 2, null, InputOptions.Default)
+                                @Html.PixelAdminSwitcherWithColFor(e => e.ConcatAnexos, 2, null, InputOptions.Default)
+                            </div>
+                            <div class="row">
+                                @Html.PixelAdminSelectWithColFor(e => e.Mercado, Model.AvailableMarkets, 6, null, InputOptions.Default)
+                                @Html.PixelAdminSelectWithColFor(e => e.XmlType, Model.AvailableXmlTypes, 6, null, InputOptions.Default)
+                            </div>
+                            <div class="row">
+                                @Html.PixelAdminSwitcherWithColFor(e => e.XMLAss, 3, null, InputOptions.Default)
+                                @Html.PixelAdminSwitcherWithColFor(e => e.XMLNAss, 3, null, InputOptions.Default)
+                                @Html.PixelAdminSwitcherWithColFor(e => e.PDFAss, 3, null, InputOptions.Default)
+                                @Html.PixelAdminSwitcherWithColFor(e => e.PDFNAss, 3, null, InputOptions.Default)
+                            </div>
+                            <div class="row" id="NomenclaturaPDF">
+                                @Html.PixelAdminSwitcherWithColFor(e => e.isNomenclaturaPDF, 3, null, InputOptions.Default)
+                            </div>
+                            <div class="row" id="NomenclaturaPDFData">
+                                @Html.PixelAdminSelectWithColFor(e => e.NomenclaturaPDFType, Model.AvailableNomenclaturaPDFTypes, 6, null, InputOptions.Default)
+                                @Html.PixelAdminTextBoxWithColFor(e => e.counterValue, 6, null, InputOptions.Default)
+                            </div>
+                            <div class="row" id="DoYouWantForwardDiv">
+                                @Html.PixelAdminSwitcherWithColFor(e => e.DoYouWantForward, 3, null, InputOptions.Default)
+                            </div>
+                            <div class="row" id="DoYouWantForwardChoose">
+                                @Html.PixelAdminSwitcherWithColFor(e => e.DoYouWantForwardEmail, 3, null, InputOptions.Default)
+                                @Html.PixelAdminSwitcherWithColFor(e => e.DoYouWantForwardFTP, 3, null, InputOptions.Default)
+                            </div>
+                            <div class="row" id="DoYouWantForwardChooseFTP">
+                                @Html.PixelAdminTextBoxWithColFor(e => e.ftpServer, 3, null, InputOptions.Default)
+                                @Html.PixelAdminTextBoxWithColFor(e => e.port, 3, null, InputOptions.Default)
+                                @Html.PixelAdminTextBoxWithColFor(e => e.username, 3, null, InputOptions.Default)
+                                @Html.PixelAdminPasswordWithColFor(e => e.password, 3, null, InputOptions.Default)
+                            </div>
+                            <div class="row" id="DoYouWantForwardChooseEmail">
+                                @Html.PixelAdminTextBoxWithColFor(e => e.listEmails, 12, null, InputOptions.Default)
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+

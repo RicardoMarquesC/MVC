@@ -1,0 +1,23 @@
+﻿@model eBillingSuite.ViewModels.EDigitalDocumentExpirationVM
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+}
+
+<form method="post">
+	<div class="panel-heading">
+		<span class="panel-title">@this.Get(DictionaryEntryKeys.DigitalDocumentExpiration)</span>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			@Html.HiddenFor(e => e.WaitListPkid)
+			@Html.PixelAdminTextBoxWithColFor(e => e.WaitList, 4, null, InputOptions.Default)
+            @Html.HiddenFor(e => e.ProcessamentoPkid)
+            @Html.PixelAdminTextBoxWithColFor(e => e.Processamento, 4, null, InputOptions.Default)
+			@Html.HiddenFor(e => e.SeparacaoPkid)
+			@Html.PixelAdminTextBoxWithColFor(e => e.Separacao, 4, null, InputOptions.Disabled)
+		</div>
+	</div>
+	<div class="panel-footer text-right">
+		<button class="btn btn-primary">@this.Get(DictionaryEntryKeys.Submit)</button>
+	</div>
+</form>

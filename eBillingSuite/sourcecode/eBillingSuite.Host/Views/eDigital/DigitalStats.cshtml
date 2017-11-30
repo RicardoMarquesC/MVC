@@ -1,0 +1,243 @@
+﻿
+@model eBillingSuite.ViewModels.StatsDigitalVM
+
+@{
+    Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+
+    var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+    var routeDataValues = Request.RequestContext.RouteData.Values;
+    var action = routeDataValues["action"].ToString().ToLower();
+}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+<!--Estatisticas Ano-->
+<div class="col-sm-6 col-md-6">
+    <div>
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.EstatisticasAno)</span>
+        </div>
+        <div class="panel-body">
+            <div class="graph-container">
+                <div id="lineStatsByYear"></div>
+            </div>
+            <script>
+                Morris.Line({
+                    element: 'lineStatsByYear',
+                    data: [
+                            @foreach (var by in Model.DataByYear)
+							{
+
+								<text>
+                                {
+                                    Year: '@(by.Year)',
+                                    Count: '@(by.Count)'
+                                },
+                                    </text>
+							}
+                    ],
+                    xkey: 'Year',
+                    ykeys: ['Count'],
+                    labels: ['Valor:'],
+                    parseTime: false,
+                    resize: true
+                });
+                @*.on('click', function (i, row, a, b, c) {
+						window.location.href =  '@Html.Raw(Model.BaseUrlForDetails)' + "&OptionID="+row.OptionID;
+					});*@
+
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--Estatisticas Mes-Ano-->
+<div class="col-sm-6 col-md-6">
+    <div>
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.EstatisticasMesAno)</span>
+        </div>
+        <div class="panel-body">
+            <div class="graph-container">
+                <div id="lineStatsByMonthYear"></div>
+            </div>
+            <script>
+                Morris.Line({
+                    element: 'lineStatsByMonthYear',
+                    data: [
+                            @foreach (var by in Model.DataByMonthYear)
+							{
+
+							<text>
+                                {
+                                    MonthYear: '@(by.MonthYear)',
+                                    Count: '@(by.Count)'
+                                },
+                                    </text>
+							}
+                    ],
+                    xkey: 'MonthYear',
+                    ykeys: ['Count'],
+                    labels: ['Valor:'],
+                    parseTime: false,
+                    resize: true
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--Estatisticas Tipo Doc-->
+<div class="col-sm-6 col-md-6">
+    <div>
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.EstatisticasTipoDoc)</span>
+        </div>
+        <div class="panel-body">
+            <div class="graph-container">
+                <div id="donut-statsTipoDoc"></div>
+            </div>
+            <script>
+                Morris.Donut({
+                    element: 'donut-statsTipoDoc',
+                    data: [
+
+                        @foreach (var by in Model.DataByDocType)
+						{
+
+							<text>
+                                {
+                                    label: '@(by.DocTYpe)',
+                                    value: '@(by.Count)'
+                                },
+                            </text>
+						}
+                    ],
+                    resize: true
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--Estatisticas por Utilizador-->
+<div class="col-sm-6 col-md-6">
+    <div>
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.EstatisticasPorUtilizador)</span>
+        </div>
+        <div class="panel-body">
+            <div class="graph-container">
+                <div id="hero-bar-statsUser"></div>
+            </div>
+            <script>
+                Morris.Bar({
+                    element: 'hero-bar-statsUser',
+                    data: [
+
+                        @foreach (var by in Model.DataByUser)
+						{
+
+							<text>
+                                {
+                                    label: '@(by.User)',
+                                    value: '@(by.Count)'
+                                },
+                            </text>
+						}
+                    ],
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Valor'],
+                    barRatio: 0.4,
+                    xLabelAngle: 0,
+                    hideHover: 'false',
+                    gridLineColor: '#cfcfcf',
+                    resize: true
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--Estatitisticas por EstatisticasUserRangeTime-->
+<div class="col-sm-6 col-md-6">
+    <div>
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.EstatisticasUserRangeTime)</span>
+        </div>
+        <div class="panel-body">
+            <div class="graph-container">
+                <div id="hero-bar-statsUserRangeTime"></div>
+            </div>
+            <script>
+                Morris.Bar({
+                    element: 'hero-bar-statsUserRangeTime',
+                    data: [
+
+                        @foreach (var by in Model.DataByUserRangeTime)
+						{
+
+							<text>
+                                {
+                                    label: '@(by.User)',
+                                    value: '@(by.RangeTime)'
+                                },
+                            </text>
+						}
+                    ],
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Valor'],
+                    barRatio: 0.4,
+                    xLabelAngle: 0,
+                    hideHover: 'false',
+                    gridLineColor: '#cfcfcf',
+                    resize: true
+                });
+            </script>
+        </div>
+    </div>
+</div>
+
+<!--Estatitisticas por Companhia-->
+<div class="col-sm-6 col-md-6">
+    <div>
+        <div class="panel-heading">
+            <span class="panel-title">@this.Get(DictionaryEntryKeys.EstatisticasPorCompanhia)</span>
+        </div>
+        <div class="panel-body">
+            <div class="graph-container">
+                <div id="hero-bar-statsCompany"></div>
+            </div>
+            <script>
+                Morris.Bar({
+                    element: 'hero-bar-statsCompany',
+                    data: [
+
+                        @foreach (var by in Model.DataByCompany)
+						{
+
+							<text>
+                                {
+                                    label: '@(by.Companhia)',
+                                    value: '@(by.Count)'
+                                },
+                            </text>
+						}
+                    ],
+                    xkey: 'label',
+                    ykeys: ['value'],
+                    labels: ['Valor'],
+                    barRatio: 0.4,
+                    xLabelAngle: 0,
+                    hideHover: 'false',
+                    gridLineColor: '#cfcfcf',
+                    resize: true
+                });
+            </script>
+        </div>
+    </div>
+</div>
+

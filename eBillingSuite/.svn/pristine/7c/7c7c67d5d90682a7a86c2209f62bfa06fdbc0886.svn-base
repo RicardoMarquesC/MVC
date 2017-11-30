@@ -1,0 +1,88 @@
+﻿@{
+    var pc = ViewBag.PixelAdminPageContext as IPixelAdminPageContext;
+    var context = this.GetContext() as IeBillingSuiteRequestContext;
+    bool usesAD = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["UsesAD"].ToString());
+
+
+}
+
+@helper RenderNavigationEntry(BasePixelAdminMenuEntry entry,bool isRoot=true){
+	if(entry is PixelAdminMenuDivider){
+		<li class="divider"></li>
+	}	
+	else if(entry is PixelAdminMenuEntry){
+		var e = entry as PixelAdminMenuEntry;
+		var hasSubMenu = isRoot && e.SubMenu != null && e.SubMenu.Count > 0;
+		<li class="@( hasSubMenu ?"dropdown":null)">
+			<a class="@(hasSubMenu?"dropdown-toggle":null)" data-toggle="@(hasSubMenu?"dropdown":null)" href="@(string.IsNullOrWhiteSpace(e.Url)?"#":e.Url)">@e.Label</a>
+			@if(isRoot && e.SubMenu != null && e.SubMenu.Count > 0)
+			{
+			<ul class="dropdown-menu">
+				@foreach (var subEntry in e.SubMenu){
+					@RenderNavigationEntry(subEntry,false)
+				}
+			</ul>
+			}
+		</li>		
+	}
+}
+	<div id="main-navbar" class="navbar" role="navigation">
+		<!-- Main menu toggle -->
+		<button type="button" id="main-menu-toggle"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
+		
+		<div class="navbar-inner">			
+			<!-- Main navbar header -->
+			<div class="navbar-header">
+				<!-- Logo -->
+				<a href="@Url.Action("Index","Home")" class="navbar-btn">
+					<div><img style="vertical-align: -8px; margin-top: 5px;" alt="@pc.ApplicationName" src="@pc.ApplicationLogo" /></div>&nbsp;
+				</a>
+            <!-- Main navbar toggle -->
+				@*<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse"><i class="navbar-icon fa fa-bars"></i></button>*@
+
+			</div> <!-- / .navbar-header -->
+			<div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
+				<div>
+					<ul class="nav navbar-nav">
+						@foreach (var entry in pc.Navigation) { 
+							@RenderNavigationEntry(entry)
+						}
+					</ul> <!-- / .navbar-nav -->
+                    <div class="right clearfix">
+                        <ul class="nav navbar-nav pull-right right-navbar-nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="nav-icon fa fa-headphones" style="font-size: 19px;margin-top: 16px;margin-right: -4px;"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li style="cursor:pointer"><a><i class="fa fa-phone"></i>&nbsp;@context.GetDictionaryValue(eBillingSuite.Globalization.DictionaryEntryKeys.Phone)</a></li>
+                                    <li class="divider"></li>
+                                    <li style="cursor:pointer" href="@Url.Action("RequestAcessControl","Support")" data-toggle="modal" data-target="#modal-form" data-url="@Url.Action("RequestAcessControl","Support")"><a><i class="fa fa-laptop"></i>&nbsp;@context.GetDictionaryValue(eBillingSuite.Globalization.DictionaryEntryKeys.RemoteAccess)</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle user-menu" data-toggle="dropdown">
+                                    <img src="~/assets/PixelAdmin/demo/avatars/6.jpg" alt="">
+                                    @if (usesAD)
+                                    {
+                                        <span>@context.UserIdentity.Name</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@pc.UserName</span>
+                                    }
+                                </a>
+                                <ul class="dropdown-menu">
+
+                                    
+                                    <li><a href="@Url.Action("SignOut","SignIn")"><i class="dropdown-icon fa fa-power-off"></i>&nbsp;&nbsp;@context.GetDictionaryValue(eBillingSuite.Globalization.DictionaryEntryKeys.LogoutLabel)</a></li>
+                                </ul>
+                            </li>
+                        </ul> <!-- / .navbar-nav -->
+                    </div> <!-- / .right -->
+				</div>
+			</div> <!-- / #main-navbar-collapse -->
+		</div> <!-- / .navbar-inner -->
+	</div> <!-- / #main-navbar -->
+<!-- /2. $END_MAIN_NAVIGATION -->
+

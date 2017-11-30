@@ -1,0 +1,47 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+    var routeDataValues = Request.RequestContext.RouteData.Values;
+    var action = routeDataValues["action"].ToString().ToLower();
+}
+
+@section header{
+}
+<script>
+	init.push(function () {
+		$('#x-tabs').tabdrop();
+	});
+</script>
+<div>
+    <ul id="x-tabs" style="margin-top: 5px;" class="nav nav-tabs">
+        <li class="@(action == "index" ? "active" : null)">
+            <a href="@Url.Action("Index", "Stats")">@Texts.OutboundInbound</a>
+        </li>
+        <li class="@(action == "faturasoutros" ? "active" : null)">
+            <a href="@Url.Action("FaturasOutros", "Stats")">@Texts.FaturasAT</a>
+        </li>
+        <li class="@(action == "doctransporte" ? "active" : null)">
+            <a href="@Url.Action("DocTransporte", "Stats")">@Texts.DocumentoTransporte</a>
+        </li>
+        <li class="@(action == "indicadoresquantidades" ? "active" : null)">
+            <a href="@Url.Action("IndicadoresQuantidades", "Stats")">@Texts.Quantidades</a>
+        </li>
+        <li class="@(action == "indicadoresquantias" ? "active" : null)">
+            <a href="@Url.Action("IndicadoresQuantias", "Stats")">@Texts.Quantias</a>
+        </li>
+        <li class="@(action == "indicadoresperformance" ? "active" : null)">
+            <a href="@Url.Action("IndicadoresPerformance", "Stats")">@Texts.Performance</a>
+        </li>
+        <li class="@(action == "integratedfiles" ? "active" : null)">
+            <a href="@Url.Action("IntegratedFiles", "Stats")">@Texts.IntegratedPackets</a>
+        </li>
+        <li class="@(action == "documentoserros" ? "active" : null)">
+            <a href="@Url.Action("DocumentosErros", "Stats")">@Texts.DocumentosErros</a>
+        </li>
+    </ul>
+
+    <div class="tab-content tab-content-bordered no-padding">
+        @RenderBody()
+    </div> <!-- / .tab-content -->
+</div>

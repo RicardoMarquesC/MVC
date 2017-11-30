@@ -1,0 +1,28 @@
+﻿using eBillingSuite.Globalization.Generators;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace eBillingSuite.Models
+{
+    [DoNotGenerateDictionaryEntry]
+
+    public class DigitalMailData
+    {
+        public int id { get; set; }
+        public string nameAccount { get; set; }
+        public string email { get; set; }
+        public string serverType { get; set; }
+        public string serverURL { get; set; }
+        public string serverUsername { get; set; }
+        public string serverPassword { get; set; }
+        public string serverPort { get; set; }
+        public bool isSSL { get; set; }
+        public string instance { get; set; }
+        public string obs { get; set; }
+        public List<SelectListItem> protocolReception { get; set; }
+        public List<SelectListItem> instancesList { get; set; }
+    }
+}

@@ -1,0 +1,34 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+	var routeDataValues = Request.RequestContext.RouteData.Values;
+	var action = routeDataValues["action"].ToString().ToLower();
+}
+
+@section header{
+}
+<script>
+	init.push(function () {
+		$('#x-tabs').tabdrop();
+	});
+</script>
+<div>
+	<ul id="x-tabs" style="margin-top: 5px;" class="nav nav-tabs">
+		@if (user.Permissions.Contains(Permissions.EECONNECTOR_REMETENTES_REMETENTES))
+		{
+			<li class="@(action == "index" ? "active" : null)">
+				<a href="@Url.Action("index", "eConnectorSenders")">@Texts.Remetentes</a>
+			</li>
+		}
+        @if (user.Permissions.Contains(Permissions.ECONNECTOR_CLIENTES_CLIENTES))
+        {
+            <li class="@(action == "customer" ? "active" : null)">
+                <a href="@Url.Action("Customer", "eConnectorSenders")">@Texts.Clientes</a>
+            </li>
+        }
+	</ul>
+	<div class="tab-content tab-content-bordered no-padding">
+		@RenderBody()
+	</div> <!-- / .tab-content -->
+</div>

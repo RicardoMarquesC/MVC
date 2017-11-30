@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using eBillingSuite.Model;
+using eBillingSuite.Model.EBC_DB;
+
+namespace eBillingSuite.Globalization.Generators
+{
+	public abstract class BaseDictionaryEntriesGenerator : Dictionary<string, string>
+	{
+		private Languages _language;
+
+		public BaseDictionaryEntriesGenerator(Languages language)
+		{
+			_language = language;
+		}
+
+		public string Get(string key)
+		{
+			if (this.ContainsKey(key))
+				return this[key];
+
+			return null;
+		}
+
+		public IEnumerable<DictionaryEntries> GenerateEntries()
+		{
+			foreach (var key in Keys)
+			{
+				var value = this[key];
+
+				if (string.IsNullOrWhiteSpace(value))
+					value = "[No value for " + key + "]";
+
+				yield return new DictionaryEntries
+				{
+					Key = key,
+					Value = value,
+					Languages = _language
+				};
+			}
+		}
+	}
+}

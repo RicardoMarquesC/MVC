@@ -1,0 +1,109 @@
+﻿using eBillingSuite.Globalization.Generators;
+using eBillingSuite.Model;
+using eBillingSuite.Model.EBC_DB;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web.Mvc;
+using System.Xml;
+using System.Xml.XPath;
+using System.Xml.Xsl;
+
+namespace eBillingSuite.ViewModels
+{
+	public class EBCTXTInboundConfigsVM
+	{
+		private IECCListRepositories _eCConfigRepositories;
+		private IeBillingSuiteRequestContext _context;
+		public Guid FKInstanceID {get;set;}
+		public List<EBC_XmlToTxtTransform> listOfConfigs;
+		//public List<IEnumerable<SelectListItem>> AvailableFieldsToChoose = new List<IEnumerable<SelectListItem>>();
+		//public List<IEnumerable<SelectListItem>> AvailableRegexsToChoose = new List<IEnumerable<SelectListItem>>();
+		//public List<IEnumerable<SelectListItem>> AvailableInvoiceRegionsToChoose = new List<IEnumerable<SelectListItem>>();
+
+		public EBCTXTInboundConfigsVM(List<EBC_XmlToTxtTransform> model, IECCListRepositories _eCConfigRepositories, IeBillingSuiteRequestContext _context, Guid instancia)
+		{
+			this.listOfConfigs = model;
+			this._eCConfigRepositories = _eCConfigRepositories;
+			this._context = _context;
+			this.FKInstanceID = instancia;
+
+			var values = _eCConfigRepositories.instancesRepository.GetEBC_Instances(_context.UserIdentity.Instances);
+			AvailableInstances = values
+					.Select(v => new SelectListItem
+					{
+						Text = v.Name,
+						Value = v.PKID.ToString(),
+						Selected = v.PKID == FKInstanceID
+					})
+					.ToList();
+		}
+
+		public EBCTXTInboundConfigsVM(EBC_XmlToTxtTransform model, IECCListRepositories _eCConfigRepositories, IeBillingSuiteRequestContext _context, Guid instancia, Guid ConfigTXTid)
+		{
+			this.FKInstanceID = instancia;
+			this.pkid = model.pkid;
+			this.posicaoTxt = model.posicaoTxt;
+			this.InboundPacketPropertyName = model.InboundPacketPropertyName;
+			this.tipo = model.tipo;
+
+			var fields = _eCConfigRepositories.connectorInboundPacketInfoObjectPropertiesRepository
+				.Set
+				.GroupBy(ect => ect.PropertyName)
+				.Select(g => new { PropertyName = g.FirstOrDefault().PropertyName, Pkid = g.FirstOrDefault().Pkid }).ToList();
+
+
+			AvailableFields = fields
+			.Select(v => new SelectListItem
+			{
+				Text = v.PropertyName,
+				Value = v.PropertyName.ToString(),
+				Selected = v.PropertyName == model.InboundPacketPropertyName
+			})
+			.ToList();
+
+			List<TipoRegioes> typeRegions = new List<TipoRegioes>();
+			TipoRegioes t1 = new TipoRegioes { id = 1, valor = "Cabecalho" };
+			TipoRegioes t2 = new TipoRegioes { id = 2, valor = "LineItem" };
+			TipoRegioes t3 = new TipoRegioes { id = 3, valor = "ResumoIva" };
+			typeRegions.Add(t1); typeRegions.Add(t2); typeRegions.Add(t3);
+
+
+			AvailableInvoiceRegionTypes = typeRegions
+				.Select(v => new SelectListItem
+				{
+					Text = v.valor,
+					Value = v.valor.ToString(),
+					Selected = v.valor == model.tipo
+				})
+				.ToList();
+				
+		}
+
+		[DoNotGenerateDictionaryEntry]
+		public System.Guid pkid { get; set; }
+		[DoNotGenerateDictionaryEntry]
+		public System.Guid fkInstanceId { get; set; }
+		public string InboundPacketPropertyName { get; set; }
+		public string tipo { get; set; }
+		public int posicaoTxt { get; set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableFields { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableInstances { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableRegexs { get; private set; }
+		[DoNotGenerateDictionaryEntry]
+		public IEnumerable<SelectListItem> AvailableInvoiceRegionTypes { get; private set; }
+
+		[DoNotGenerateDictionaryEntry]
+		public class TipoRegioes
+		{
+			public int id;
+			public string valor;
+		}
+	}
+}

@@ -1,0 +1,7 @@
+﻿namespace eBillingSuite.Globalization
+{
+	public interface IDictionaryDataSource
+	{
+		string this[int languageID, string key] { get; }
+	}
+}

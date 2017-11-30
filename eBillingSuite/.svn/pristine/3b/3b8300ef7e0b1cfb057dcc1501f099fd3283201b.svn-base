@@ -1,0 +1,664 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9207A875-47B9-4E6D-8829-F762C21686E8}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>eBillingSuite</RootNamespace>
+    <AssemblyName>eBillingSuite.Host</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elmah.Mvc, Version=2.1.2.1389, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.7.0.2\lib\net45\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.Mvc5.7.0.0\lib\net45\FluentValidation.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.9.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.1.9.0\lib\net45\LinqKit.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=1.16.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.1.16.1\lib\net45\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="MimeKit, Version=1.16.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.1.16.1\lib\net45\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcFlash.Core, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcFlash.Core.2.1.0\lib\net40\MvcFlash.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc">
+      <HintPath>..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="SgmlReaderDll">
+      <HintPath>..\packages\SgmlReader.1.8.11\lib\4.0\SgmlReaderDll.dll</HintPath>
+    </Reference>
+    <Reference Include="Shortcut.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shortcut.Core.1.0.35\lib\net45\Shortcut.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Shortcut.PixelAdmin.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\PixelAdminMVC5.0.8.00\lib\Shortcut.PixelAdmin.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleCrypto, Version=26.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleCrypto.0.3.30.26\lib\SimpleCrypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\PixelAdmin\demo\avatars\1.jpg" />
+    <Content Include="assets\PixelAdmin\demo\avatars\2.jpg" />
+    <Content Include="assets\PixelAdmin\demo\avatars\3.jpg" />
+    <Content Include="assets\PixelAdmin\demo\avatars\4.jpg" />
+    <Content Include="assets\PixelAdmin\demo\avatars\5.jpg" />
+    <Content Include="assets\PixelAdmin\demo\avatars\6.jpg" />
+    <Content Include="assets\PixelAdmin\demo\avatars\6over.jpg" />
+    <Content Include="assets\PixelAdmin\demo\demo.js" />
+    <Content Include="assets\PixelAdmin\demo\less-1.7.0.js" />
+    <Content Include="assets\PixelAdmin\demo\logo-big.png" />
+    <Content Include="assets\PixelAdmin\demo\pricing-bg.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-1.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-2.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-3.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-4.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-5.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-6.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-7.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-8.jpg" />
+    <Content Include="assets\PixelAdmin\demo\signin-bg-9.jpg" />
+    <Content Include="assets\PixelAdmin\demo\suporte.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\adminflare.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\asphalt.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\clean.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\default.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\dust.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\fresh.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\frost.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\purple-hills.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\silver.png" />
+    <Content Include="assets\PixelAdmin\demo\themes\white.png" />
+    <Content Include="assets\PixelAdmin\fonts\font-awesome\fontawesome-webfont.svg" />
+    <Content Include="assets\PixelAdmin\images\pixel-admin\avatar.png" />
+    <Content Include="assets\PixelAdmin\images\pixel-admin\blank.png" />
+    <Content Include="assets\PixelAdmin\images\pixel-admin\blur.svg" />
+    <Content Include="assets\PixelAdmin\images\pixel-admin\main-menu-bg.png" />
+    <Content Include="assets\PixelAdmin\images\pixel-admin\main-navbar-bg.png" />
+    <Content Include="assets\PixelAdmin\images\pixel-admin\main-navbar-logo.png" />
+    <Content Include="assets\PixelAdmin\images\plugins\bootstrap-editable\loading.gif" />
+    <Content Include="assets\PixelAdmin\images\plugins\jquery.minicolors.png" />
+    <Content Include="assets\PixelAdmin\images\themes\adminflare\body-bg.png" />
+    <Content Include="assets\PixelAdmin\images\themes\adminflare\ie-navbar-bg.png" />
+    <Content Include="assets\PixelAdmin\images\themes\adminflare\menu-bg.png" />
+    <Content Include="assets\PixelAdmin\images\themes\clean\body-bg.gif" />
+    <Content Include="assets\PixelAdmin\javascripts\angular.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\bootstrap-editable-demo.js" />
+    <Content Include="assets\PixelAdmin\javascripts\bootstrap-editable-demo.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\bootstrap.js" />
+    <Content Include="assets\PixelAdmin\javascripts\bootstrap.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\dataTables.buttons.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\demo-mock.js" />
+    <Content Include="assets\PixelAdmin\javascripts\demo-mock.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\ie.js" />
+    <Content Include="assets\PixelAdmin\javascripts\ie.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\jquery-ui-extras.js" />
+    <Content Include="assets\PixelAdmin\javascripts\jquery-ui-extras.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\jquery.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\PixelAdmin\javascripts\jquery.mockjax.js" />
+    <Content Include="assets\PixelAdmin\javascripts\jquery.mockjax.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\pdfmake.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\pixel-admin.js" />
+    <Content Include="assets\PixelAdmin\javascripts\pixel-admin.min.js" />
+    <Content Include="assets\PixelAdmin\javascripts\vfs_fonts.js" />
+    <Content Include="assets\PixelAdmin\stylesheets\bootstrap.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\bootstrap.min.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\pages.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\pages.min.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\pixel-admin.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\pixel-admin.min.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\rtl.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\rtl.min.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\themes.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\themes.min.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\widgets.css" />
+    <Content Include="assets\PixelAdmin\stylesheets\widgets.min.css" />
+    <Content Include="assets\PI\demo-list.js" />
+    <Content Include="assets\PI\demo.css" />
+    <Content Include="assets\PI\demo.js" />
+    <Content Include="assets\PI\dom.jsPlumb-1.6.4-min.js" />
+    <Content Include="assets\PI\Images\homePagePI_v2_newLogos.jpg" />
+    <Content Include="assets\PI\Images\IMG_17102014_142503.png" />
+    <Content Include="assets\PI\Images\logotipo.png" />
+    <Content Include="assets\PI\Images\schema_connector.gif" />
+    <Content Include="assets\PI\Images\schema_digital.gif" />
+    <Content Include="assets\PI\Images\schema_edi.gif" />
+    <Content Include="assets\PI\jsplumb.css" />
+    <Content Include="assets\PI\morris\morris.css" />
+    <Content Include="assets\PI\morris\morris.js" />
+    <Content Include="assets\PI\morris\morris.min.js" />
+    <Content Include="assets\PI\raphael-min.js" />
+    <Content Include="assets\SH\jqDataTableExtension.js" />
+    <Content Include="assets\SH\AjaxForms.js" />
+    <Content Include="assets\SH\Images\logo-blue.png" />
+    <Content Include="assets\SH\Images\logo-white.png" />
+    <Content Include="assets\SH\Images\no-avatar.jpg" />
+    <Content Include="assets\SH\PeoplePortal.css" />
+    <Content Include="assets\Vendors\jquery.fileupload.css" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Shared\DisplayTemplates\SimpleMessage.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MessageBase.cshtml" />
+    <Content Include="Views\Shared\_LayoutMainNavigation.cshtml" />
+    <Content Include="Views\Shared\_LayoutMainMenu.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_eMCATLayout.cshtml" />
+    <Content Include="Views\eMCAT\Configurations.cshtml" />
+    <Content Include="assets\SH\PeoplePortal.css.map" />
+    <Content Include="assets\SH\PeoplePortal.less" />
+    <Content Include="assets\SH\portuguese.json" />
+    <Content Include="Views\eMCAT\Credentials.cshtml" />
+    <Content Include="Views\eEDI\Costumers.cshtml" />
+    <Content Include="Views\Shared\_eEDILayout.cshtml" />
+    <Content Include="Views\eEDI\EditCostumer.cshtml" />
+    <Content Include="Views\eEDI\Senders.cshtml" />
+    <Content Include="Views\eEDI\EditSender.cshtml" />
+    <Content Include="Views\eEDI\ReceivedDocs.cshtml" />
+    <Content Include="Views\eEDI\SentDocs.cshtml" />
+    <Content Include="Views\eEDI\EDIInboundDetail.cshtml" />
+    <Content Include="Views\eEDI\EDIOutboundDetail.cshtml" />
+    <Content Include="Views\Shared\_eDigitalLayout.cshtml" />
+    <Content Include="Views\eDigital\Index.cshtml" />
+    <Content Include="Views\eDigital\Template.cshtml" />
+    <Content Include="Views\eDigital\XmlManagment.cshtml" />
+    <Content Include="Views\eDigital\DocumentsExpiration.cshtml" />
+    <Content Include="Views\eDigital\DocumentsHistoric.cshtml" />
+    <Content Include="Views\eDigital\EditSupplier.cshtml" />
+    <Content Include="Views\eDigital\CreateSupplier.cshtml" />
+    <Content Include="Views\Shared\_eConnectorConfigsLayout.cshtml" />
+    <Content Include="Views\Shared\_eConnectorCustomersLayout.cshtml" />
+    <Content Include="Views\Shared\_eConnectorSendersLayout.cshtml" />
+    <Content Include="Views\eConnectorConfigs\Index.cshtml" />
+    <Content Include="Views\eDigital\Synchronization.cshtml" />
+    <Content Include="Views\eConnectorConfigs\DigitalCertificate.cshtml" />
+    <Content Include="Views\eConnectorConfigs\EmailConfigs.cshtml" />
+    <Content Include="Views\eConnectorConfigs\AlertsConfigs.cshtml" />
+    <Content Include="Views\eDigital\CreateDocumentType.cshtml" />
+    <Content Include="Views\eDigital\_templateCab.cshtml" />
+    <Content Include="Views\eDigital\_templateLines.cshtml" />
+    <Content Include="Views\eDigital\_templateVat.cshtml" />
+    <Content Include="Views\eDigital\CreateField.cshtml" />
+    <Content Include="Views\eConnectorConfigs\PacketConfigs.cshtml" />
+    <Content Include="Views\eConnectorConfigs\TXTConfigs.cshtml" />
+    <Content Include="Views\eConnectorConfigs\EditTXTConfigs.cshtml" />
+    <Content Include="Views\eConnectorConfigs\TXTInboundConfigs.cshtml" />
+    <Content Include="Views\eConnectorConfigs\EditTXTInboundConfigs.cshtml" />
+    <Content Include="Views\eConnectorConfigs\InstancesConfigs.cshtml" />
+    <Content Include="Views\eConnectorCustomers\Index.cshtml" />
+    <Content Include="Views\eConnectorCustomers\EditCustomer.cshtml" />
+    <Content Include="Views\eDigital\EditField.cshtml" />
+    <Content Include="Views\eConnectorCustomers\XmlConfigs.cshtml" />
+    <Content Include="Views\eDigital\_templateCabSupplier.cshtml" />
+    <Content Include="Views\eDigital\_templateLinesSupplier.cshtml" />
+    <Content Include="Views\eDigital\_templateVatSupplier.cshtml" />
+    <Content Include="Views\eDigital\CreateFieldSupplier.cshtml" />
+    <Content Include="Views\eDigital\EditFieldSupplier.cshtml" />
+    <Content Include="Views\Shared\_eWWFLayout.cshtml" />
+    <Content Include="Views\eWWF\Index.cshtml" />
+    <Content Include="Views\eWWF\Details.cshtml" />
+    <Content Include="Views\Shared\_DiaryTimeline.cshtml" />
+    <Content Include="Views\Shared\_FilePointers.cshtml" />
+    <Content Include="Views\eConnectorCustomers\AddXmlConfig.cshtml" />
+    <Content Include="Views\eWWF\Configurations.cshtml" />
+    <Content Include="Views\eWWF\InvoiceAproval.cshtml" />
+    <Content Include="Views\eConnectorSenders\Index.cshtml" />
+    <Content Include="Views\eConnectorSenders\EditSender.cshtml" />
+    <Content Include="Views\eConnectorSenders\XmlConfiguration.cshtml" />
+    <Content Include="Views\eConnectorSenders\CreateXmlField.cshtml" />
+    <Content Include="Views\eConnectorSenders\EditXmlField.cshtml" />
+    <Content Include="Views\eConnectorSenders\XmlUpload.cshtml" />
+    <Content Include="Views\eConnectorSenders\XmlMapping.cshtml" />
+    <Content Include="Views\eWWF\Aprovacoes.cshtml" />
+    <Content Include="Views\eDigital\InactiveModule.cshtml" />
+    <Content Include="Views\eEDI\InactiveModule.cshtml" />
+    <Content Include="Views\eMCAT\InactiveModule.cshtml" />
+    <Content Include="Views\eConnector\InactiveModule.cshtml" />
+    <Content Include="Views\Home\UnderConstruction.cshtml" />
+    <Content Include="Views\eConnectorSenders\CreateSender.cshtml" />
+    <Content Include="Views\eDigital\IntegrationConfigurations.cshtml" />
+    <Content Include="assets\PixelAdmin\fonts\font-awesome\fontawesome-webfont.woff" />
+    <Content Include="assets\PixelAdmin\fonts\font-awesome\fontawesome-webfont.ttf" />
+    <Content Include="assets\PixelAdmin\fonts\font-awesome\fontawesome-webfont.eot" />
+    <Content Include="assets\PixelAdmin\fonts\font-awesome\FontAwesome.otf" />
+    <Content Include="assets\PixelAdmin\demo\less\variables.less" />
+    <Content Include="assets\PixelAdmin\demo\less\mixins.less" />
+    <Content Include="assets\PixelAdmin\demo\less\colors.less" />
+    <Content Include="assets\PixelAdmin\demo\less\bootstrap-variables.less" />
+    <Content Include="assets\PixelAdmin\demo\less\bootstrap-mixins.less" />
+    <Content Include="assets\PixelAdmin\fonts\font.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\PixelAdmin\fonts\font2.woff2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="assets\PixelAdmin\stylesheets\buttons.dataTables.css" />
+    <None Include="Properties\PublishProfiles\Suite.pubxml" />
+    <Content Include="Views\eConnectorConfigs\InstancesConfigs.old.cshtml" />
+    <Content Include="Views\eConnectorConfigs\EditInstance.cshtml" />
+    <Content Include="Views\eDigital\XTEMPORARAY.cshtml" />
+    <Content Include="Views\Demo\SignIn.cshtml" />
+    <Content Include="Views\Demo\BreadCrumbs.cshtml" />
+    <Content Include="Views\Demo\Blank.cshtml" />
+    <Content Include="Views\Web.Config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\eUser\Index.cshtml" />
+    <Content Include="Views\eUser\PermissionsList.cshtml" />
+    <Content Include="Views\eDigital\DigitalStats.cshtml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Views\eDigital\DigitalProc.cshtml" />
+    <Content Include="Views\SignIn\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutSignIn.cshtml" />
+    <Content Include="Views\Home\teste.cshtml" />
+    <Content Include="Views\Support\Index.cshtml" />
+    <Content Include="Views\Support\RequestAcessControl.cshtml" />
+    <Content Include="Views\Stats\Details.cshtml" />
+    <Content Include="Views\Shared\_LayoutStats.cshtml" />
+    <Content Include="Views\Stats\FaturasOutros.cshtml" />
+    <Content Include="Views\Stats\DocTransporte.cshtml" />
+    <Content Include="Views\Stats\IndicadoresQuantidades.cshtml" />
+    <Content Include="Views\Stats\IndicadoresQuantias.cshtml" />
+    <Content Include="Views\Stats\IndicadoresPerformance.cshtml" />
+    <Content Include="Views\Stats\IntegratedFiles.cshtml" />
+    <Content Include="Views\Stats\DocumentosErros.cshtml" />
+    <Content Include="Views\Stats\Index.cshtml" />
+    <Content Include="Views\eDigital\DigitalInstances.cshtml" />
+    <Content Include="Views\eDigital\CreateInstance.cshtml" />
+    <Content Include="Views\eDigital\DigitalAccountingData.cshtml" />
+    <Content Include="Views\eConnectorSenders\UnknownList.cshtml" />
+    <Content Include="Views\readEmail\Index.cshtml" />
+    <Content Include="Views\readEmail\CreateSender.cshtml" />
+    <Content Include="Views\readEmail\Details.cshtml" />
+    <Content Include="Views\Stats\IndicadoresQuantidades.cshtml" />
+    <Content Include="Views\eDigital\instancesMails.cshtml" />
+    <Content Include="Views\eDigital\EditMail.cshtml" />
+    <Content Include="Views\eDigital\CreateInstanceMail.cshtml" />
+    <Content Include="Views\eUser\editUser.cshtml" />
+    <Content Include="Views\_ViewImports.cshtml" />
+    <None Include="Web References\ebcExternalWS\ebcExternalWs.wsdl" />
+    <None Include="Web References\ebcExternalWS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Global.asax" />
+    <None Include="Web References\ebcExternalWS\ebcExternalWs.disco" />
+    <Content Include="Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AjaxFormReply.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\FluentValidationConfig.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\eConnectorController.cs" />
+    <Compile Include="Controllers\eUserController.cs" />
+    <Compile Include="Controllers\OutboundInfoController.cs" />
+    <Compile Include="Controllers\readEmailController.cs" />
+    <Compile Include="Controllers\SerialCheckerController.cs" />
+    <Compile Include="Controllers\SignInController.cs" />
+    <Compile Include="Controllers\StatsController.cs" />
+    <Compile Include="Controllers\SupportController.cs" />
+    <Compile Include="Helper\DatabaseConnection.cs" />
+    <Compile Include="Helper\Encryption.cs" />
+    <Compile Include="Helper\Helpers.cs" />
+    <Compile Include="Helper\PosicaoImagem.cs" />
+    <Compile Include="JsonNetResult.cs" />
+    <Compile Include="Licensing.cs" />
+    <Compile Include="Models\DigitalCreateInstanceData.cs" />
+    <Compile Include="Models\DigitalMailData.cs" />
+    <Compile Include="Models\TicketsData.cs" />
+    <Compile Include="Models\DigitalModel\NomeTemplate.cs" />
+    <Compile Include="Models\DigitalModel\ResolutionObject.cs" />
+    <Compile Include="Models\InboundPackets.cs" />
+    <Compile Include="Models\LoginData.cs" />
+    <Compile Include="Models\OutboundPackets.cs" />
+    <Compile Include="Models\PermissionsData.cs" />
+    <Compile Include="Models\SaphetyCredentialsData.cs" />
+    <Compile Include="Models\SignInData.cs" />
+    <Compile Include="Models\UserData.cs" />
+    <Compile Include="ViewModels\unknownListVM.cs" />
+    <Compile Include="Models\Validators\LoginDataValidator.cs" />
+    <Compile Include="Models\Validators\SignInDatataValidator.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\OutboundPacketDetailVM.cs" />
+    <Compile Include="ViewModels\SupportChatVM.cs" />
+    <Compile Include="ViewModels\EBCInstanceEditVM.cs" />
+    <Compile Include="ViewModels\eUserVM.cs" />
+    <Compile Include="Controllers\eWWFController.cs" />
+    <Compile Include="Models\XmlMapRowData.cs" />
+    <Compile Include="Models\Validators\XmlConfigDataValidator.cs" />
+    <Compile Include="Models\XmlConfigData.cs" />
+    <Compile Include="Models\Validators\XmlSenderDataValidator.cs" />
+    <Compile Include="Models\XmlSenderData.cs" />
+    <Compile Include="Models\SenderData.cs" />
+    <Compile Include="Models\CustomerData.cs" />
+    <Compile Include="Controllers\DemoController.cs" />
+    <Compile Include="Models\InstanceData.cs" />
+    <Compile Include="Models\ConfigInboundTXTData.cs" />
+    <Compile Include="Models\DigitalDocumentTypeData.cs" />
+    <Compile Include="Models\DigitalCreateXmlFieldData.cs" />
+    <Compile Include="Models\DigitalTemplatesData.cs" />
+    <Compile Include="Models\ConfigTXTData.cs" />
+    <Compile Include="Models\PacketConfigsData.cs" />
+    <Compile Include="Models\SpecificOptions.cs" />
+    <Compile Include="Models\Validators\ConfigInboundTXTDataValidator.cs" />
+    <Compile Include="Models\Validators\ConfigTXTDataValidator.cs" />
+    <Compile Include="Models\Validators\SenderDataValidator.cs" />
+    <Compile Include="Models\Validators\CustomerDataValidator.cs" />
+    <Compile Include="Models\Validators\DigitalXmlFieldDataValidator.cs" />
+    <Compile Include="Models\Validators\PacketConfigsDataValidator.cs" />
+    <Compile Include="ViewModels\EBCSenderXmlMappingVM.cs" />
+    <Compile Include="ViewModels\EBCSenderXmlUploadVM.cs" />
+    <Compile Include="ViewModels\FilePointerVM.cs" />
+    <Compile Include="ViewModels\DiaryVM.cs" />
+    <Compile Include="ViewModels\EBCSendersXMLConfigsVM.cs" />
+    <Compile Include="ViewModels\EBCSendersVM.cs" />
+    <Compile Include="ViewModels\EBCCustomersXMLConfigsVM.cs" />
+    <Compile Include="ViewModels\EBCCustomersVM.cs" />
+    <Compile Include="ViewModels\EBCInstancesConfigsVM.cs" />
+    <Compile Include="ViewModels\EBCTXTInboundConfigsVM.cs" />
+    <Compile Include="ViewModels\EBCTXTConfigsVM.cs" />
+    <Compile Include="ViewModels\EBCPacketConfigsVM.cs" />
+    <Compile Include="Models\Validators\DigitalDocumentTypeDataValidator.cs" />
+    <Compile Include="Models\Validators\DigitalSupplierSyncDataValidator.cs" />
+    <Compile Include="ViewModels\EBCEmailConfigVM.cs" />
+    <Compile Include="Controllers\eConnectorConfigsController.cs" />
+    <Compile Include="Controllers\eConnectorCustomersController.cs" />
+    <Compile Include="Controllers\eConnectorSendersController.cs" />
+    <Compile Include="Controllers\eDigitalController.cs" />
+    <Compile Include="Controllers\eEDIController.cs" />
+    <Compile Include="Controllers\eMCATController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="EBillingSuitePixelAdminPageContext.cs" />
+    <Compile Include="EBillingSuiteRequestContext.cs" />
+    <Compile Include="ECListRepositories.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="HostMVCModule.cs" />
+    <Compile Include="Models\MarketCertData.cs" />
+    <Compile Include="Models\ConfigData.cs" />
+    <Compile Include="Models\DigitalCreateSupplierData.cs" />
+    <Compile Include="Models\DigitalSupplierSyncData.cs" />
+    <Compile Include="Models\DigitalDocumentExpirationData.cs" />
+    <Compile Include="Models\DigitalSupplierData.cs" />
+    <Compile Include="Models\EDISenderData.cs" />
+    <Compile Include="Models\EDICostumerData.cs" />
+    <Compile Include="Models\MCATConfigSendInfoData.cs" />
+    <Compile Include="Models\CredentialsData.cs" />
+    <Compile Include="Models\Validators\MarketCertDataValidator.cs" />
+    <Compile Include="Models\Validators\DigitalCreateSupplierDataValidator.cs" />
+    <Compile Include="Models\Validators\DigitalDocumentExpirationDataValidator.cs" />
+    <Compile Include="Models\Validators\DigitalSupplierDataValidator.cs" />
+    <Compile Include="Models\Validators\EDISenderDataValidator.cs" />
+    <Compile Include="Models\Validators\EDICostumerDataValidator.cs" />
+    <Compile Include="Models\Validators\MCATConfigSendInfoDataValidator.cs" />
+    <Compile Include="Models\Validators\CredentialsDataValidator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\ConfigBaseVM.cs" />
+    <Compile Include="ViewModels\EBCDigitalCertificateVM.cs" />
+    <Compile Include="ViewModels\EBCConfigurationsVM.cs" />
+    <Compile Include="ViewModels\EBCRealTimeAlertsConfigVM.cs" />
+    <Compile Include="ViewModels\EDigitalCreateDocTypeVM.cs" />
+    <Compile Include="ViewModels\EBCXmlFieldSenderVM.cs" />
+    <Compile Include="ViewModels\EDigitalXmlFieldVM.cs" />
+    <Compile Include="ViewModels\EDigitalXmlManagmentVM.cs" />
+    <Compile Include="ViewModels\EDigitalTemplatesVM.cs" />
+    <Compile Include="ViewModels\EDigitalSupplierSyncVM.cs" />
+    <Compile Include="ViewModels\EDigitalDocumentHistoryVM.cs" />
+    <Compile Include="ViewModels\EEDIOutboundDetailVM.cs" />
+    <Compile Include="ViewModels\EDigitalDocumentExpirationVM.cs" />
+    <Compile Include="ViewModels\EEDICostumersVM.cs" />
+    <Compile Include="ViewModels\HomeVM.cs" />
+    <Compile Include="ViewModels\MCATSendingConfigVM.cs" />
+    <Compile Include="ViewModels\CredentialsVM.cs" />
+    <Compile Include="ViewModels\StatsDigitalVM.cs" />
+    <Compile Include="Web References\ebcExternalWS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\eBillingSuite.Core\eBillingSuite.Core.csproj">
+      <Project>{3a7d6e4d-b211-4b87-bcc3-55548de9ec0d}</Project>
+      <Name>eBillingSuite.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\EBillingDigitalEXT\" />
+    <Folder Include="Views\Elmah\" />
+    <Folder Include="Views\OutboundInfo\" />
+    <Folder Include="Views\SerialChecker\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://localhost:6249/ebcExternalWs.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\ebcExternalWS\</RelPath>
+      <UpdateFromURL>http://localhost:6249/ebcExternalWs.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>eBillingSuite_Host_ebcExternalWS_ebcExternalWS</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>55811</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/eBillingSuite2018R1</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.4\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

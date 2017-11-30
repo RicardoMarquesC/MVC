@@ -1,0 +1,142 @@
+﻿@{
+	var pc = ViewBag.PixelAdminPageContext as IPixelAdminPageContext;
+	var bodyExtraClass = ViewBag.PixelAdminBodyExtraClass as string;
+}
+<!DOCTYPE html>
+@*
+<!--
+
+TABLE OF CONTENTS.
+
+Use search to find needed section.
+
+=====================================================
+
+|  1. $BODY                 |  Body                 |
+|  2. $MAIN_NAVIGATION      |  Main navigation      |
+|  3. $NAVBAR_ICON_BUTTONS  |  Navbar Icon Buttons  |
+|  4. $MAIN_MENU            |  Main menu            |
+|  5. $CONTENT              |  Content              |
+
+=====================================================
+
+-->
+*@
+
+<!--[if IE 8]>         <html class="ie8"> <![endif]-->
+<!--[if IE 9]>         <html class="ie9 gt-ie8"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="gt-ie8 gt-ie9 not-ie"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>@pc.PageTitle - @pc.ApplicationName</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<!-- Open Sans font from Google CDN -->
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
+
+	<!-- Para os icons font-awesome -->
+	<!-- TODO: O ficheiro admin.css já usa fontawesome!!! Fazer upgrade a essa versão e não incluir este ficheiro! -->
+	@*<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">*@
+
+	<!-- Pixel Admin's stylesheets -->
+	@Styles.Render("~/Assets/PixelAdmin/css/")
+	<!--[if lt IE 9]>
+		<script src="~/assets/pixeladmin/javascripts/ie.min.js"></script>
+	<![endif]-->
+	@RenderSection("header", required: false)
+
+	<style>
+
+		.bootstrap-timepicker-widget,
+		.datepicker{z-index:1151 !important;}
+
+		 .no-user-select {
+			-webkit-user-select: none; /* Webkit */
+			-moz-user-select: none;    /* Firefox */
+			-ms-user-select: none;     /* IE 10  */
+			/* Currently not supported in Opera but will be soon */
+			-o-user-select: none;
+			user-select: none;
+		}
+
+	</style>
+
+</head>
+
+
+<!-- 1. $BODY ======================================================================================
+	
+	Body
+
+	Classes:
+	* 'theme-{THEME NAME}'
+	* 'right-to-left'      - Sets text direction to right-to-left
+	* 'main-menu-right'    - Places the main menu on the right side
+	* 'no-main-menu'       - Hides the main menu
+	* 'main-navbar-fixed'  - Fixes the main navigation
+	* 'main-menu-fixed'    - Fixes the main menu
+	* 'main-menu-animated' - Animate main menu
+-->
+<body class="theme-default main-menu-animated @bodyExtraClass">
+
+<script>var init = [];</script>
+
+<div id="main-wrapper">
+
+@Html.Partial("_LayoutMainNavigation")
+
+@Html.Partial("_LayoutMainMenu")
+
+	<div id="content-wrapper">
+<!-- 5. $CONTENT ===================================================================================
+
+		Content
+-->
+		@if (pc.Breadcrumbs.Count > 0) { 
+		<ul id="page-breadcrumb-demo" class="breadcrumb breadcrumb-page" style="display: block;">
+			@foreach (var bc in pc.Breadcrumbs) { 
+			<li class="@(bc == pc.Breadcrumbs.Last()?"active":null)">
+				@if (string.IsNullOrWhiteSpace(bc.Url))
+				{
+					@bc.Label
+				}
+				else { 
+				<a href="@bc.Url">@bc.Label</a>
+				}				
+			</li>
+			}			
+		</ul>
+		}
+		<!-- Content here -->
+		@Html.Flash()
+		@RenderBody()
+
+	</div> <!-- / #content-wrapper -->
+	<div id="main-menu-bg"></div>
+</div> <!-- / #main-wrapper -->
+
+<!-- Get jQuery from Google CDN -->
+<!--[if !IE]> -->
+	<script type="text/javascript"> window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js">'+"<"+"/script>"); </script>
+<!-- <![endif]-->
+<!--[if lte IE 9]>
+	<script type="text/javascript"> window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">'+"<"+"/script>"); </script>
+<![endif]-->
+
+
+<!-- Pixel Admin's javascripts -->
+@Scripts.Render("~/Assets/PixelAdmin/js/")
+
+@RenderSection("bodyScripts", required: false)
+
+<script type="text/javascript">
+	init.push(function () {
+		@RenderSection("jsInit", required: false)
+	})
+
+	window.PixelAdmin.start(init);
+</script>
+
+</body>
+</html>

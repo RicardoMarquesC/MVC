@@ -1,0 +1,33 @@
+﻿@model eBillingSuite.ViewModels.EBCCustomersXMLConfigsVM
+@{
+	var uniqueID = "econnectorcustomerXMLConfig-modal";
+}
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.EConnectorCustomerXMLConfigAdd)</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("AddXmlConfig", "eConnectorCustomers")"
+		  method="post"
+		  class="form-horizontal">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.FKCustomerID)
+				@Html.HiddenFor(e => e.FKInstanceID)
+				@Html.HiddenFor(e => e.numeroxml)
+				@Html.HiddenFor(e => e.tipoXml)
+				@Html.HiddenFor(e => e.isEdit)
+				<div class="row">
+					@Html.PixelAdminSelectWithColFor(e => e.selectedField, Model.AvailableFields, 6, null, Model.isEdit ? InputOptions.ReadOnly : InputOptions.Default)
+					@Html.PixelAdminSwitcherWithColFor(e => Model.mandatory,6,null,InputOptions.Default)					
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>

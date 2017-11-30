@@ -1,0 +1,46 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var user = User.Identity as eBillingSuite.Security.IeBillingSuiteIdentity;
+	var routeDataValues = Request.RequestContext.RouteData.Values;
+	var action = routeDataValues["action"].ToString().ToLower();
+}
+
+@section header{
+}
+<script>
+	init.push(function () {
+		$('#x-tabs').tabdrop();
+	});
+</script>
+<div>
+	<ul id="x-tabs" class="nav nav-tabs">
+		@if (user.Permissions.Contains(Permissions.EMCAT_FATURAS))
+		{
+			<li class="@(action == "index" ? "active" : null)">
+				<a href="@Url.Action("Index", "eMCAT")">@this.Get(DictionaryEntryKeys.Faturas)</a>
+			</li>
+		}
+		@if (user.Permissions.Contains(Permissions.EMCAT_GUIASTRANSPORTES))
+		{
+			<li class="@(action == "guias" ? "active" : null)">
+				<a href="@Url.Action("Guias", "eMCAT")">@this.Get(DictionaryEntryKeys.GuiasTransporte)</a>
+			</li>
+		}
+		@if (user.Permissions.Contains(Permissions.EMCAT_DEFINICOESCREDENCIAIS))
+		{
+			<li class="@(action == "credentials" ? "active" : null)">
+				<a href="@Url.Action("Credentials", "eMCAT")">@this.Get(DictionaryEntryKeys.DefinicoesCredenciais)</a>
+			</li>
+		}
+		@if (user.Permissions.Contains(Permissions.EMCAT_CONFIGURACOESENVIO))
+		{
+			<li class="@(action == "configurations" ? "active" : null)">
+				<a href="@Url.Action("Configurations", "eMCAT")">@this.Get(DictionaryEntryKeys.ConfigEnvio)</a>
+			</li>
+		}
+	</ul>
+	<div class="tab-content tab-content-bordered no-padding">
+		@RenderBody()
+	</div> <!-- / .tab-content -->
+</div>

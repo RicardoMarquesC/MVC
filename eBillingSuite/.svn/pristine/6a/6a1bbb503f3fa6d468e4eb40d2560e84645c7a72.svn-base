@@ -1,0 +1,50 @@
+﻿@model eBillingSuite.Model.Desmaterializacao.Fornecedores
+@{
+	var uniqueID = "edigitalsupplier-modal";
+
+	var wantSupplierSync = ViewBag.SupplierSync as string;
+	var option = wantSupplierSync.ToLower() == "true" ? InputOptions.ReadOnly : InputOptions.Default;
+}
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@Texts.DigitalSenderEdit</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("EditSupplier", "eDigital")"
+		  method="post"
+		  class="form-horizontal">
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.pkid)
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Contribuinte, 6, null, InputOptions.ReadOnly, Texts.NIF)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Nome, 12, null, InputOptions.Default, Texts.Name)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Morada, 12, null, InputOptions.Default, Texts.Morada)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Telefone, 6, null, InputOptions.Default, Texts.Telefone)
+					@Html.PixelAdminTextBoxWithColFor(e => e.Fax, 6, null, InputOptions.Default, Texts.Fax)
+				</div>
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Email, 6, null, InputOptions.Default, Texts.EmailAddress)
+					@Html.PixelAdminTextBoxWithColFor(e => e.WebSite, 6, null, InputOptions.Default, Texts.Website)
+				</div>
+				<div class="row">
+					@Html.PixelAdminSwitcherWithColFor(e => e.WantMainValidations, 6, null, InputOptions.Default, Texts.WantMainValidations)
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	@*@if (wantSupplierSync.ToLower() == "false")
+	{*@
+		<button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@Texts.Submit</button>
+	@*}*@
+	<button type="button" class="btn btn-default" data-dismiss="modal">@Texts.Close</button>
+</div>

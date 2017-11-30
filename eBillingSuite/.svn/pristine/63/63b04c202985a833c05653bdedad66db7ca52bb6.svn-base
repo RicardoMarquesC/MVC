@@ -1,0 +1,1348 @@
+﻿using eBillingSuite.Enumerations;
+using eBillingSuite.Globalization;
+using eBillingSuite.HelperTools.Interfaces;
+using eBillingSuite.Model;
+using eBillingSuite.Model.CIC_DB;
+using eBillingSuite.Model.EBC_DB;
+using eBillingSuite.Models;
+using eBillingSuite.Repositories;
+using eBillingSuite.Security;
+using eBillingSuite.ViewModels;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
+using Shortcut.PixelAdmin;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace eBillingSuite.Controllers
+{
+	public class eConnectorSendersController : Controller
+	{
+		private static string allowed = ".xml";
+
+		protected readonly IeBillingSuiteRequestContext _context;
+		private IPixelAdminPageContext _pixelAdminPageContext;
+		private IEConnectorSendersRepository _eConnectorSendersRepository;
+		private IECCListRepositories _eCCListRepositories;
+		private IXmlHelper _xmlHelper;
+
+		public eConnectorSendersController(IeBillingSuiteRequestContext context,
+			IPixelAdminPageContext pixelAdminPageContext,
+			IEConnectorSendersRepository eConnectorSendersRepository,
+			IECCListRepositories eCConfigRepositories,
+			IXmlHelper xmlHelper)
+		{
+			_context = context;
+			_pixelAdminPageContext = pixelAdminPageContext;
+			_eConnectorSendersRepository = eConnectorSendersRepository;
+			_eCCListRepositories = eCConfigRepositories;
+			_xmlHelper = xmlHelper;
+		}
+
+		#region Senders
+
+		// GET: eConnectorSenders
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_REMETENTES)]
+		public ActionResult Index()
+		{
+			this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+			var model = _eConnectorSendersRepository.GetAllSenders();
+
+			if (Request.IsAjaxRequest())
+				return Json(this.PanelContentReply(model), JsonRequestBehavior.AllowGet);
+			else
+				return View(model);
+		}
+
+		// GET: Create sender
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_REMETENTES)]
+		public ActionResult CreateSender()
+		{
+			var tempSender = new Whitelist
+			{
+				ConcatAnexos = false,
+				EmailAddress = "",
+				EmailName = "",
+				Enabled = true,
+				FKIntegrationFilterID = _eCCListRepositories.eConnectorIntegrationFiltersRepository.Set
+					.FirstOrDefault(x => x.FriendlyName.Equals(Enumerations.IntegrationFiltersName.DEFAULT, StringComparison.OrdinalIgnoreCase))
+					.PKIntegrationFilterID,
+				HaveXML = false,
+                UsesPluginSystem = false,
+				Mercado = "Portugal",
+				NIF = "",
+				PDFAss = true,
+				PdfLink = false,
+                PdfLinkBaseURL = "",
+				PDFNAss = false,
+				XMLAss = false,
+				XMLNAss = false
+            };
+
+			var counterValue = _eCCListRepositories.suiteConfigurationsRepository.ConfigValue("ContadorNomenclaturaPDF");
+
+			var modelVM = new EBCSendersVM(tempSender, String.Empty, _eCCListRepositories, Guid.Empty, false, counterValue, true);
+
+			if (Request.IsAjaxRequest())
+				return Json(this.ModalContentReply(modelVM), JsonRequestBehavior.AllowGet);
+			else
+				return PartialView(modelVM);
+		}
+
+		// POST: Create sender
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_REMETENTES)]
+		public ActionResult CreateFinalSender(SenderData senderData)
+		{
+			using (var dbContextTransaction = _eConnectorSendersRepository.Context.Database.BeginTransaction())
+			{
+				try
+				{
+					// INSERT into WhiteList
+					var newDB = new Whitelist
+					{
+						PKWhitelistID = Guid.NewGuid(),
+						EmailAddress = senderData.EmailAddress,
+						EmailName = senderData.EmailName,
+						FKIntegrationFilterID = _eCCListRepositories.eConnectorIntegrationFiltersRepository.Set
+												.FirstOrDefault(x => x.FriendlyName.Equals(Enumerations.IntegrationFiltersName.DEFAULT, StringComparison.OrdinalIgnoreCase))
+												.PKIntegrationFilterID,
+						Enabled = senderData.Enabled,
+						HaveXML = (senderData.XMLAss == true || senderData.XMLNAss == true) ? true : false,
+						ConcatAnexos = senderData.ConcatAnexos,
+						Mercado = senderData.Mercado,
+						XMLAss = senderData.XMLAss,
+						XMLNAss = senderData.XMLNAss,
+						PDFAss = senderData.PDFAss,
+						PDFNAss = senderData.PDFNAss,
+						NIF = senderData.Nif,
+						PdfLink = senderData.PdfLink,
+                        PdfLinkBaseURL = senderData.PdfLinkBaseURL,
+                        UsesPluginSystem = senderData.UsesPluginSystem,
+                        DoYouWantForwardEmail = senderData.DoYouWantForwardEmail,
+                        DoYouWantForwardFTP = senderData.DoYouWantForwardFTP,
+                        ftpServer = senderData.ftpServer,
+                        username = senderData.username,
+                        password = senderData.password,
+                        port = senderData.port,
+                        listEmails = senderData.listEmails,
+                        ReplyToAddress = senderData.ReplyToAddress
+					};
+
+					if (!ModelState.IsValid)
+					{
+						//Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+						var modelVM = new EBCSendersVM(newDB, senderData.XmlType, _eCCListRepositories, true);
+
+						if (Request.IsAjaxRequest())
+							return Json(this.ModalContentReply("CreateSender", modelVM));
+						else
+							return PartialView(modelVM);
+					}
+
+					_eConnectorSendersRepository
+						.Add(newDB)
+						.Save();
+
+					if (newDB.HaveXML)
+					{
+						// GET template UBL2.0 structure
+						var xmlData = _eCCListRepositories.eConnectorXmlTemplateRepository.GetDataByType(senderData.XmlType);
+
+						// GET last xml template number
+						int xmlNumber = _eCCListRepositories.eConnectorXmlInboundRepository.GetLastInboundXmlNumber();
+
+						// INSERT into XMLInbound
+						var newXmlInbound = new EBC_XMLInbound
+						{
+							pkid = Guid.NewGuid(),
+							Fornecedor = senderData.Nif,
+							NumeroXML = xmlNumber
+						};
+						_eCCListRepositories.eConnectorXmlInboundRepository.Add(newXmlInbound).Save();
+
+						// INSERT into Header, Lines and VAT lines
+						int i = 1;
+						foreach (var data in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.HEADER.ToLower()).ToList())
+						{
+							_eCCListRepositories.eConnectorXmlHeadInboundRepository.Add(new EBC_XMLHeadInbound
+							{
+								pkid = Guid.NewGuid(),
+								NumeroXML = xmlNumber,
+								Element = data.CaminhoXML,
+								NomeCampo = data.NomeCampo,
+								TipoXML = data.TipoXML,
+								Obrigatorio = true,
+								Posicao = i,
+								CampoBD = data.NomeCampo.Replace(" ", ""),
+								isATfield = data.isATfield.HasValue ? (data.isATfield.Value == true ? 1 : 0) : 0,
+							}).Save();
+
+							i++;
+						};
+
+						i = 1;
+						foreach (var data in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.LINES.ToLower()).ToList())
+						{
+							_eCCListRepositories.eConnectorXmlLinesInboundRepository.Add(new EBC_XMLLinesInbound
+							{
+								pkid = Guid.NewGuid(),
+								NumeroXML = xmlNumber,
+								Element = data.CaminhoXML,
+								NomeCampo = data.NomeCampo,
+								TipoXML = data.TipoXML,
+								Obrigatorio = true,
+								Posicao = i,
+								CampoBD = data.NomeCampo.Replace(" ", ""),
+								isATfield = data.isATfield.HasValue ? data.isATfield.Value : false,
+							}).Save();
+
+							i++;
+						};
+
+						i = 1;
+						foreach (var data in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.VAT.ToLower()).ToList())
+						{
+							_eCCListRepositories.eConnectorXmlVatInboundRepository.Add(new EBC_XMLResumoIVAInbound
+							{
+								pkid = Guid.NewGuid(),
+								NumeroXML = xmlNumber,
+								Element = data.CaminhoXML,
+								NomeCampo = data.NomeCampo,
+								TipoXML = data.TipoXML,
+								Obrigatorio = true,
+								Posicao = i,
+								CampoBD = data.NomeCampo.Replace(" ", ""),
+								isATfield = data.isATfield.HasValue ? data.isATfield.Value : false,
+							}).Save();
+
+							i++;
+						};
+					}
+
+
+					var sender = _eConnectorSendersRepository.Where(s => s.NIF == senderData.Nif).FirstOrDefault();
+					//save the TipoNomenclaturaPDF
+					if (senderData.isNomenclaturaPDF)
+					{
+						var pkidnomenclatura = Guid.Parse(senderData.NomenclaturaPDFType);
+						var nomenclaturaFromDB = _eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository.GetBySenderID(sender.PKWhitelistID);
+						if (nomenclaturaFromDB != null)
+						{
+							nomenclaturaFromDB.FKtiponomenclatura = pkidnomenclatura;
+
+							_eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository.Edit(nomenclaturaFromDB).Save();
+						}
+						else
+						{
+							var pkidnomenclatura2 = Guid.Parse(senderData.NomenclaturaPDFType);
+							var nomenclatura = new TipoNomenclaturaSender
+							{
+								FKRemetente = sender.PKWhitelistID,
+								FKtiponomenclatura = pkidnomenclatura2,
+							};
+
+							_eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository
+								.Add(nomenclatura)
+								.Save();
+						}
+
+						//save the counter
+						var ebc_config = _eCCListRepositories.suiteConfigurationsRepository
+										.Where(sc => sc.Name == "ContadorNomenclaturaPDF").FirstOrDefault();
+
+						ebc_config.Data = senderData.counterValue;
+						_eCCListRepositories.suiteConfigurationsRepository.Edit(ebc_config).Save();
+					}
+
+					dbContextTransaction.Commit();
+
+					Flash.Instance.Success(_context.GetDictionaryValue(DictionaryEntryKeys.CreateOperationSuccess));
+					return Json(this.CloseModalReply());
+				}
+				catch (Exception ex)
+				{
+					Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+					dbContextTransaction.Rollback();
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+					return RedirectToAction("Index");
+				}
+
+			}
+		}
+
+		// GET: Open edit sender modal
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_REMETENTES)]
+		public ActionResult EditSender(Guid pkid)
+		{
+			var model = _eConnectorSendersRepository.Find(pkid);
+
+			var senderXmlType = _eCCListRepositories.eConnectorXmlInboundRepository.GetSenderXmlType(model.NIF);
+			var counterValue = _eCCListRepositories.suiteConfigurationsRepository.ConfigValue("ContadorNomenclaturaPDF");
+			var nomenclatura = _eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository.GetBySenderID(pkid);
+
+			var modelVM = new EBCSendersVM(model, 
+				senderXmlType, 
+				_eCCListRepositories,
+				nomenclatura==null ? Guid.Empty:nomenclatura.FKtiponomenclatura,
+				nomenclatura==null ? false : true,
+				counterValue,
+                false);
+
+			if (Request.IsAjaxRequest())
+				return Json(this.ModalContentReply(modelVM), JsonRequestBehavior.AllowGet);
+			else
+				return PartialView(modelVM);
+		}
+
+		//POST: submit edit sender info
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_REMETENTES)]
+		public ActionResult EditSender(SenderData data)
+		{
+			using (var dbContextTransaction = _eConnectorSendersRepository.Context.Database.BeginTransaction())
+			{
+				var dataFromDB = _eConnectorSendersRepository.Find(data.Pkid);
+				try
+				{
+					if (!ModelState.IsValid)
+					{
+						Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+						var modelVM = new EBCSendersVM(dataFromDB, data.XmlType, _eCCListRepositories, data.IsFromCreate);
+
+						if (Request.IsAjaxRequest())
+							return Json(this.ModalContentReply(modelVM));
+						else
+							return PartialView(modelVM);
+					}
+
+					// if it changes VAT Number, update EBC_XMLInbound
+					if (!data.Nif.Equals(dataFromDB.NIF, StringComparison.OrdinalIgnoreCase) && (data.XMLAss == true || data.XMLNAss == true))
+					{
+						var xmlInboundFromDB = _eCCListRepositories.eConnectorXmlInboundRepository
+							.Set
+							.FirstOrDefault(x => x.Fornecedor.Equals(dataFromDB.NIF, StringComparison.OrdinalIgnoreCase));
+
+						xmlInboundFromDB.Fornecedor = data.Nif;
+
+						_eCCListRepositories.eConnectorXmlInboundRepository
+							.Edit(xmlInboundFromDB)
+							.Save();
+					}
+
+					// ckeck for selected XML Type
+					var senderXmlType = _eCCListRepositories.eConnectorXmlInboundRepository.GetSenderXmlType(data.Nif);
+					if (senderXmlType == "") // if there wasn't defined XML
+					{
+						if (data.XMLAss == true || data.XMLNAss == true) // if it's defining XML
+						{
+							// insert into XML tables
+							// GET template structure
+							var xmlData = _eCCListRepositories.eConnectorXmlTemplateRepository.GetDataByType(data.XmlType);
+
+							// GET last xml template number
+							int xmlNumber = _eCCListRepositories.eConnectorXmlInboundRepository.GetLastInboundXmlNumber();
+
+							// INSERT into XMLInbound
+							var newXmlInbound = new EBC_XMLInbound
+							{
+								pkid = Guid.NewGuid(),
+								Fornecedor = data.Nif,
+								NumeroXML = xmlNumber
+							};
+							_eCCListRepositories.eConnectorXmlInboundRepository.Add(newXmlInbound).Save();
+
+							// INSERT into Header, Lines and VAT lines
+							int i = 1;
+							foreach (var data2 in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.HEADER.ToLower()).ToList())
+							{
+								_eCCListRepositories.eConnectorXmlHeadInboundRepository.Add(new EBC_XMLHeadInbound
+								{
+									pkid = Guid.NewGuid(),
+									NumeroXML = xmlNumber,
+									Element = data2.CaminhoXML,
+									NomeCampo = data2.NomeCampo,
+									TipoXML = data2.TipoXML,
+									Obrigatorio = true,
+									Posicao = i,
+									CampoBD = data2.NomeCampo.Replace(" ", ""),
+									isATfield = data2.isATfield.HasValue ? (data2.isATfield.Value == true ? 1 : 0) : 0,
+								}).Save();
+
+								i++;
+							};
+
+							i = 1;
+							foreach (var data2 in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.LINES.ToLower()).ToList())
+							{
+								_eCCListRepositories.eConnectorXmlLinesInboundRepository.Add(new EBC_XMLLinesInbound
+								{
+									pkid = Guid.NewGuid(),
+									NumeroXML = xmlNumber,
+									Element = data2.CaminhoXML,
+									NomeCampo = data2.NomeCampo,
+									TipoXML = data2.TipoXML,
+									Obrigatorio = true,
+									Posicao = i,
+									CampoBD = data2.NomeCampo.Replace(" ", ""),
+									isATfield = data2.isATfield.HasValue ? data2.isATfield.Value : false,
+								}).Save();
+
+								i++;
+							};
+
+							i = 1;
+							foreach (var data2 in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.VAT.ToLower()).ToList())
+							{
+								_eCCListRepositories.eConnectorXmlVatInboundRepository.Add(new EBC_XMLResumoIVAInbound
+								{
+									pkid = Guid.NewGuid(),
+									NumeroXML = xmlNumber,
+									Element = data2.CaminhoXML,
+									NomeCampo = data2.NomeCampo,
+									TipoXML = data2.TipoXML,
+									Obrigatorio = true,
+									Posicao = i,
+									CampoBD = data2.NomeCampo.Replace(" ", ""),
+									isATfield = data2.isATfield.HasValue ? data2.isATfield.Value : false,
+								}).Save();
+
+								i++;
+							};
+						}
+					}
+					else // if there's a defined XML
+					{
+						var xmlNumber = _eCCListRepositories.eConnectorXmlInboundRepository.GetXmlNumberBySenderVat(data.Nif);
+
+						//// delete the existing one
+						//var headerToDelete = _eCCListRepositories.eConnectorXmlHeadInboundRepository.Set
+						//	.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+						//_eCCListRepositories.eConnectorXmlHeadInboundRepository.Set.RemoveRange(headerToDelete);
+
+						//var linesToDelete = _eCCListRepositories.eConnectorXmlLinesInboundRepository.Set
+						//	.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+						//_eCCListRepositories.eConnectorXmlLinesInboundRepository.Set.RemoveRange(linesToDelete);
+
+						//var vatToDelete = _eCCListRepositories.eConnectorXmlVatInboundRepository.Set
+						//	.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+						//_eCCListRepositories.eConnectorXmlVatInboundRepository.Set.RemoveRange(vatToDelete);
+
+						// if defined XML is diferent than the existing one
+						if ((data.XMLAss == true || data.XMLNAss == true) && (data.XmlType.ToLower() != senderXmlType.ToLower()))
+						{
+							// delete the existing one
+							var headerToDelete = _eCCListRepositories.eConnectorXmlHeadInboundRepository.Set
+								.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+							_eCCListRepositories.eConnectorXmlHeadInboundRepository.Set.RemoveRange(headerToDelete);
+
+							var linesToDelete = _eCCListRepositories.eConnectorXmlLinesInboundRepository.Set
+								.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+							_eCCListRepositories.eConnectorXmlLinesInboundRepository.Set.RemoveRange(linesToDelete);
+
+							var vatToDelete = _eCCListRepositories.eConnectorXmlVatInboundRepository.Set
+								.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+							_eCCListRepositories.eConnectorXmlVatInboundRepository.Set.RemoveRange(vatToDelete);
+
+							// insert the new one
+							// get template structure
+							var xmlData = _eCCListRepositories.eConnectorXmlTemplateRepository.GetDataByType(data.XmlType);
+
+							// INSERT into Header, Lines and VAT lines
+							int i = 1;
+							foreach (var data2 in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.HEADER.ToLower()).ToList())
+							{
+								_eCCListRepositories.eConnectorXmlHeadInboundRepository.Add(new EBC_XMLHeadInbound
+								{
+									pkid = Guid.NewGuid(),
+									NumeroXML = xmlNumber,
+									Element = data2.CaminhoXML,
+									NomeCampo = data2.NomeCampo,
+									TipoXML = data2.TipoXML,
+									Obrigatorio = true,
+									Posicao = i,
+									CampoBD = data2.NomeCampo.Replace(" ", ""),
+									isATfield = data2.isATfield.HasValue ? (data2.isATfield.Value == true ? 1 : 0) : 0,
+								}).Save();
+
+								i++;
+							};
+
+							i = 1;
+							foreach (var data2 in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.LINES.ToLower()).ToList())
+							{
+								_eCCListRepositories.eConnectorXmlLinesInboundRepository.Add(new EBC_XMLLinesInbound
+								{
+									pkid = Guid.NewGuid(),
+									NumeroXML = xmlNumber,
+									Element = data2.CaminhoXML,
+									NomeCampo = data2.NomeCampo,
+									TipoXML = data2.TipoXML,
+									Obrigatorio = true,
+									Posicao = i,
+									CampoBD = data2.NomeCampo.Replace(" ", ""),
+									isATfield = data2.isATfield.HasValue ? data2.isATfield.Value : false,
+								}).Save();
+
+								i++;
+							};
+
+							i = 1;
+							foreach (var data2 in xmlData.Where(xd => xd.Tipo.ToLower() == DigitalDocumentAreas.VAT.ToLower()).ToList())
+							{
+								_eCCListRepositories.eConnectorXmlVatInboundRepository.Add(new EBC_XMLResumoIVAInbound
+								{
+									pkid = Guid.NewGuid(),
+									NumeroXML = xmlNumber,
+									Element = data2.CaminhoXML,
+									NomeCampo = data2.NomeCampo,
+									TipoXML = data2.TipoXML,
+									Obrigatorio = true,
+									Posicao = i,
+									CampoBD = data2.NomeCampo.Replace(" ", ""),
+									isATfield = data2.isATfield.HasValue ? data2.isATfield.Value : false,
+								}).Save();
+
+								i++;
+							};
+						}
+						else
+						{
+							// delete from EBC_XMLInbound
+							//var line = _eCCListRepositories.eConnectorXmlInboundRepository.Set
+							//	.FirstOrDefault(x => x.NumeroXML == xmlNumber && x.Fornecedor == data.Nif);
+
+							//_eCCListRepositories.eConnectorXmlInboundRepository.Delete(line).Save();
+						}
+					}
+
+					dataFromDB.EmailName = data.EmailName;
+					dataFromDB.EmailAddress = data.EmailAddress;
+					if (String.IsNullOrWhiteSpace(dataFromDB.NIF)) // only update VAT if it's on create
+						dataFromDB.NIF = data.Nif;
+					dataFromDB.Enabled = data.Enabled;
+					dataFromDB.ConcatAnexos = data.ConcatAnexos;
+					dataFromDB.FKIntegrationFilterID = _eCCListRepositories.eConnectorIntegrationFiltersRepository.Set
+														.FirstOrDefault(x => x.FriendlyName.Equals(Enumerations.IntegrationFiltersName.DEFAULT, StringComparison.OrdinalIgnoreCase))
+														.PKIntegrationFilterID;
+					dataFromDB.Mercado = data.Mercado;
+					dataFromDB.XMLNAss = data.XMLNAss;
+					dataFromDB.XMLAss = data.XMLAss;
+					dataFromDB.PDFAss = data.PDFAss;
+					dataFromDB.PDFNAss = data.PDFNAss;
+					dataFromDB.PdfLink = data.PdfLink;
+                    dataFromDB.PdfLinkBaseURL = data.PdfLinkBaseURL;
+                    dataFromDB.UsesPluginSystem = data.UsesPluginSystem;
+					if (dataFromDB.XMLNAss.Value || dataFromDB.XMLAss.Value)
+						dataFromDB.HaveXML = true;
+					else
+						dataFromDB.HaveXML = false;
+
+                    dataFromDB.DoYouWantForwardEmail = data.DoYouWantForwardEmail;
+                    dataFromDB.DoYouWantForwardFTP = data.DoYouWantForwardFTP;
+                    if (dataFromDB.DoYouWantForwardEmail == true)
+                    {
+                        dataFromDB.listEmails = data.listEmails;
+                        dataFromDB.ftpServer = "NULL";
+                        dataFromDB.username = "NULL";
+                        dataFromDB.password = "NULL";
+                        dataFromDB.port = "NULL";
+                    }
+                    else
+                    {
+                        if (dataFromDB.DoYouWantForwardFTP == true)
+                        {
+                            dataFromDB.ftpServer = data.ftpServer;
+                            dataFromDB.username = data.username;
+                            dataFromDB.password = data.password;
+                            dataFromDB.port = data.port;
+                            dataFromDB.listEmails = "NULL";
+                        }
+                        else
+                        {
+                            dataFromDB.listEmails = "NULL";
+                            dataFromDB.ftpServer = "NULL";
+                            dataFromDB.username = "NULL";
+                            dataFromDB.password = "NULL";
+                            dataFromDB.port = "NULL";
+                        }
+                    }
+                    dataFromDB.ReplyToAddress = data.ReplyToAddress;
+
+                    _eConnectorSendersRepository
+						.Edit(dataFromDB)
+						.Save();
+
+					var sender = _eConnectorSendersRepository.Where(s => s.NIF == data.Nif).FirstOrDefault();
+
+					//save the TipoNomenclaturaPDF
+					if (data.isNomenclaturaPDF)
+					{
+						var pkidnomenclatura = Guid.Parse(data.NomenclaturaPDFType);
+						var nomenclaturaFromDB = _eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository.GetBySenderID(sender.PKWhitelistID);
+						if (nomenclaturaFromDB != null)
+						{
+							nomenclaturaFromDB.FKtiponomenclatura = pkidnomenclatura;
+
+							_eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository.Edit(nomenclaturaFromDB).Save();
+						}
+						else
+						{
+							var pkidnomenclatura2 = Guid.Parse(data.NomenclaturaPDFType);
+							var nomenclatura = new TipoNomenclaturaSender
+							{
+								FKRemetente = sender.PKWhitelistID,
+								FKtiponomenclatura = pkidnomenclatura2,
+							};
+
+							_eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository
+								.Add(nomenclatura)
+								.Save();
+						}
+
+						//save the counter
+						var ebc_config = _eCCListRepositories.suiteConfigurationsRepository
+										.Where(sc => sc.Name == "ContadorNomenclaturaPDF").FirstOrDefault();
+
+						ebc_config.Data = data.counterValue;
+						_eCCListRepositories.suiteConfigurationsRepository.Edit(ebc_config).Save();
+					}
+					else
+					{
+						var nomenclaturaFromDB = _eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository.GetBySenderID(sender.PKWhitelistID);
+						if (nomenclaturaFromDB != null)
+						{
+							_eCCListRepositories.eConnectorTipoNomenclaturaSenderRepository.Delete(nomenclaturaFromDB).Save();
+						}
+					}
+
+					dbContextTransaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+					dbContextTransaction.Rollback();
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+					var modelVM = new EBCSendersVM(dataFromDB, data.XmlType, _eCCListRepositories, data.IsFromCreate);
+
+					if (Request.IsAjaxRequest())
+						return Json(this.ModalContentReply(modelVM));
+					else
+						return PartialView(modelVM);
+				}
+			}
+
+			Flash.Instance.Success(_context.GetDictionaryValue(DictionaryEntryKeys.EditOperationSuccess));
+			return Json(this.CloseModalReply());
+		}
+
+        public ActionResult UpdateTable()
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+            var model = _eConnectorSendersRepository.GetAllSenders();
+
+            if (Request.IsAjaxRequest())
+                return Json(this.PanelContentReply(model), JsonRequestBehavior.AllowGet);
+            else
+                return View(model);
+        }
+		#endregion
+
+		#region XML configuration
+		// GET: initial call
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_CONFIGURACOESXML)]
+		public ActionResult XmlConfiguration(Guid? senderId)
+		{
+			this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+			var senderIdValue = senderId.HasValue ? senderId.Value : Guid.Empty;
+			var modelVM = new EBCSendersXMLConfigsVM(senderIdValue, _eCCListRepositories, _eConnectorSendersRepository);
+
+			if (Request.IsAjaxRequest())
+				return Json(this.PanelContentReply(modelVM), JsonRequestBehavior.AllowGet);
+			else
+				return View(modelVM);
+		}
+
+		// POST: open modal to create xml field
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_CONFIGURACOESXML)]
+		public ActionResult CreateXmlField(Guid id, string t, string n)
+		{
+			this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+			var model = new EBCXmlFieldSenderVM(_eCCListRepositories, id, t, n);
+
+			if (Request.IsAjaxRequest())
+				return Json(this.ModalContentReply(model), JsonRequestBehavior.AllowGet);
+			else
+				return PartialView();
+		}
+
+		// POST: submit xml create form
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_CONFIGURACOESXML)]
+		public ActionResult CreateXmlFieldSubmit(XmlSenderData data)
+		{
+			using (var dbContextTransaction = _eConnectorSendersRepository.Context.Database.BeginTransaction())
+			{
+				try
+				{
+					if (!ModelState.IsValid)
+					{
+						Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+						var modelVM = new EBCXmlFieldSenderVM(data, _eCCListRepositories);
+
+						if (Request.IsAjaxRequest())
+							return Json(this.ModalContentReply(modelVM));
+						else
+							return PartialView(modelVM);
+					}
+
+					// check if the choosed XML type is equal to the existing one
+					int xmlNumber = Int32.Parse(data.XmlNumber);
+					string previousXmlType = _eCCListRepositories.eConnectorXmlHeadInboundRepository.GetXmlTypeByXmlNumber(xmlNumber);
+
+					if (previousXmlType == null)
+						throw new Exception("Could not find previous XML type.");
+
+					// if previous XML type it's diferent: delete the XML template
+					if (previousXmlType != null && !previousXmlType.Equals(data.XmlType, StringComparison.OrdinalIgnoreCase))
+					{
+						var headerToDelete = _eCCListRepositories.eConnectorXmlHeadInboundRepository.Set
+							.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+						_eCCListRepositories.eConnectorXmlHeadInboundRepository.Set.RemoveRange(headerToDelete);
+
+						var linesToDelete = _eCCListRepositories.eConnectorXmlLinesInboundRepository.Set
+							.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+						_eCCListRepositories.eConnectorXmlLinesInboundRepository.Set.RemoveRange(linesToDelete);
+
+						var vatToDelete = _eCCListRepositories.eConnectorXmlVatInboundRepository.Set
+							.Where(x => x.NumeroXML == xmlNumber).AsEnumerable();
+						_eCCListRepositories.eConnectorXmlVatInboundRepository.Set.RemoveRange(vatToDelete);
+					}
+
+					// get field from xmlTemplate
+					var field = _eCCListRepositories.eConnectorXmlTemplateRepository.Set
+						.FirstOrDefault(x => x.NomeCampo.Equals(data.NomeCampo, StringComparison.OrdinalIgnoreCase)
+							&& x.Tipo.Equals(data.Area, StringComparison.OrdinalIgnoreCase)
+							&& x.TipoXML.Equals(data.XmlType, StringComparison.OrdinalIgnoreCase));
+
+					// insert the field
+					if (data.Area.Equals(DigitalDocumentAreas.HEADER, StringComparison.OrdinalIgnoreCase))
+					{
+						// get last position
+						int lastPos = _eCCListRepositories.eConnectorXmlHeadInboundRepository
+							.GetLastPosition(xmlNumber, field.NomeCampo, field.TipoXML);
+
+						var newDB = new EBC_XMLHeadInbound
+						{
+							pkid = Guid.NewGuid(),
+							NumeroXML = xmlNumber,
+							Element = field.CaminhoXML,
+							NomeCampo = field.NomeCampo,
+							TipoXML = field.TipoXML,
+							Obrigatorio = data.IsRequired,
+							Posicao = lastPos + 1,
+							CampoBD = field.NomeCampo.Replace(" ", ""),
+							isATfield = field.isATfield.Value == true ? 1 : 0
+						};
+
+						_eCCListRepositories.eConnectorXmlHeadInboundRepository.Add(newDB).Save();
+					}
+					else if (data.Area.Equals(DigitalDocumentAreas.LINES, StringComparison.OrdinalIgnoreCase))
+					{
+						// get last position
+						int lastPos = _eCCListRepositories.eConnectorXmlLinesInboundRepository
+							.GetLastPosition(xmlNumber, field.NomeCampo, field.TipoXML);
+
+						var newDB = new EBC_XMLLinesInbound
+						{
+							pkid = Guid.NewGuid(),
+							NumeroXML = xmlNumber,
+							Element = field.CaminhoXML,
+							NomeCampo = field.NomeCampo,
+							TipoXML = field.TipoXML,
+							Obrigatorio = data.IsRequired,
+							Posicao = lastPos + 1,
+							CampoBD = field.NomeCampo.Replace(" ", ""),
+							isATfield = field.isATfield
+						};
+
+						_eCCListRepositories.eConnectorXmlLinesInboundRepository.Add(newDB).Save();
+					}
+					else
+					{
+						// get last position
+						int lastPos = _eCCListRepositories.eConnectorXmlVatInboundRepository
+							.GetLastPosition(xmlNumber, field.NomeCampo, field.TipoXML);
+
+						var newDB = new EBC_XMLResumoIVAInbound
+						{
+							pkid = Guid.NewGuid(),
+							NumeroXML = xmlNumber,
+							Element = field.CaminhoXML,
+							NomeCampo = field.NomeCampo,
+							TipoXML = field.TipoXML,
+							Obrigatorio = data.IsRequired,
+							Posicao = lastPos + 1,
+							CampoBD = field.NomeCampo.Replace(" ", ""),
+							isATfield = field.isATfield
+						};
+
+						_eCCListRepositories.eConnectorXmlVatInboundRepository.Add(newDB).Save();
+					}
+
+					dbContextTransaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+					dbContextTransaction.Rollback();
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+					var modelVM = new EBCXmlFieldSenderVM(data, _eCCListRepositories);
+
+					if (Request.IsAjaxRequest())
+						return Json(this.ModalContentReply(modelVM));
+					else
+						return PartialView(modelVM);
+				}
+			}
+
+			Flash.Instance.Success(_context.GetDictionaryValue(DictionaryEntryKeys.EditOperationSuccess));
+			return Json(this.CloseModalReply());
+		}
+
+		// GET: open modal to edit xml field
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_CONFIGURACOESXML)]
+		public ActionResult EditXmlField(Guid pkid, string type)
+		{
+			var modelVM = new EBCXmlFieldSenderVM();
+			if (type == DigitalDocumentAreas.HEADER)
+			{
+				var model = _eCCListRepositories.eConnectorXmlHeadInboundRepository.Find(pkid);
+				modelVM.Pkid = model.pkid;
+				modelVM.IsRequired = model.Obrigatorio.Value;
+				modelVM.NomeCampo = model.NomeCampo;
+				modelVM.Area = DigitalDocumentAreas.HEADER;
+			}
+			else if (type == DigitalDocumentAreas.LINES)
+			{
+				var model = _eCCListRepositories.eConnectorXmlLinesInboundRepository.Find(pkid);
+				modelVM.Pkid = model.pkid;
+				modelVM.IsRequired = model.Obrigatorio.Value;
+				modelVM.NomeCampo = model.NomeCampo;
+				modelVM.Area = DigitalDocumentAreas.LINES;
+			}
+			else
+			{
+				var model = _eCCListRepositories.eConnectorXmlVatInboundRepository.Find(pkid);
+				modelVM.Pkid = model.pkid;
+				modelVM.IsRequired = model.Obrigatorio.Value;
+				modelVM.NomeCampo = model.NomeCampo;
+				modelVM.Area = DigitalDocumentAreas.VAT;
+			}
+
+			if (Request.IsAjaxRequest())
+				return Json(this.ModalContentReply(modelVM), JsonRequestBehavior.AllowGet);
+			else
+				return PartialView(modelVM);
+		}
+
+		// POST: submit xml field edit
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_CONFIGURACOESXML)]
+		public ActionResult EditXmlField(XmlSenderData submitedData)
+		{
+			using (var dbContextTransaction = _eConnectorSendersRepository.Context.Database.BeginTransaction())
+			{
+				try
+				{
+					if (!ModelState.IsValid)
+					{
+						Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+						var modelVM = new EBCXmlFieldSenderVM();
+						modelVM.Pkid = submitedData.Pkid;
+						modelVM.IsRequired = submitedData.IsRequired;
+						modelVM.NomeCampo = submitedData.NomeCampo;
+						modelVM.Area = submitedData.Area;
+
+						if (Request.IsAjaxRequest())
+							return Json(this.ModalContentReply(modelVM));
+						else
+							return PartialView(modelVM);
+					}
+
+					// update in DB
+					if (submitedData.Area == DigitalDocumentAreas.HEADER)
+					{
+						var dataFromDb = _eCCListRepositories.eConnectorXmlHeadInboundRepository.Find(submitedData.Pkid);
+						dataFromDb.Obrigatorio = submitedData.IsRequired;
+						_eCCListRepositories.eConnectorXmlHeadInboundRepository.Edit(dataFromDb).Save();
+					}
+					else if (submitedData.Area == DigitalDocumentAreas.LINES)
+					{
+						var dataFromDb = _eCCListRepositories.eConnectorXmlLinesInboundRepository.Find(submitedData.Pkid);
+						dataFromDb.Obrigatorio = submitedData.IsRequired;
+						_eCCListRepositories.eConnectorXmlLinesInboundRepository.Edit(dataFromDb).Save();
+					}
+					else
+					{
+						var dataFromDb = _eCCListRepositories.eConnectorXmlVatInboundRepository.Find(submitedData.Pkid);
+						dataFromDb.Obrigatorio = submitedData.IsRequired;
+						_eCCListRepositories.eConnectorXmlVatInboundRepository.Edit(dataFromDb).Save();
+					}
+
+					dbContextTransaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+					dbContextTransaction.Rollback();
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+					var modelVM = new EBCXmlFieldSenderVM();
+					modelVM.Pkid = submitedData.Pkid;
+					modelVM.IsRequired = submitedData.IsRequired;
+					modelVM.NomeCampo = submitedData.NomeCampo;
+					modelVM.Area = submitedData.Area;
+
+					if (Request.IsAjaxRequest())
+						return Json(this.ModalContentReply(modelVM));
+					else
+						return PartialView(modelVM);
+				}
+			}
+
+			Flash.Instance.Success(_context.GetDictionaryValue(DictionaryEntryKeys.EditOperationSuccess));
+			return Json(this.CloseModalReply());
+		}
+
+		// POST: submit xml field delete
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_CONFIGURACOESXML)]
+		public ActionResult DeleteXmlField(Guid pkid, string type, Guid senderId)
+		{
+			using (var dbContextTransaction = _eConnectorSendersRepository.Context.Database.BeginTransaction())
+			{
+				try
+				{
+					if (type == DigitalDocumentAreas.HEADER)
+					{
+						var dataFromDb = _eCCListRepositories.eConnectorXmlHeadInboundRepository.Find(pkid);
+
+						// delete field
+						_eCCListRepositories.eConnectorXmlHeadInboundRepository.Delete(dataFromDb).Save();
+
+						// update the Position of the next fields on the template
+						_eCCListRepositories.eConnectorXmlHeadInboundRepository
+							.Where(x => x.Posicao > dataFromDb.Posicao && x.TipoXML == dataFromDb.TipoXML && x.NumeroXML == dataFromDb.NumeroXML)
+							.ToList()
+							.ForEach(x =>
+							{
+								var lineFromDb = _eCCListRepositories.eConnectorXmlHeadInboundRepository.Find(x.pkid);
+								lineFromDb.Posicao = x.Posicao - 1;
+								_eCCListRepositories.eConnectorXmlHeadInboundRepository.Edit(lineFromDb).Save();
+							});
+					}
+					else if (type == DigitalDocumentAreas.LINES)
+					{
+						var dataFromDb = _eCCListRepositories.eConnectorXmlLinesInboundRepository.Find(pkid);
+
+						// delete field
+						_eCCListRepositories.eConnectorXmlLinesInboundRepository.Delete(dataFromDb).Save();
+
+						// update the Position of the next fields on the template
+						_eCCListRepositories.eConnectorXmlLinesInboundRepository
+							.Where(x => x.Posicao > dataFromDb.Posicao && x.TipoXML == dataFromDb.TipoXML && x.NumeroXML == dataFromDb.NumeroXML)
+							.ToList()
+							.ForEach(x =>
+							{
+								var lineFromDb = _eCCListRepositories.eConnectorXmlLinesInboundRepository.Find(x.pkid);
+								lineFromDb.Posicao = x.Posicao - 1;
+								_eCCListRepositories.eConnectorXmlLinesInboundRepository.Edit(lineFromDb).Save();
+							});
+					}
+					else
+					{
+						var dataFromDb = _eCCListRepositories.eConnectorXmlVatInboundRepository.Find(pkid);
+
+						// delete field
+						_eCCListRepositories.eConnectorXmlVatInboundRepository.Delete(dataFromDb).Save();
+
+						// update the Position of the next fields on the template
+						_eCCListRepositories.eConnectorXmlVatInboundRepository
+							.Where(x => x.Posicao > dataFromDb.Posicao && x.TipoXML == dataFromDb.TipoXML && x.NumeroXML == dataFromDb.NumeroXML)
+							.ToList()
+							.ForEach(x =>
+							{
+								var lineFromDb = _eCCListRepositories.eConnectorXmlVatInboundRepository.Find(x.pkid);
+								lineFromDb.Posicao = x.Posicao - 1;
+								_eCCListRepositories.eConnectorXmlVatInboundRepository.Edit(lineFromDb).Save();
+							});
+					}
+
+					dbContextTransaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+					dbContextTransaction.Rollback();
+
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+					return RedirectToAction("XmlConfiguration", new { senderId = senderId });
+				}
+			}
+
+			Flash.Instance.Success(_context.GetDictionaryValue(DictionaryEntryKeys.DeleteOperationSuccess));
+			return RedirectToAction("XmlConfiguration", new { senderId = senderId });
+		}
+
+		#endregion
+
+		#region XML Upload
+
+		// GET: show XML upload view
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_MAPEAMENTO)]
+		public ActionResult XmlUpload(Guid? selectedSender)
+		{
+			this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+			if (selectedSender == null)
+				selectedSender = Guid.Empty;
+
+			var model = _eConnectorSendersRepository.Set
+				.Where(s => s.HaveXML)
+				.ToList();
+			var viewModel = new EBCSenderXmlUploadVM(model, selectedSender);
+
+			if (Request.IsAjaxRequest())
+				return Json(this.PanelContentReply(viewModel), JsonRequestBehavior.AllowGet);
+			else
+				return View(viewModel);
+		}
+
+		// POST: Submit XML file
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_MAPEAMENTO)]
+		public ActionResult XmlUpload(Guid FkSender, HttpPostedFileBase FicheiroXml)
+		{
+			string path = "";
+			try
+			{
+				if (FkSender == null || FkSender == Guid.Empty)
+				{
+					this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.MustSelectSender));
+
+					if (FkSender == null)
+						FkSender = Guid.Empty;
+
+					var model = _eConnectorSendersRepository.Set.ToList();
+					var viewModel = new EBCSenderXmlUploadVM(model, FkSender);
+
+					return View("XmlUpload", viewModel);
+				}
+
+				if (FicheiroXml == null || FicheiroXml.ContentLength <= 0)
+				{
+					this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.XmlNotUploaded));
+
+					if (FkSender == null)
+						FkSender = Guid.Empty;
+
+					var model = _eConnectorSendersRepository.Set.ToList();
+					var viewModel = new EBCSenderXmlUploadVM(model, FkSender);
+
+					return View("XmlUpload", viewModel);
+				}
+
+				var ext = Path.GetExtension(FicheiroXml.FileName);
+				if (!allowed.Equals(ext, StringComparison.OrdinalIgnoreCase))
+				{
+					this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.FicheiroFormatoInvalido));
+
+					if (FkSender == null)
+						FkSender = Guid.Empty;
+
+					var model = _eConnectorSendersRepository.Set.ToList();
+					var viewModel = new EBCSenderXmlUploadVM(model, FkSender);
+
+					return View("XmlUpload", viewModel);
+				}
+
+				string installDir = _eCCListRepositories.suiteConfigurationsRepository.ConfigValue("InstallDir");
+
+				// Save XML file
+				path = Path.Combine(installDir, "TemplatesXML", FicheiroXml.FileName);
+				try
+				{
+					if (!Directory.Exists(Path.Combine(installDir, "TemplatesXML")))
+						Directory.CreateDirectory(Path.Combine(_eCCListRepositories.suiteConfigurationsRepository.ConfigValue("InstallDir"), "TemplatesXML"));
+
+					FicheiroXml.SaveAs(path);
+				}
+				catch (Exception)
+				{
+					throw;
+				}
+
+				// parse XML file and save his tags on DB
+				_xmlHelper.ParseXmlTagsAndSave(path, FkSender);
+
+				// Delete XML file
+				if (path != "")
+				{
+					try
+					{
+						if (System.IO.File.Exists(path))
+							System.IO.File.Delete(path);
+					}
+					catch (Exception)
+					{
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+				// delte uploaded XML
+				if (path != "")
+				{
+					try
+					{
+						if (System.IO.File.Exists(path))
+							System.IO.File.Delete(path);
+					}
+					catch (Exception)
+					{
+					}
+				}
+
+				Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+				this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+				if (FkSender == null)
+					FkSender = Guid.Empty;
+
+				var model = _eConnectorSendersRepository.Set.ToList();
+				var viewModel = new EBCSenderXmlUploadVM(model, FkSender);
+
+				return View("XmlUpload", viewModel);
+			}
+
+			Flash.Instance.Success(_context.GetDictionaryValue(DictionaryEntryKeys.XmlMapUploadSuccess));
+			return RedirectToAction("XmlUpload");
+		}
+
+		#endregion
+
+		#region XML Mapping
+
+		// GET: show XML upload view
+		/// <summary>
+		/// Mapping XML
+		/// </summary>
+		/// <param name="i">Instance</param>
+		/// <param name="s">Sender</param>
+		/// <param name="sx">Sender XML (uploaded)</param>
+		/// <param name="bx">Base XML</param>
+		/// <returns></returns>
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_XMLMAPEAMENTO)]
+		public ActionResult XmlMapping(Guid? i, Guid? s, string sx, string bx)
+		{
+			this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+			var instaces = _eCCListRepositories.instancesRepository.Set
+				.OrderBy(ins => ins.Name)
+				.ToList();
+
+			var senders = _eConnectorSendersRepository.Set
+				.Where(x => x.HaveXML)
+				.OrderBy(x => x.EmailName)
+				.ToList();
+
+			// available xml types
+			var xmls = _eCCListRepositories.eConnectorXmlTemplateRepository
+				.GetExistingXmlTypes();
+
+			if (sx == null)
+				sx = "";
+
+			if (bx == null)
+				bx = "";
+
+			// available xml base fiels
+			var xmlBaseFields = _eCCListRepositories.eConnectorXmlTemplateRepository.GetAllXmlDataByType(bx);
+
+			// available xml to map fiels
+			var xmlToMapFields = _eCCListRepositories.eConnectorXmlTemplateRepository.GetAllXmlDataByType(sx);
+
+			var viewModel = new EBCSenderXmlMappingVM(instaces, senders, xmls, i, s, sx, bx, xmlBaseFields, xmlToMapFields);
+
+			if (Request.IsAjaxRequest())
+				return Json(this.PanelContentReply(viewModel), JsonRequestBehavior.AllowGet);
+			else
+				return View(viewModel);
+		}
+
+		[HttpPost]
+		[PersonAuthorize(Permissions.EECONNECTOR_REMETENTES_XMLMAPEAMENTO)]
+		public ActionResult XmlMapping(Guid? i, Guid? s, string sx, string bx, List<XmlMapRowData> mapRows)
+		{
+			using (var dbContextTransaction = _eCCListRepositories.eConnectorXmlMappingRepository.Context.Database.BeginTransaction())
+			{
+				try
+				{
+					if (!ModelState.IsValid)
+					{
+						Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+
+						var instaces = _eCCListRepositories.instancesRepository.Set
+										.OrderBy(ins => ins.Name)
+										.ToList();
+
+						var senders = _eConnectorSendersRepository.Set
+							.Where(x => x.HaveXML)
+							.OrderBy(x => x.EmailName)
+							.ToList();
+
+						// available xml types
+						var xmls = _eCCListRepositories.eConnectorXmlTemplateRepository
+							.GetExistingXmlTypes();
+
+						if (sx == null)
+							sx = "";
+
+						if (bx == null)
+							bx = "";
+
+						// available xml base fiels
+						var xmlBaseFields = _eCCListRepositories.eConnectorXmlTemplateRepository.GetAllXmlDataByType(bx);
+
+						// available xml to map fiels
+						var xmlToMapFields = _eCCListRepositories.eConnectorXmlTemplateRepository.GetAllXmlDataByType(sx);
+
+						var viewModel = new EBCSenderXmlMappingVM(instaces, senders, xmls, i, s, sx, bx, xmlBaseFields, xmlToMapFields);
+
+						return View("XmlUpload", viewModel);
+					}
+
+					// check if there are repeated fields
+					var repeated = mapRows
+						.Where(x => x.BaseXmlFieldPkid != Guid.Empty)
+						.GroupBy(x => x.BaseXmlFieldPkid)
+						.Where(g => g.Count() > 1)
+						.Select(y => y.Key)
+						.ToList();
+					if (repeated.Count > 0)
+					{
+						Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.RepeatedXmlFields));
+
+						var instaces = _eCCListRepositories.instancesRepository.Set
+										.OrderBy(ins => ins.Name)
+										.ToList();
+
+						var senders = _eConnectorSendersRepository.Set
+							.Where(x => x.HaveXML)
+							.OrderBy(x => x.EmailName)
+							.ToList();
+
+						// available xml types
+						var xmls = _eCCListRepositories.eConnectorXmlTemplateRepository
+							.GetExistingXmlTypes();
+
+						if (sx == null)
+							sx = "";
+
+						if (bx == null)
+							bx = "";
+
+						// available xml base fiels
+						var xmlBaseFields = _eCCListRepositories.eConnectorXmlTemplateRepository.GetAllXmlDataByType(bx);
+
+						// available xml to map fiels
+						var xmlToMapFields = _eCCListRepositories.eConnectorXmlTemplateRepository.GetAllXmlDataByType(sx);
+
+						var viewModel = new EBCSenderXmlMappingVM(instaces, senders, xmls, i, s, sx, bx, xmlBaseFields, xmlToMapFields);
+
+						return View("XmlUpload", viewModel);
+					}
+
+					// get sender NIF
+					var senderNif = _eConnectorSendersRepository.GetSenderNifById(s.Value);
+
+					// insert mapping
+					foreach (XmlMapRowData row in mapRows)
+					{
+						if (row.BaseXmlFieldPkid != null && row.BaseXmlFieldPkid != Guid.Empty)
+						{
+							MapeamentoXML map = new MapeamentoXML
+							{
+								pkid = Guid.NewGuid(),
+								FKCaminhoXML_Forn = row.ToMapXmlFieldPkid,
+								FKCaminhoXML_Cli = row.BaseXmlFieldPkid,
+								FKEmpresa = i.Value,
+								TipoXML = bx,
+								TipoCustom = sx,
+								NifFornecedor = senderNif
+							};
+							_eCCListRepositories.eConnectorXmlMappingRepository.Add(map).Save();
+						}
+					}
+
+					dbContextTransaction.Commit();
+				}
+				catch (Exception ex)
+				{
+					Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+					dbContextTransaction.Rollback();
+
+					Flash.Instance.Error(_context.GetDictionaryValue(DictionaryEntryKeys.DBErrors));
+					return RedirectToAction("XmlMapping");
+				}
+			}
+
+			Flash.Instance.Success(_context.GetDictionaryValue(DictionaryEntryKeys.eConnectorSenderXmlMappingSuccess));
+			return RedirectToAction("XmlMapping");
+
+		}
+
+        #endregion
+
+        #region UnknownEmails
+        public ActionResult UnknownList()
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+
+            return View();
+        }
+        #endregion
+    }
+}

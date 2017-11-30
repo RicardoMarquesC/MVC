@@ -1,0 +1,214 @@
+﻿@model eBillingSuite.ViewModels.EBCSendersVM
+@{
+    var uniqueID = "econnectorsender-modal";
+}
+
+<script>
+    $(document).ready(function () {
+        if (($('#PDFAss').prop('checked')) || ($('#PDFNAss').prop('checked'))) {
+            $('#NomenclaturaPDF').show();
+            if ($('#isNomenclaturaPDF').prop('checked')) {
+                $("#NomenclaturaPDFData").show();
+            }
+            else {
+                $("#NomenclaturaPDFData").hide();
+            }
+        }
+        else {
+            $("#NomenclaturaPDF").hide();
+            $("#NomenclaturaPDFData").hide();
+        }
+
+        $('#PDFAss').change(function () {
+            if ($(this).is(':checked')) {
+                $('#NomenclaturaPDF').show();
+            }
+            else {
+                $("#NomenclaturaPDF").hide();
+                $("#NomenclaturaPDFData").hide();
+            }
+        });
+
+        $('#PDFNAss').change(function () {
+            if ($(this).is(':checked')) {
+                $('#NomenclaturaPDF').show();
+            }
+            else {
+                $("#NomenclaturaPDF").hide();
+                $("#NomenclaturaPDFData").hide();
+            }
+        });
+
+        $('#isNomenclaturaPDF').change(function () {
+            if ($(this).is(':checked')) {
+                $('#NomenclaturaPDFData').show();
+            }
+            else {
+                $("#NomenclaturaPDFData").hide();
+            }
+        });
+
+        if ($('#DoYouWantForward').prop('checked')) {
+            $('#DoYouWantForwardChoose').show();
+        }
+        else {
+            $("#DoYouWantForwardChoose").hide();
+        }
+
+        if ($('#DoYouWantForwardFTP').prop('checked')) {
+            $("#DoYouWantForward").prop("checked", true);
+            $("#DoYouWantForwardChoose").show();
+            $("#DoYouWantForwardChooseFTP").show();
+        }
+        else {
+            $("#DoYouWantForwardChooseFTP").hide();
+        }
+
+        if ($('#DoYouWantForwardEmail').prop('checked')) {
+            $("#DoYouWantForward").prop("checked", true);
+            $("#DoYouWantForwardChoose").show();
+            $("#DoYouWantForwardChooseEmail").show();
+        }
+        else {
+            $("#DoYouWantForwardChooseEmail").hide();
+        }
+
+        $('#DoYouWantForward').click(function () {
+            if ($(this).is(':checked')) {
+                $('#DoYouWantForwardChoose').show();
+                if ($('#DoYouWantForwardFTP').prop('checked'))
+                    $("#DoYouWantForwardChooseFTP").show();
+                if ($('#DoYouWantForwardEmail').prop('checked'))
+                    $("#DoYouWantForwardChooseEmail").show();
+            }
+            else {
+                $("#DoYouWantForwardChoose").hide();
+                $("#DoYouWantForwardChooseFTP").hide();
+                $("#DoYouWantForwardChooseEmail").hide();
+            }
+        });
+
+        $('#DoYouWantForwardEmail').click(function () {
+            if ($(this).is(':checked')) {
+                $('#DoYouWantForwardChooseEmail').show();
+
+                $('#DoYouWantForwardFTP').prop("checked", false);
+                $('#DoYouWantForwardChooseFTP').hide();
+
+            }
+            else {
+                $("#DoYouWantForwardChooseEmail").hide();
+            }
+        });
+
+        $('#DoYouWantForwardFTP').click(function () {
+            if ($(this).is(':checked')) {
+                $('#DoYouWantForwardChooseFTP').show();
+                $("#DoYouWantForwardEmail").prop("checked", false);
+                $('#DoYouWantForwardChooseEmail').hide();
+            }
+            else {
+                $("#DoYouWantForwardChooseFTP").hide();
+            }
+        });
+
+        if ($('#PdfLink').prop('checked')) {
+            $('#PdfLinkDiv').show();
+        }
+        else {
+            $("#PdfLinkDiv").hide();
+        }
+
+        $('#PdfLink').click(function () {
+            if ($(this).is(':checked')) {
+                $('#PdfLinkDiv').show();
+            }
+            else {
+                $("#PdfLinkDiv").hide();
+                $('#PdfLinkBaseURL').val('');
+            }
+    });
+    });
+</script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h4 class="modal-title">@Texts.EConnectorSupplierEdit)</h4>
+</div>
+<div class="modal-body">
+    <form id="doc-edit-form"
+          action="@Url.Action("EditSender", "eConnectorSenders")"
+          method="post"
+          class="form-horizontal">
+
+        <div class="tab-content">
+            <div id="@uniqueID-details" class="tab-pane fade in active">
+                @Html.HiddenFor(e => e.Pkid)
+                @Html.HiddenFor(e => e.IsFromCreate)
+                <div class="row">
+                    @Html.PixelAdminTextBoxWithColFor(e => e.EmailName, 8, null, InputOptions.Default, Texts.EmailName)
+
+                    @if (Model.IsFromCreate)
+                    {
+                        @Html.PixelAdminTextBoxWithColFor(e => e.Nif, 4, null, InputOptions.Default, Texts.NIF)
+                    }
+                    else
+                    {
+                        @Html.PixelAdminTextBoxWithColFor(e => e.Nif, 4, null, InputOptions.ReadOnly, Texts.NIF)
+                    }
+                </div>
+                <p class="help-block">@Texts.EBCWhiteListEmailHelpLine</p>
+                <div class="row">
+                    @Html.PixelAdminTextBoxWithColFor(e => e.EmailAddress, 6, null, InputOptions.Default, Texts.EmailAddress)
+                    @Html.PixelAdminTextBoxWithColFor(e => e.ReplyToAddress, 6, null, InputOptions.Default, Texts.ReplyToAddress)
+                </div>
+                <div class="row">
+                    @Html.PixelAdminSwitcherWithColFor(e => e.PdfLink, 2, null, InputOptions.Default, Texts.PdfLink)
+                    @Html.PixelAdminSwitcherWithColFor(e => e.Enabled, 2, null, InputOptions.Default, Texts.Enabled)
+                    @Html.PixelAdminSwitcherWithColFor(e => e.ConcatAnexos, 2, null, InputOptions.Default, Texts.ConcatAnexos)
+                </div>
+                <div class="row" id="PdfLinkDiv">
+                    @Html.PixelAdminTextBoxWithColFor(e => e.PdfLinkBaseURL, 6, null, InputOptions.Default, Texts.PdfLinkBaseURL)
+                </div>
+                <div class="row">
+                    @Html.PixelAdminSelectWithColFor(e => e.Mercado, Model.AvailableMarkets, 6, null, InputOptions.Default, Texts.AvailableMarkets)
+                    @Html.PixelAdminSelectWithColFor(e => e.XmlType, Model.AvailableXmlTypes, 6, null, InputOptions.Default, Texts.AvailableXMLTypes)
+                </div>
+                <div class="row">
+                    @Html.PixelAdminSwitcherWithColFor(e => e.XMLAss, 3, null, InputOptions.Default, Texts.XMLAss)
+                    @Html.PixelAdminSwitcherWithColFor(e => e.XMLNAss, 3, null, InputOptions.Default, Texts.XMLNAss)
+                    @Html.PixelAdminSwitcherWithColFor(e => e.PDFAss, 3, null, InputOptions.Default, Texts.PDFAss)
+                    @Html.PixelAdminSwitcherWithColFor(e => e.PDFNAss, 3, null, InputOptions.Default, Texts.PDFNAss)
+                </div>
+                <div class="row" id="NomenclaturaPDF">
+                    @Html.PixelAdminSwitcherWithColFor(e => e.isNomenclaturaPDF, 3, null, InputOptions.Default, Texts.isNomenclaturaPDF)
+                    @Html.PixelAdminSwitcherWithColFor(e => e.UsesPluginSystem, 3, null, InputOptions.Default, Texts.UsesPluginSystem)
+                </div>
+                <div class="row" id="NomenclaturaPDFData">
+                    @Html.PixelAdminSelectWithColFor(e => e.NomenclaturaPDFType, Model.AvailableNomenclaturaPDFTypes, 6, null, InputOptions.Default, Texts.AvailableNomenclaturaPDFTypes)
+                    @Html.PixelAdminTextBoxWithColFor(e => e.counterValue, 6, null, InputOptions.Default, Texts.counterValue)
+                </div>
+                <div class="row" id="DoYouWantForwardDiv">
+                    @Html.PixelAdminSwitcherWithColFor(e => e.DoYouWantForward, 3, null, InputOptions.Default, Texts.DoYouWantForward)
+                </div>
+                <div class="row" id="DoYouWantForwardChoose">
+                    @Html.PixelAdminSwitcherWithColFor(e => e.DoYouWantForwardEmail, 3, null, InputOptions.Default, Texts.DoYouWantForwardEmail)
+                    @Html.PixelAdminSwitcherWithColFor(e => e.DoYouWantForwardFTP, 3, null, InputOptions.Default, Texts.DoYouWantForwardFTP)
+                </div>
+                <div class="row" id="DoYouWantForwardChooseFTP">
+                    @Html.PixelAdminTextBoxWithColFor(e => e.ftpServer, 3, null, InputOptions.Default, Texts.ftpServer)
+                    @Html.PixelAdminTextBoxWithColFor(e => e.port, 3, null, InputOptions.Default, Texts.port)
+                    @Html.PixelAdminTextBoxWithColFor(e => e.username, 3, null, InputOptions.Default, Texts.Username)
+                    @Html.PixelAdminPasswordWithColFor(e => e.password, 3, null, InputOptions.Default, Texts.Password)
+                </div>
+                <div class="row" id="DoYouWantForwardChooseEmail">
+                    @Html.PixelAdminTextBoxWithColFor(e => e.listEmails, 12, null, InputOptions.Default, Texts.ListEmails)
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@Texts.Submit</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">@Texts.Close</button>
+</div>

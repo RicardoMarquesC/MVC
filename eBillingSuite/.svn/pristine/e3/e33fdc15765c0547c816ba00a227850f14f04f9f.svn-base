@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Shortcut.Repositories;
+using System.Data.Entity;
+
+namespace eBillingSuite.Model.EBC_DB
+{
+	public interface IeBillingSuiteEBCDBContext : IDbContext
+	{
+		Database Database { get; }
+
+		System.Data.Entity.DbSet<ComATPackets> ComATPackets { get; set; }
+		System.Data.Entity.DbSet<ComATPackets_Guias> ComATPackets_Guias { get; set; }
+		System.Data.Entity.DbSet<ConfigEnvioAT> ConfigEnvioAT { get; set; }
+		System.Data.Entity.DbSet<DictionaryEntries> DictionaryEntries { get; set; }
+		System.Data.Entity.DbSet<DocumentosErros> DocumentosErros { get; set; }
+		System.Data.Entity.DbSet<EBC_CertSignatureDetails> EBC_CertSignatureDetails { get; set; }
+		System.Data.Entity.DbSet<EBC_Config> EBC_Config { get; set; }
+		System.Data.Entity.DbSet<EBC_CustomerMetadata> EBC_CustomerMetadata { get; set; }
+		System.Data.Entity.DbSet<EBC_CustomerPackages> EBC_CustomerPackages { get; set; }
+		System.Data.Entity.DbSet<EBC_Customers> EBC_Customers { get; set; }
+		System.Data.Entity.DbSet<EBC_EmailContent> EBC_EmailContent { get; set; }
+		System.Data.Entity.DbSet<EBC_InstanceDeniedSenders> EBC_InstanceDeniedSenders { get; set; }
+		System.Data.Entity.DbSet<EBC_InstanceMetadata> EBC_InstanceMetadata { get; set; }
+		System.Data.Entity.DbSet<EBC_InstancePackages> EBC_InstancePackages { get; set; }
+		System.Data.Entity.DbSet<EBC_Instances> EBC_Instances { get; set; }
+		System.Data.Entity.DbSet<EBC_MercadoCert> EBC_MercadoCert { get; set; }
+		System.Data.Entity.DbSet<EBC_Mercados> EBC_Mercados { get; set; }
+		System.Data.Entity.DbSet<EBC_Metadata> EBC_Metadata { get; set; }
+		System.Data.Entity.DbSet<EBC_PackageEvents> EBC_PackageEvents { get; set; }
+		System.Data.Entity.DbSet<EBC_Packages> EBC_Packages { get; set; }
+		System.Data.Entity.DbSet<EBC_SpecificDeliveryOptions> EBC_SpecificDeliveryOptions { get; set; }
+		System.Data.Entity.DbSet<EBC_XML> EBC_XML { get; set; }
+		System.Data.Entity.DbSet<EBC_XMLClient> EBC_XMLClient { get; set; }
+		System.Data.Entity.DbSet<EBC_XMLHeadInbound> EBC_XMLHeadInbound { get; set; }
+		System.Data.Entity.DbSet<EBC_XMLInbound> EBC_XMLInbound { get; set; }
+		System.Data.Entity.DbSet<EBC_XMLLines> EBC_XMLLines { get; set; }
+		System.Data.Entity.DbSet<EBC_XMLLinesInbound> EBC_XMLLinesInbound { get; set; }
+		System.Data.Entity.DbSet<EBC_XMLResumoIVAInbound> EBC_XMLResumoIVAInbound { get; set; }
+		System.Data.Entity.DbSet<EBC_XmlToTxtTransform> EBC_XmlToTxtTransform { get; set; }
+		System.Data.Entity.DbSet<InboundPacketInfoObjectProperties> InboundPacketInfoObjectProperties { get; set; }
+		System.Data.Entity.DbSet<Languages> Languages { get; set; }
+		System.Data.Entity.DbSet<LoginAT> LoginAT { get; set; }
+		System.Data.Entity.DbSet<ManutencaoSistema> ManutencaoSistema { get; set; }
+		System.Data.Entity.DbSet<TipoRegexs> TipoRegexs { get; set; }
+		System.Data.Entity.DbSet<TiposRegioesFatura> TiposRegioesFatura { get; set; }
+		System.Data.Entity.DbSet<xmlTemplate> xmlTemplate { get; set; }
+		System.Data.Entity.DbSet<EBC_ConfigTXT> EBC_ConfigTXT { get; set; }
+		System.Data.Entity.DbSet<EBC_XMLResumoIVA> EBC_XMLResumoIVA { get; set; }
+		System.Data.Entity.DbSet<MapeamentoXML> MapeamentoXML { get; set; }
+        System.Data.Entity.DbSet<Tickets> Tickets { get; set; }
+        System.Data.Entity.DbSet<EBC_UnknownList> EBC_UnknownList { get; set; }
+
+    }
+}

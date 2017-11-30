@@ -1,0 +1,71 @@
+﻿@using eBillingSuite.Model.EDI_DB
+@model List<InboundPacket>
+@{
+	Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eEDILayout.cshtml";
+}
+<script>
+	init.push(function () {
+		$('a[data-toggle=tooltip]').tooltip();
+
+		$(document).ready(function () {
+			$('#jq-datatables').dataTable({
+				"oLanguage": {
+					"sUrl": '@this.GetjQDataTableLanguageUrl()',
+				},
+				"bProcessing": true,
+				"bServerSide": true,
+				"sPaginationType": "full_numbers",
+				"sAjaxSource": "ReceivedDocs",
+				"sSearch": { "sSearch": "Initial search" },
+				"bPaginate": true,
+			});
+		});
+
+		$('#jq-datatables_wrapper .table-caption').text('');
+		$('#jq-datatables_wrapper .dataTables_filter input').attr('placeholder', 'Procurar');
+	});
+</script>
+
+<div class="tab-pane panel no-padding no-border fade in active">
+	<div class="panel-heading">
+		<span class="panel-title">@this.Get(DictionaryEntryKeys.ReceivedDocsList)</span>
+	</div>
+	<div class="panel-body">
+		<div class="table-primary">
+			<table cellpadding="0"
+				   cellspacing="0"
+				   border="0"
+				   class="table table-striped table-bordered"
+				   id="jq-datatables"
+				   data-rel="ajax-update-panel"
+				   data-modal-size="modal-lg">
+				<thead>
+					<tr>
+						<th>@this.Get(DictionaryEntryKeys.NumDocumento)</th>
+						<th>@this.Get(DictionaryEntryKeys.NomeFornecedor)</th>
+						<th class="visible-lg">@this.Get(DictionaryEntryKeys.NomeCliente)</th>
+						<th>@this.Get(DictionaryEntryKeys.Quantia)</th>
+						<th class="visible-lg">@this.Get(DictionaryEntryKeys.DataRececao)</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (InboundPacket cap in Model)
+					{
+						<tr>
+							<td>@cap.NumFactura</td>
+							<td>@cap.NomeEmissor</td>
+							<td class="visible-lg">@cap.NomeReceptor</td>
+							<td>@cap.QuantiaComIVA</td>
+							<td class="visible-lg">@cap.DataRecepcao.ToDataTableShortFormat()</td>
+							<td style="text-align:right; white-space:nowrap">
+								<button type="button" class="btn btn-primary btn-sm" data-rel="ajax-edit-trigger" data-url="@Url.Action("EDIInboundDetail", "eEDI", new { id = cap.InternalProcessID })"><i class="fa fa-pencil"></i></button>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>

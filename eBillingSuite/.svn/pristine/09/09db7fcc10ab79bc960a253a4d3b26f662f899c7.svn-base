@@ -1,0 +1,480 @@
+﻿using eBillingSuite.Globalization;
+using eBillingSuite.HelperTools.Interfaces;
+using eBillingSuite.Model;
+using eBillingSuite.Model.Desmaterializacao;
+using eBillingSuite.Model.EBC_DB;
+using eBillingSuite.Model.eBillingConfigurations;
+using eBillingSuite.Models;
+using eBillingSuite.Repositories;
+using eBillingSuite.Repositories.Interfaces;
+using eBillingSuite.Resources;
+using eBillingSuite.Security;
+using eBillingSuite.ViewModels;
+using MvcFlash.Core;
+using MvcFlash.Core.Extensions;
+using Shortcut.PixelAdmin;
+using System;
+using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using static eBillingSuite.Controllers.User_Produtos;
+
+namespace eBillingSuite.Controllers
+{
+    public class eUserController : Controller
+    {
+        protected readonly IeBillingSuiteRequestContext _context;
+        private IPixelAdminPageContext _pixelAdminPageContext;
+        private IPermissionsRepository _permissionsRepository;
+        private IESuiteUserPermissionsRepository _eSuiteUserPermissionsRepository;
+        private IESuitePermissionsRepository _eSuitePermissionsRepository;
+        private ILoginRepository _loginRepository;
+        private IEncryption _encryption;
+        private IProductsRepository _productsRepository;
+        private IECCListRepositories _eCConfigRepositories;
+
+        public eUserController(IeBillingSuiteRequestContext context,
+            IPixelAdminPageContext pixelAdminPageContext,
+            IPermissionsRepository permissionsRepository,
+            IESuiteUserPermissionsRepository eSuiteUserPermissionsRepository,
+            ILoginRepository loginRepository,
+            IEncryption encryption,
+            IProductsRepository productsRepository,
+            IESuitePermissionsRepository eSuitePermissionsRepository,
+            IECCListRepositories eCConfigRepositories)
+        {
+            _context = context;
+            _pixelAdminPageContext = pixelAdminPageContext;
+            _permissionsRepository = permissionsRepository;
+            _eSuiteUserPermissionsRepository = eSuiteUserPermissionsRepository;
+            _eSuitePermissionsRepository = eSuitePermissionsRepository;
+            _productsRepository = productsRepository;
+            _loginRepository = loginRepository;
+            _encryption = encryption;
+            _eCConfigRepositories = eCConfigRepositories;
+        }
+
+        // GET: eUser
+        [PersonAuthorize(Permissions.EUSERS)]
+        public ActionResult Index()
+        {
+            bool usesAD = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["UsesAD"].ToString());
+
+            if (usesAD)
+            {
+                this.SetPixelAdminPageContext(_pixelAdminPageContext);
+                var modelVM = new eUserVM();
+                return View(modelVM);
+            }
+            else
+            {
+                this.SetPixelAdminPageContext(_pixelAdminPageContext);
+                var modelVM = new eUserVM(true, _loginRepository);
+                return View(modelVM);
+            }
+        }
+
+        [PersonAuthorize(Permissions.EUSERS)]
+        public ActionResult PermissionsList(string user, string domain)
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+            var modelVM = new eUserVM(user, _permissionsRepository);
+
+            if (domain != "Login")
+            {
+                ViewBag.user = user;
+                ViewBag.domain = domain;
+            }
+            else
+            {
+                ViewBag.user = user;
+                //ViewBag.domain = "Login";
+            }
+            return View(modelVM);
+        }
+
+        [HttpPost]
+        [PersonAuthorize(Permissions.EUSERS)]
+        public ActionResult PermissionsList(string user, string domain, List<string> Permissions)
+        {
+            bool usesAD = bool.Parse(System.Configuration.ConfigurationManager.AppSettings["UsesAD"].ToString());
+
+            using (var dbContextTransaction = _permissionsRepository.Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var userPermissions = new List<eSuitePermissions>();
+                    if (Permissions != null && Permissions.Count > 0)
+                    {
+                        userPermissions = _eSuitePermissionsRepository.Where(t => Permissions.Contains(t.Nome)).ToList();
+                    }
+
+                    var userNoSpaces = user.Replace(" ", "");
+
+                    //get the list of permissions associated to the user
+                    var actualUserPermissions = _eSuiteUserPermissionsRepository
+                                                .Where(esup => esup.Username.Contains(userNoSpaces))
+                                                .ToList();
+
+                    _eSuiteUserPermissionsRepository.Set.RemoveRange(actualUserPermissions);
+
+                    actualUserPermissions.Clear();
+
+                    foreach (eSuitePermissions ep in userPermissions)
+                    {
+                        var esup = new eSuiteUserPermissions
+                        {
+                            pkid = Guid.NewGuid(),
+                            eSuitePermissions = ep,
+                            FKPermissions = ep.pkid,
+                            Username = usesAD ? domain.Replace(".local", "") + @"\" + user.Replace(" ", "") : user
+                        };
+                        actualUserPermissions.Add(esup);
+                    }
+
+                    _eSuiteUserPermissionsRepository.Set.AddRange(actualUserPermissions);
+                    _eSuiteUserPermissionsRepository.Save();
+
+                    dbContextTransaction.Commit();
+
+                    Flash.Instance.Success(Texts.EditOperationSuccess);
+
+                    return RedirectToAction("PermissionsList", new { user = user, domain = domain });
+                }
+                catch (Exception ex)
+                {
+                    Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+                    dbContextTransaction.Rollback();
+                    Flash.Instance.Success(Texts.DBErrors);
+                    return RedirectToAction("PermissionsList", new { user = user, domain = domain });
+                }
+            }
+        }
+
+        #region Editar Utilizador
+        [HttpGet]
+        [PersonAuthorize(Permissions.EUSERS)]
+        public ActionResult editUser(int user)
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+            var ebcUSER = _loginRepository.Find(user);
+
+            List<ProdutosMaybeActive> productsForThisUser = _permissionsRepository.GetProductsByUser(ebcUSER.username)
+                .Select(o => new ProdutosMaybeActive
+                {
+                    ProductName = _productsRepository.GetProductsByID(o.produto),
+                    Checked = _productsRepository.GetProductsByID(o.produto) == "PI eSuite Users" ? false : o.activo.Value
+                }).ToList();
+
+            if (productsForThisUser.Count <= 0)
+            {
+                productsForThisUser = _permissionsRepository.GetProductsByUser(_loginRepository.Find(_context.UserIdentity.CodUtilizador).username)
+                    .Select(o => new ProdutosMaybeActive
+                    {
+                        ProductName = _productsRepository.GetProductsByID(o.produto),
+                        Checked = _productsRepository.GetProductsByID(o.produto) == "PI eSuite Users" ? false : o.activo.Value
+                    }).ToList();
+            }
+
+            var listInst = new List<InstancesActive>();
+
+            if (_context.UserIdentity.Instances == "*")
+            {
+                foreach (var instance in _eCConfigRepositories.instancesRepository.Set.ToList())
+                {
+                    listInst.Add(new InstancesActive
+                    {
+                        Name = instance.Name,
+                        NIF = instance.NIF,
+                        Checked = ebcUSER.Instances == null ? false : (ebcUSER.Instances == "*" ? true : ebcUSER.Instances.Contains(instance.NIF))
+                    });
+
+                }
+            }
+
+            var modelVM = new User_Produtos
+            {
+                user = new UserData
+                {
+                    CodUtilizador = ebcUSER.CodUtilizador.ToString(),
+                    username = ebcUSER.username,
+                    password = ebcUSER.password,
+                    allPermission = false
+                },
+                lista = productsForThisUser.ToList(),
+                listaInstances = listInst
+            };
+
+            //var modelVM = new eUserVM(true, _loginRepository, utilizador);
+
+
+            if (Request.IsAjaxRequest())
+                return Json(this.ModalContentReply(modelVM), JsonRequestBehavior.AllowGet);
+            else
+                return PartialView(modelVM);
+        }
+
+        [HttpPost]
+        [PersonAuthorize(Permissions.EUSERS)]
+        public ActionResult editUserE(User_Produtos data)
+        {
+            using (var dbContextTransaction = _loginRepository.Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var dataFromDB = _loginRepository.getUserById(int.Parse(data.user.CodUtilizador));
+
+                    if (dataFromDB.password != data.user.password)
+                        dataFromDB.password = _encryption.Sha512Encrypt(data.user.password);
+                    dataFromDB.username = data.user.username;
+                    dataFromDB.Instances = getListInstance(data.listaInstances);
+
+                    _loginRepository.Edit(dataFromDB).Save();
+
+                    var actualProductsList = _permissionsRepository.GetProductsByUser(dataFromDB.username)
+                                             .ToList();
+
+
+                    _permissionsRepository.Set.RemoveRange(actualProductsList);
+
+                    actualProductsList.Clear();
+
+                    foreach (ProdutosMaybeActive ep in data.lista)
+                    {
+                        var esup = new eSuite_Produtos
+                        {
+                            pkid = Guid.NewGuid(),
+                            produto = _productsRepository.GetProductsIDByName(ep.ProductName),
+                            utilizador = data.user.username,
+                            activo = ep.Checked
+                        };
+                        actualProductsList.Add(esup);
+                    }
+
+                    _permissionsRepository.Set.AddRange(actualProductsList);
+                    _permissionsRepository.Save();
+
+                    if (data.allPermission)
+                    {
+                        var permissions = _eSuitePermissionsRepository.Set.ToList();
+                        List<eSuiteUserPermissions> UserPerm = _eSuiteUserPermissionsRepository
+                                                .Where(esup => esup.Username.Contains(data.user.username))
+                                                .ToList();
+                        _eSuiteUserPermissionsRepository.Set.RemoveRange(UserPerm);
+
+                        UserPerm.Clear();
+
+                        foreach (var perm in permissions)
+                        {
+                            UserPerm.Add(new eSuiteUserPermissions
+                            {
+                                pkid = Guid.NewGuid(),
+                                Username = data.user.username,
+                                FKPermissions = perm.pkid,
+                                eSuitePermissions = perm
+                            });
+                        }
+
+                        _eSuiteUserPermissionsRepository.Set.AddRange(UserPerm);
+                        _eSuiteUserPermissionsRepository.Save();
+                    }
+
+
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+                    dbContextTransaction.Rollback();
+                    Flash.Instance.Error(Texts.DBErrors);
+                }
+            }
+
+
+            Flash.Instance.Success(Texts.EditOperationSuccess);
+            return Json(this.CloseModalReply());
+        }
+        #endregion
+
+        #region Criar Utilizador
+        public ActionResult createUser()
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+            //var ebcUSER = _loginRepository.Where(o => o.username == User.Identity.Name).Select(o => o).FirstOrDefault();
+
+            //List<ProdutosMaybeActive> productsForThisUser = _permissionsRepository.GetProductsByUser(ebcUSER.username)
+
+
+
+            List<ProdutosMaybeActive> productsForThisUser = _permissionsRepository.GetProductsByUser(User.Identity.Name)
+                .Select(o => new ProdutosMaybeActive
+                {
+                    ProductName = _productsRepository.GetProductsByID(o.produto),
+                    Checked = _productsRepository.GetProductsByID(o.produto) == "PI eSuite Users" ? false : o.activo.Value
+                }).ToList();
+
+
+            if (productsForThisUser.Count <= 0)
+            {
+                productsForThisUser = _permissionsRepository.GetProductsByUser(_loginRepository.Find(_context.UserIdentity.CodUtilizador).username)
+                    .Select(o => new ProdutosMaybeActive
+                    {
+                        ProductName = _productsRepository.GetProductsByID(o.produto),
+                        Checked = _productsRepository.GetProductsByID(o.produto) == "PI eSuite Users" ? false : o.activo.Value
+                    }).ToList();
+
+            }
+
+            var listaInstances = new List<InstancesActive>();
+
+            if (_context.UserIdentity.Instances == "*")
+            {
+                foreach (var instance in _eCConfigRepositories.instancesRepository.Set.ToList())
+                {
+                    listaInstances.Add(new InstancesActive
+                    {
+                        Name = instance.Name,
+                        NIF = instance.NIF,
+                        Checked = false
+                    });
+
+                }
+            }
+
+
+            var modelVM = new User_Produtos
+            {
+                user = new UserData(),
+                lista = productsForThisUser.ToList(),
+                listaInstances = listaInstances
+            };
+
+            //var modelVM = new eUserVM(true, _loginRepository, utilizador);
+
+
+            if (Request.IsAjaxRequest())
+                return Json(this.ModalContentReply(modelVM), JsonRequestBehavior.AllowGet);
+            else
+                return PartialView(modelVM);
+        }
+
+        [HttpPost]
+        public ActionResult createUserP(User_Produtos data)
+        {
+            using (var dbContextTransaction = _loginRepository.Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    string listNIFInstance = getListInstance(data.listaInstances);
+                    var dataFromDB = new eBC_Login
+                    {
+                        username = data.user.username,
+                        password = _encryption.Sha512Encrypt(data.user.password),
+                        Instances = String.IsNullOrEmpty(listNIFInstance) ? null : listNIFInstance
+                    };
+
+                    _loginRepository.Add(dataFromDB).Save();
+
+
+
+                    var actualProductsList = _permissionsRepository.GetProductsByUser(dataFromDB.username)
+                                             .ToList();
+
+
+                    _permissionsRepository.Set.RemoveRange(actualProductsList);
+
+                    actualProductsList.Clear();
+
+                    foreach (ProdutosMaybeActive ep in data.lista)
+                    {
+                        var esup = new eSuite_Produtos
+                        {
+                            pkid = Guid.NewGuid(),
+                            produto = _productsRepository.GetProductsIDByName(ep.ProductName),
+                            utilizador = data.user.username,
+                            activo = ep.Checked
+                        };
+                        actualProductsList.Add(esup);
+                    }
+
+                    _permissionsRepository.Set.AddRange(actualProductsList);
+                    _permissionsRepository.Save();
+
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Elmah.ErrorSignal.FromCurrentContext().Raise(ex);
+
+                    dbContextTransaction.Rollback();
+                    Flash.Instance.Error(Texts.DBErrors);
+                }
+            }
+
+
+            Flash.Instance.Success(Texts.EditOperationSuccess);
+            return Json(this.CloseModalReply());
+        }
+
+        private string getListInstance(List<InstancesActive> listaInstances)
+        {
+
+            if (listaInstances.Count > 0)
+            {
+                string x = string.Empty;
+                if (listaInstances.All(l => l.Checked))
+                    return "*";
+
+
+                foreach (var instance in listaInstances.Where(o => o.Checked))
+                {
+                    x += $"{instance.NIF};";
+                }
+                if (!String.IsNullOrEmpty(x))
+                    return x.Remove(x.Length - 1);
+
+                return x;
+            }
+            else
+            {
+                return "*";
+            }
+        }
+        #endregion
+
+        public ActionResult UpdateAction()
+        {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
+            var modelVM = new eUserVM(true, _loginRepository);
+            if (Request.IsAjaxRequest())
+                return Json(this.PanelContentReply("Index", modelVM), JsonRequestBehavior.AllowGet);
+            else
+                return View(modelVM);
+        }
+    }
+
+    public class User_Produtos
+    {
+        public UserData user { get; set; }
+        public List<ProdutosMaybeActive> lista { get; set; }
+        public List<InstancesActive> listaInstances { get; set; }
+        public bool allPermission { get; set; }
+    }
+
+    public class ProdutosMaybeActive
+    {
+        public string ProductName { get; set; }
+        public bool Checked { get; set; }
+    }
+
+    public class InstancesActive
+    {
+        public string Name { get; set; }
+        public string NIF { get; set; }
+        public bool Checked { get; set; }
+    }
+
+}

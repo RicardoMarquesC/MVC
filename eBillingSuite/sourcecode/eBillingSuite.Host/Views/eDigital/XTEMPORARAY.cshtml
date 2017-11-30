@@ -1,0 +1,156 @@
+﻿@{
+	//Layout = Request.IsAjaxRequest() ? null : "~/Views/Shared/_eDigitalLayout.cshtml";
+}
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="panel">
+			<div class="panel-heading">
+				<span class="panel-title">Default tables</span>
+			</div>
+			<div class="panel-body">
+				<table class="table table-bordered table-light">
+					<thead>
+						<tr>
+							<th style="text-align:center;">Funcionalidade</th>
+							<th style="text-align:center;">eBilling Connector</th>
+							<th style="text-align:center;">eBilling Digital</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr style="text-align:center;">
+							<td><b>Envio e receção de documentos eletrónicos certificados</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Consulta de documentos eletrónicos enviados e recebidos</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Envio e receção de anexos</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Possibilidade de integração automática dos documentos, enviados e recebidos, com outros sistemas</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Integração de ficheiros PDF e XML</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Reenvio automático de documentos em caso de falha</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Possibilidade de enviar para outros sistemas o estado dos documentos enviados</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Personalização do assunto e corpo do email a enviar</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Comunicação de documentos comerciais à AT</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Comunicação de documentos de transporte à AT</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Consulta de documentos comunicados à AT</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Criação e gestão de clientes</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Criação e gestão de fornecedores</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Multiempresa</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Tratamento de documentos de empresas do mesmo grupo (intercompany)</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Integração através de ficheiro de texto (TXT)</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Alertas em tempo real</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Relatórios diários</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Suporte para SMTP seguro</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Possibilidade de enviar para outros sistemas o estado dos documentos comunicados à AT</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Estatísticas e indicadores de desempenho</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Na receção de FE, possibilidade de extração automática de PDF alojado num servidor externo</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Suporte para receção em IMAP4</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Deteção de documentos repetidos</b></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Certificado eletrónico incluído</b></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+						<tr style="text-align:center;">
+							<td><b>Taxa por documento enviado/recebido (pay-per-use)</b></td>
+							<td><button class="btn btn-danger btn-sm" id="switcher-disable-all">Não</button></td>
+							<td><button class="btn btn-success btn-sm" id="switcher-enable-all">Sim</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

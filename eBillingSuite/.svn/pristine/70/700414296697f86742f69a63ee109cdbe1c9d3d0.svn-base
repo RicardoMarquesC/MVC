@@ -1,0 +1,53 @@
+﻿@model eBillingSuite.ViewModels.EBCInstanceEditVM
+@{
+	var uniqueID = "econnectorinstance-modal";
+}
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h4 class="modal-title">@this.Get(DictionaryEntryKeys.eConnectorInstanceEdit)</h4>
+</div>
+<div class="modal-body">
+	<form id="doc-edit-form"
+		  action="@Url.Action("EditInstance", "eConnectorConfigs")"
+		  method="post"
+		  class="form-horizontal">
+
+		<div class="tab-content">
+			<div id="@uniqueID-details" class="tab-pane fade in active">
+				@Html.HiddenFor(e => e.Instance.PKID)
+				<div class="row">
+					@Html.PixelAdminTextBoxWithColFor(e => e.Instance.Name, 6, null, InputOptions.Disabled)
+					@Html.PixelAdminTextBoxWithColFor(e => e.Instance.NIF, 3, null, InputOptions.Disabled)
+					@Html.PixelAdminSwitcherWithColFor(e => e.Instance.HasInternalProcess, 3, null, InputOptions.Default)
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="form-group no-margin-hr">
+							@Html.Label("Remetentes (fornecedores) sem autorização para enviar documentos para esta instância")
+							<div class="input-group" style="padding-top: 7px">
+								@foreach (var entry in Model.WhitelistEntries)
+								{
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="WhitelistEntries" class="px"
+												   checked="@(entry.WhitelistHasPermission ? "checked" : null)"
+												   value="@entry.WhitelistEntry.NIF">
+											<span class="lbl">
+												@(entry.WhitelistEntry.NIF + " - " + entry.WhitelistEntry.EmailName)
+											</span>
+										</label>
+									</div>
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-primary" data-rel="submit" data-form="doc-edit-form">@this.Get(DictionaryEntryKeys.Submit)</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">@this.Get(DictionaryEntryKeys.Close)</button>
+</div>
