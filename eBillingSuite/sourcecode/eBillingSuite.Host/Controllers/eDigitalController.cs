@@ -2736,5 +2736,15 @@ namespace eBillingSuite.Controllers
         }
 
         #endregion
+
+        #region OCR
+        public ActionResult ListInvoices()
+        {
+
+
+            return null;
+        }
+
+        #endregion
     }
 }

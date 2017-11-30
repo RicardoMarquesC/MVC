@@ -80,6 +80,9 @@
             <li class="@(action == "digitalaccountingdata" ? "active" : null)">
                 <a href="@Url.Action("DigitalAccountingData", "eDigital")">@Texts.LoadAccountingData</a>
             </li>}
+        <li class="@(action == "digitalaccountingdata" ? "active" : null)">
+            <a href="@Url.Action("DigitalAccountingData", "eDigital")">@Texts.LoadAccountingData</a>
+        </li>
 	</ul>
 	<div class="tab-content tab-content-bordered no-padding">
 		@RenderBody()
