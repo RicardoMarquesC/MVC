@@ -80,8 +80,9 @@
             <li class="@(action == "digitalaccountingdata" ? "active" : null)">
                 <a href="@Url.Action("DigitalAccountingData", "eDigital")">@Texts.LoadAccountingData</a>
             </li>}
-        <li class="@(action == "digitalaccountingdata" ? "active" : null)">
-            <a href="@Url.Action("DigitalAccountingData", "eDigital")">@Texts.LoadAccountingData</a>
+
+        <li class="@(action == "listinvoices" ? "active" : null)">
+            <a href="@Url.Action("ListInvoices", "eDigital")">@Texts.ListInvoice</a>
         </li>
 	</ul>
 	<div class="tab-content tab-content-bordered no-padding">

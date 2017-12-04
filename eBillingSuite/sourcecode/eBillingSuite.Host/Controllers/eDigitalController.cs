@@ -2232,7 +2232,9 @@ namespace eBillingSuite.Controllers
             {
                 return View("DigitalProc");
             }
+           
 
+            //"Select * from ProcDocs where Estado = 0 order by Prioridade"
             var model = _eDigitalMasterizationProcRepository
                         .Where(x => x.Estado == 0)
                         .OrderBy(x => x.Prioridade)
@@ -2738,11 +2740,66 @@ namespace eBillingSuite.Controllers
         #endregion
 
         #region OCR
-        public ActionResult ListInvoices()
+        public ActionResult ListInvoices(JQueryDataTableParamModel param)
         {
+            this.SetPixelAdminPageContext(_pixelAdminPageContext);
 
 
-            return null;
+            if (!Request.IsAjaxRequest())
+            {
+                return View("ListInvoices");
+            }
+
+
+            var model = _eDigitalMasterizationProcRepository
+                       .Where(x => x.Estado == 0)
+                       .OrderBy(x => x.Prioridade)
+                       .ToList();
+
+            var result = model.Select(o => new
+            {
+                Id = o.pkid.ToString(),
+                Prioridade = o.Prioridade,
+                nomeficheiro = Path.GetFileName(o.nomeficheiro),
+                dtaCriacao = o.dtaCriacao.ToString("yyyy/MM/dd"),
+                DtaModificacao = o.DtaModificacao.ToString("yyyy/MM/dd"),
+                Utilizador = o.Utilizador
+            });
+
+            if (param.iDisplayLength != 0)
+            {
+                var recordCount = result.Count();
+                var records = result
+                    .Skip(param.iDisplayStart)
+                    .Take(param.iDisplayLength)
+                    .ToList();
+
+                var reply = new JsonNetResult();
+                reply.Data = new
+                {
+                    sEcho = param.sEcho,
+                    iTotalRecords = recordCount,
+                    iTotalDisplayRecords = param.iDisplayLength,
+                    aaData = records
+                };
+
+                return reply;
+            }
+            else
+            {
+                var records = result.Take(10).ToList();
+                var reply = new JsonNetResult();
+                reply.Data = new
+                {
+                    sEcho = param.sEcho,
+                    iTotalRecords = result.Count(),
+                    iTotalDisplayRecords = records.Count,
+                    aaData = result
+                };
+
+                return reply;
+            }
+
         }
 
         #endregion

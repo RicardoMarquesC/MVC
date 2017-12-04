@@ -1183,4 +1183,10 @@
   <data name="Permissions_ParseFailed" xml:space="preserve">
     <value>Erros</value>
   </data>
+  <data name="ListInvoice" xml:space="preserve">
+    <value>ListInvoice</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Selecionar</value>
+  </data>
 </root>

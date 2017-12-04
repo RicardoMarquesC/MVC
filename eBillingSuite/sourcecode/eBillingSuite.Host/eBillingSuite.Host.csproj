@@ -420,6 +420,7 @@
     <Content Include="Views\eUser\editUser.cshtml" />
     <Content Include="Views\_ViewImports.cshtml" />
     <Content Include="Views\eUser\createUser.cshtml" />
+    <Content Include="Views\eDigital\ListInvoices.cshtml" />
     <None Include="Web References\ebcExternalWS\ebcExternalWs.wsdl" />
     <None Include="Web References\ebcExternalWS\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>

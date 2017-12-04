@@ -33,13 +33,6 @@ namespace eBillingSuite
             );
             }
 
-            
-
-            //routes.MapRoute(
-            // name: "Default",
-            // url: "{controller}/{action}/{ID}",
-            // defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-            //);
 
             //routes.MapRoute(
             //	name: "Enterprise SignIn Route",

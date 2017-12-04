@@ -1573,6 +1573,15 @@ namespace eBillingSuite.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ListInvoice.
+        /// </summary>
+        public static string ListInvoice {
+            get {
+                return ResourceManager.GetString("ListInvoice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dados contabilísticos.
         /// </summary>
         public static string LoadAccountingData {
@@ -2595,6 +2604,15 @@ namespace eBillingSuite.Resources {
         public static string Seccoes {
             get {
                 return ResourceManager.GetString("Seccoes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecionar.
+        /// </summary>
+        public static string Select {
+            get {
+                return ResourceManager.GetString("Select", resourceCulture);
             }
         }
         
